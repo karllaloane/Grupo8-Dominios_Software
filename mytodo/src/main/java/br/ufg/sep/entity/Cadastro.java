@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import br.ufg.sep.entity.role.Role;
+import br.ufg.sep.entity.role.RoleUser;
 
 @Entity
 public class Cadastro extends AbstractEntity{
@@ -24,6 +25,9 @@ public class Cadastro extends AbstractEntity{
 		private String cpf;
 		
 		@Column
+		private String email;
+		
+		@Column
 		private String senha;
 		
 		@Column
@@ -31,21 +35,30 @@ public class Cadastro extends AbstractEntity{
 		
 		@ElementCollection(fetch = FetchType.LAZY, targetClass = Role.class)
 		@Enumerated(EnumType.STRING) 
-		@Column(name = "role")
-		@JoinTable(name="Roles")
-		List<Role> role;
+		@OneToMany(mappedBy="cadastro")
+		List<RoleUser> roles;
 		
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public List<RoleUser> getRoles() {
+			return roles;
+		}
+
+		public void setRoles(List<RoleUser> roles) {
+			this.roles = roles;
+		}
+
 		@OneToMany(mappedBy="responsavel", fetch = FetchType.LAZY,cascade= CascadeType.ALL)
 		List<Prova> provas;
 		
 
-		public List<Role> getRole() {
-			return role;
-		}
-
-		public void setRole(List<Role> role) {
-			this.role = role;
-		}
+		
 
 		public List<Prova> getProvas() {
 			return provas;

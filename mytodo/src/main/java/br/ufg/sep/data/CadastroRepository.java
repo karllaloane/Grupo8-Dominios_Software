@@ -9,4 +9,6 @@ import br.ufg.sep.entity.Cadastro;
 @Repository
 public interface CadastroRepository extends JpaRepository<Cadastro,Long>{
 
+	Cadastro findByCpf(String cpf);
+
 }
