@@ -35,7 +35,7 @@ public class Cadastro extends AbstractEntity{
 		
 		@ElementCollection(fetch = FetchType.LAZY, targetClass = Role.class)
 		@Enumerated(EnumType.STRING) 
-		@OneToMany(mappedBy="cadastro")
+		@OneToMany(mappedBy="cadastro", cascade = CascadeType.ALL)
 		List<RoleUser> roles;
 		
 		public String getEmail() {

@@ -1,6 +1,7 @@
 package br.ufg.sep.views.login;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
@@ -10,13 +11,22 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import br.ufg.sep.data.CadastroRepository;
+import br.ufg.sep.entity.Cadastro;
+import br.ufg.sep.entity.role.Role;
+import br.ufg.sep.entity.role.RoleUser;
+
 @Route("login")
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver{
 
 	LoginForm login = new LoginForm();
 	
-	public LoginView() {
+	public LoginView(CadastroRepository cadastroRepository) {
+		
+		
+		
+		
 		
 		addClassName("login-view");
 		setSizeFull();

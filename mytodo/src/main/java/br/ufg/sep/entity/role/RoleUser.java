@@ -21,6 +21,17 @@ public class RoleUser extends AbstractEntity {
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
+	public RoleUser() {
+		
+	}
+	
+
+	public RoleUser(Role r, Cadastro c) {
+		this.role = r;
+		this.cadastro = c;
+	}
+	
 	
 	
 	public Role getRole() {
