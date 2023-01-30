@@ -28,15 +28,35 @@ public class Generator {
 			cadastro.setSenha("123");
 			RoleUser rU = new RoleUser(Role.ADMIN,cadastro);
 			
-			cadastro.setRoles(new ArrayList<RoleUser>(
-					List.of(new RoleUser(
-							Role.ADMIN
-							,cadastro)
-							)
-						)
-					);
+			cadastro.setRoles(new ArrayList<RoleUser>(List.of(rU)));
 			cadastroRepository.save(cadastro);
 		}
+		if(cadastroRepository.count()==1l) {
+			Cadastro c = new Cadastro();
+			c.setCpf("456");
+			c.setSenha("456");
+			RoleUser roleUser1 = new RoleUser(Role.PED,c);
+			
+			c.setRoles(new ArrayList<RoleUser>(List.of(roleUser1)));
+			cadastroRepository.save(c);
+			
+			Cadastro c1 = new Cadastro();
+			c1.setCpf("789");
+			c1.setSenha("789");
+			RoleUser roleUser2 = new RoleUser(Role.PROF,c1);
+			
+			c1.setRoles(new ArrayList<RoleUser>(List.of(roleUser2)));
+			cadastroRepository.save(c1);
+			
+			Cadastro c2 = new Cadastro();
+			c2.setCpf("111");
+			c2.setSenha("111");
+			RoleUser roleUser3 = new RoleUser(Role.USER,c2);
+			
+			c2.setRoles(new ArrayList<RoleUser>(List.of(roleUser3)));
+			cadastroRepository.save(c2);
+		}
+		
 	}
 
 }
