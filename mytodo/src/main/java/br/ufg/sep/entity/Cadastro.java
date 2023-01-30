@@ -1,6 +1,7 @@
 package br.ufg.sep.entity;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,7 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import br.ufg.sep.entity.role.Role;
@@ -101,8 +103,9 @@ public class Cadastro extends AbstractEntity{
 		}
 		
 		
-		
-		// map complicado de papeis
+		//mapear em um momento posterior
+		//@Column
+		//List<Map<Concurso,RoleUser>> papeis;
 	
 	
 }

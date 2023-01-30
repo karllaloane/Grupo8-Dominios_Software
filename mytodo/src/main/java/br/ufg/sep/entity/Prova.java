@@ -16,6 +16,10 @@ import javax.persistence.Table;
 @Table(name="provas")
 public class Prova extends AbstractEntity{
 	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="concurso_id", nullable = false)
+	private Concurso concurso;
+	
 	@Column
 	private String areaConhecimento;
 	
