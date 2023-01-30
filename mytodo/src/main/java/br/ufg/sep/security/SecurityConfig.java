@@ -22,7 +22,8 @@ import br.ufg.sep.views.login.LoginView;
 @Configuration
 public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	
-	
+    public static final String LOGOUT_URL = "/login";
+
 	
 	 @Bean
 	    public PasswordEncoder passwordEncoder() {
@@ -31,7 +32,7 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	
 	protected void configure(HttpSecurity http) throws Exception{
 		super.configure(http);
-		setLoginView(http,LoginView.class,"/login");
+		setLoginView(http,LoginView.class,LOGOUT_URL); // /login se refere a url de log-out da classe
 	}
 	
 	public void configure(WebSecurity web) throws Exception{

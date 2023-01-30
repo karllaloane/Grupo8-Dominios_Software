@@ -26,8 +26,19 @@ public class Generator {
 			Cadastro cadastro = new Cadastro();
 			cadastro.setCpf("123");
 			cadastro.setSenha("123");
-			RoleUser rU = new RoleUser(Role.ADMIN,cadastro);
 			
+			
+			RoleUser rU = new RoleUser(Role.ADMIN,cadastro);
+			ArrayList<RoleUser> rolesUsers = new ArrayList<>();
+			rolesUsers.add(rU);
+			
+			cadastro.setRoles(rolesUsers);
+			
+			/*
+			 * Cria o array list de RoleUser
+			 * Define que esse arrayList é uma lista de: 
+			 * 	novo usuario, o qual tem a role como Role.ADMIN e tem o pai 'cadastro' 
+			 * 
 			cadastro.setRoles(new ArrayList<RoleUser>(
 					List.of(new RoleUser(
 							Role.ADMIN
@@ -35,6 +46,7 @@ public class Generator {
 							)
 						)
 					);
+					*/
 			cadastroRepository.save(cadastro);
 		}
 	}

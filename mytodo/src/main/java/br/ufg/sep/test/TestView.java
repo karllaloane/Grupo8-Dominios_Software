@@ -7,9 +7,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("test")
+import br.ufg.sep.views.MainLayout;
+
+@Route(value = "test", layout = MainLayout.class)
 @PageTitle("Home")
-@RolesAllowed({"ADMIN","PROF"})
+@RolesAllowed({"ADMIN"})
 public class TestView extends HorizontalLayout {
 	
 	public TestView(){
