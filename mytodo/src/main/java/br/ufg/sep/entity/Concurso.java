@@ -23,11 +23,11 @@ public class Concurso extends AbstractEntity{
 		@Column
 		private LocalDate dataFim;
 		
-		@OneToMany(mappedBy="prova", cascade = CascadeType.ALL)
+		@OneToMany(mappedBy="concurso", cascade = CascadeType.ALL)
 		List<Prova> provas;	
 		
-		@OneToMany(mappedBy="cadastro", cascade = CascadeType.ALL)
-		List<Cadastro> colaboradores;	
+//		@OneToMany(mappedBy="cadastro", cascade = CascadeType.ALL)
+//		List<Cadastro> colaboradores;	
 	
 	
 		public List<Prova> getProvas() {
@@ -70,14 +70,10 @@ public class Concurso extends AbstractEntity{
 			this.dataFim = dataFim;
 		}
 
-		public List<Cadastro> getColaboradores() {
-			return colaboradores;
-		}
-
-		public void setColaboradores(List<Cadastro> colaboradores) {
-			this.colaboradores = colaboradores;
-		}
-		
-		
-		
+		/*
+		 * public List<Cadastro> getColaboradores() { return colaboradores; }
+		 * 
+		 * public void setColaboradores(List<Cadastro> colaboradores) {
+		 * this.colaboradores = colaboradores; }
+		 */	
 }
