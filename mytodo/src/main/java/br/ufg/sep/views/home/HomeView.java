@@ -31,8 +31,6 @@ public class HomeView extends HorizontalLayout{
 	
 		Cadastro cadastro = new Cadastro();
 		
-		RoleUser rU = new RoleUser(Role.PED,cadastro);
-		cadastro.setRoles(new ArrayList<RoleUser>(List.of(rU)));
 	
 
 		

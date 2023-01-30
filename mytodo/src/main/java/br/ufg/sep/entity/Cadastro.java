@@ -35,10 +35,6 @@ public class Cadastro extends AbstractEntity{
 		@Column
 		private String grauInstrução;
 		
-		@ElementCollection(fetch = FetchType.LAZY, targetClass = Role.class)
-		@Enumerated(EnumType.STRING) 
-		@OneToMany(mappedBy="cadastro", cascade = CascadeType.ALL)
-		List<RoleUser> roles;
 		
 		public String getEmail() {
 			return email;
@@ -48,27 +44,6 @@ public class Cadastro extends AbstractEntity{
 			this.email = email;
 		}
 
-		public List<RoleUser> getRoles() {
-			return roles;
-		}
-
-		public void setRoles(List<RoleUser> roles) {
-			this.roles = roles;
-		}
-
-		@OneToMany(mappedBy="responsavel", fetch = FetchType.LAZY,cascade= CascadeType.ALL)
-		List<Prova> provas;
-		
-
-		
-
-		public List<Prova> getProvas() {
-			return provas;
-		}
-
-		public void setProvas(List<Prova> provas) {
-			this.provas = provas;
-		}
 
 		public String getNome() {
 			return nome;

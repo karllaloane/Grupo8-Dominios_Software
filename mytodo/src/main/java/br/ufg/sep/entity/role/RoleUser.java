@@ -15,35 +15,38 @@ import br.ufg.sep.entity.Cadastro;
 @Table(name = "roles_user")
 public class RoleUser extends AbstractEntity {
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="cadastro_id", nullable = false)
-	private Cadastro cadastro;
+
+	private String userCpf;
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	public RoleUser() {
-		
-	}
-	
-
-	public RoleUser(Role r, Cadastro c) {
+	public RoleUser(Role r, String cpf) {
 		this.role = r;
-		this.cadastro = c;
+		this.userCpf = cpf;
 	}
+public RoleUser() {
 	
-	
-	
+}
+
+
+	public String getUserCpf() {
+		return userCpf;
+	}
+
+	public void setUserCpf(String userCpf) {
+		this.userCpf = userCpf;
+	}
+
 	public Role getRole() {
 		return role;
 	}
-	public Cadastro getCadastro() {
-		return cadastro;
-	}
-	public void setCadastro(Cadastro cadastro) {
-		this.cadastro = cadastro;
-	}
+
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	
+	
+
 }

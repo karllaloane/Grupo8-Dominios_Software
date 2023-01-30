@@ -31,6 +31,7 @@ import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.test.TestView;
 import br.ufg.sep.views.home.HomeView;
+import br.ufg.sep.views.permissoes.PermissoesView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -110,6 +111,10 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(TestView.class)) {
             nav.add(new Tab( new RouterLink("Test",TestView.class)));
+        }
+        
+        if (accessChecker.hasAccess(PermissoesView.class)) {
+        	nav.add(new Tab(new RouterLink("Permissões",PermissoesView.class)));
         }
         
         nav.setOrientation(Orientation.VERTICAL);
