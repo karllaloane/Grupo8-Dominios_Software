@@ -3,6 +3,7 @@ package br.ufg.sep.views;
 
 import java.util.Optional;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -13,7 +14,9 @@ import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,6 +33,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.test.TestView;
+import br.ufg.sep.view.prova.ProvasView;
+import br.ufg.sep.views.concurso.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
 
@@ -48,14 +53,12 @@ public class MainLayout extends AppLayout {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
 
-        setPrimarySection(Section.DRAWER); // o drawer que estará de forma primária
+        setPrimarySection(Section.DRAWER); // o drawer que estara de forma primária
         addDrawerContent();
         addHeaderContent();
-        
-        
+            
     }
 
-   
 
 	private void addHeaderContent() {
 		
@@ -77,9 +80,6 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, header);
     }
 	
-	
-    
-
 /***************************/
 	//Adição do "SEP" como titulo, do botaozinho de deslogar, e da barra de navegação com o createNavigation.
 	private void addDrawerContent() {
@@ -106,20 +106,37 @@ public class MainLayout extends AppLayout {
         Tabs nav = new Tabs();
 
         if (accessChecker.hasAccess(HomeView.class)) {
-            nav.add(new Tab(new RouterLink("Home",HomeView.class)));
-
+            nav.add(createTab(VaadinIcon.HOME, "Home", HomeView.class));
         }
+        
         if (accessChecker.hasAccess(TestView.class)) {
-            nav.add(new Tab( new RouterLink("Test",TestView.class)));
+            nav.add(createTab(VaadinIcon.GLOBE, "Concursos", ConcursosView.class));
+        }
+        
+        if (accessChecker.hasAccess(TestView.class)) {
+            nav.add(createTab(VaadinIcon.PENCIL, "Provas", ProvasView.class));
         }
         
         if (accessChecker.hasAccess(PermissoesView.class)) {
-        	nav.add(new Tab(new RouterLink("Permissões",PermissoesView.class)));
+        	nav.add(createTab(VaadinIcon.USER, "Administrador", PermissoesView.class));
         }
         
         nav.setOrientation(Orientation.VERTICAL);
 
         return nav;
+    }
+    
+    private Tab createTab(VaadinIcon viewIcon, String viewName, Class<? extends Component> classe) {
+        Icon icon = viewIcon.create();
+        icon.getStyle().set("box-sizing", "border-box")
+                .set("margin-inline-end", "var(--lumo-space-m)")
+                .set("padding", "var(--lumo-space-xs)");
+
+        RouterLink link = new RouterLink();
+        link.add(icon, new Span(viewName));
+        link.setRoute(classe);
+
+        return new Tab(link);
     }
 
     private Footer createFooter() {

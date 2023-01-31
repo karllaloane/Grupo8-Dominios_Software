@@ -31,10 +31,6 @@ public class HomeView extends HorizontalLayout{
 	
 		Cadastro cadastro = new Cadastro();
 		
-	
-
-		
-		
 		Button arrumar = new Button("Navegar para teste");
 		
 		arrumar.addClickListener(e->{
