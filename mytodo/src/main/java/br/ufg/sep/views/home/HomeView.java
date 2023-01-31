@@ -30,22 +30,7 @@ public class HomeView extends HorizontalLayout{
 	public HomeView(SecurityService secutiryService, CadastroRepository cr){
 	
 		
-		Button arrumar = new Button("Navegar para teste");
-		
-		arrumar.addClickListener(e->{
-			arrumar.getUI().ifPresent(ui->{
-				ui.navigate(TestView.class);
-			});
-		});
-		
-		
-		Button logout = new Button("log-out",e->{
-			secutiryService.logout();		
-		});
-		
-		
-		
-		add(new TextField(),logout,arrumar);
+	
 	}
 
 	
