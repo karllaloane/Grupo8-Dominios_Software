@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import br.ufg.sep.data.CadastroRepository;
-import br.ufg.sep.data.RoleUserRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
+import br.ufg.sep.data.repositories.RoleUserRepository;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.role.Role;
 import br.ufg.sep.entity.role.RoleUser;

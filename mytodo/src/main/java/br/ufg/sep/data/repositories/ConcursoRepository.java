@@ -1,4 +1,4 @@
-package br.ufg.sep.data;
+package br.ufg.sep.data.repositories;
 
 import java.util.List;
 

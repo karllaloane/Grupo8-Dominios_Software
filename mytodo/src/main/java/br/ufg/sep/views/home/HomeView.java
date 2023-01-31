@@ -12,8 +12,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.Route;
 
-import br.ufg.sep.data.CadastroRepository;
-import br.ufg.sep.data.ProvaRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
+import br.ufg.sep.data.repositories.ProvaRepository;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.role.Role;
 import br.ufg.sep.entity.role.RoleUser;

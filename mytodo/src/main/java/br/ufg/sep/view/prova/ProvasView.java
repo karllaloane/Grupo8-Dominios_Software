@@ -9,7 +9,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import br.ufg.sep.data.CadastroRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.SecurityService;
 import br.ufg.sep.views.MainLayout;

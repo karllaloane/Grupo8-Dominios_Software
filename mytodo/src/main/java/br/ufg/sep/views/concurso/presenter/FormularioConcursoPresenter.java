@@ -1,4 +1,4 @@
-package br.sep.presenter;
+package br.ufg.sep.views.concurso.presenter;
 
 import java.time.LocalDate;
 
@@ -8,6 +8,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
+
+import br.ufg.sep.data.repositories.ConcursoRepository;
+import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.views.concurso.ConcursosView;
 import br.ufg.sep.views.concurso.FormularioConcursoView;
@@ -16,9 +19,11 @@ public class FormularioConcursoPresenter implements ComponentEventListener<Click
 
 	Concurso concurso;
 	FormularioConcursoView cv;
+	ConcursoService concursoService;
 	
-	public FormularioConcursoPresenter(FormularioConcursoView formularioConcursoViewImpl) {
+	public FormularioConcursoPresenter(FormularioConcursoView formularioConcursoViewImpl, ConcursoService cS) {
 		cv = formularioConcursoViewImpl;
+		this.concursoService = cS;
 	}
 	
 	private boolean salvarConcurso() {
@@ -74,7 +79,7 @@ public class FormularioConcursoPresenter implements ComponentEventListener<Click
 				concurso.setDataFim(dataFim);
 				
 				
-				
+				concursoService.save(concurso);		
 				
 				Notification notification = Notification
 				        .show("Concurso salvo com sucesso!");

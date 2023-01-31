@@ -4,7 +4,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.vaadin.flow.component.grid.Grid;
 
-import br.ufg.sep.data.CadastroRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.entity.Cadastro;
 
 

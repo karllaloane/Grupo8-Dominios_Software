@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
 
-import br.ufg.sep.data.CadastroRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.entity.Cadastro;
 
 @Component

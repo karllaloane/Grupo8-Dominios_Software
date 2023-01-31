@@ -8,7 +8,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import br.ufg.sep.data.CadastroRepository;
+import br.ufg.sep.data.repositories.CadastroRepository;
 
 @Route("login")
 @PageTitle("Login")

@@ -2,8 +2,6 @@ package br.ufg.sep.views.concurso;
 
 import javax.annotation.security.RolesAllowed;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -15,8 +13,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import br.sep.presenter.FormularioConcursoPresenter;
+import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.concurso.presenter.FormularioConcursoPresenter;
 
 @Route(value="cadastrar_concursos", layout = MainLayout.class)
 @PageTitle("Concursos")
@@ -33,13 +32,18 @@ public class FormularioConcursoView extends VerticalLayout {
 	HorizontalLayout buttonLayout;
 	//FormularioConcursoPresenter formPresenter;
 	
-	public FormularioConcursoView() {
+	public FormularioConcursoView(ConcursoService cS) {
 		
 		criarTela();
+		
+		//FormularioConcursoPresenter formPresenter = new FormularioConcursoPresenter(this);
+		
+		
+		
 		//formPresenter = new FormularioConcursoPresenter(this);
 		
-		save.addClickListener(new FormularioConcursoPresenter(this));
-		cancel.addClickListener(new FormularioConcursoPresenter(this));
+		save.addClickListener(new FormularioConcursoPresenter(this, cS));
+		cancel.addClickListener(new FormularioConcursoPresenter(this, cS));
         
         setPadding(true);
         add(layout, buttonLayout);
