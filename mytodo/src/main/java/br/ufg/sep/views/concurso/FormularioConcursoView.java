@@ -1,40 +1,60 @@
 package br.ufg.sep.views.concurso;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.charts.model.Responsive;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import br.sep.presenter.FormularioConcursoPresenter;
 import br.ufg.sep.views.MainLayout;
 
 @Route(value="cadastrar_concursos", layout = MainLayout.class)
 @PageTitle("Concursos")
 @RolesAllowed({"ADMIN", "PED"})
-public class FormularioConcursoView extends VerticalLayout{
+public class FormularioConcursoView extends VerticalLayout {
+	
+	Button save;
+	Button cancel;
+	TextField nomeTF;
+	TextField cidadeTF;
+	DatePicker dataInicioDP;
+	DatePicker dataFimDP;
+	VerticalLayout layout;
+	HorizontalLayout buttonLayout;
+	//FormularioConcursoPresenter formPresenter;
 	
 	public FormularioConcursoView() {
 		
+		criarTela();
+		//formPresenter = new FormularioConcursoPresenter(this);
+		
+		save.addClickListener(new FormularioConcursoPresenter(this));
+		cancel.addClickListener(new FormularioConcursoPresenter(this));
+        
+        setPadding(true);
+        add(layout, buttonLayout);
+        
+	}	
+	
+	private void criarTela() {
+
 		DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
 		
-		TextField nomeTF = new TextField("Nome", "", "");
-        TextField cidadeTF = new TextField("Cidade", "", "");
-        DatePicker dataInicioDP = new DatePicker("Data de Início");
-        DatePicker dataFimDP = new DatePicker("Data Fim");
+		nomeTF = new TextField("Nome", "", "");
+        cidadeTF = new TextField("Cidade", "", "");
+        dataInicioDP = new DatePicker("Data de Início");
+        dataFimDP = new DatePicker("Data Fim");
         
         dataInicioDP.setI18n(singleFormatI18n);
         dataFimDP.setI18n(singleFormatI18n);
@@ -48,19 +68,49 @@ public class FormularioConcursoView extends VerticalLayout{
         //formLayout.setMaxWidth("700px");
         //formData.setMaxWidth("700px");
 
-        Button save = new Button("Salvar");
+        save = new Button("Salvar");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        Button cancel = new Button("Cancel");
+        cancel = new Button("Cancel");
         
-        VerticalLayout layout = new VerticalLayout(formLayout,
-        		formData);
+        layout = new VerticalLayout(formLayout, formData);
         //layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setMaxWidth("700px");
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(save, cancel);
+        buttonLayout = new HorizontalLayout(save, cancel);
         buttonLayout.setPadding(true);
-        
-        setPadding(true);
-        add(layout, buttonLayout);
 	}
+
+	public Button getSave() {
+		return save;
+	}
+
+	public void setSave(Button save) {
+		this.save = save;
+	}
+
+	public TextField getNomeTF() {
+		return nomeTF;
+	}
+
+	public TextField getCidadeTF() {
+		return cidadeTF;
+	}
+
+	public DatePicker getDataInicioDP() {
+		return dataInicioDP;
+	}
+
+	public DatePicker getDataFimDP() {
+		return dataFimDP;
+	}
+
+	public void setCancel(Button cancel) {
+		this.cancel = cancel;
+	}
+
+	public void setButtonLayout(HorizontalLayout buttonLayout) {
+		this.buttonLayout = buttonLayout;
+	}
+	
+	
 }

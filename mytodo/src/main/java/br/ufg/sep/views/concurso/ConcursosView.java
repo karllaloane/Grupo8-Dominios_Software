@@ -19,7 +19,7 @@ import br.ufg.sep.views.MainLayout;
 
 @Route(value="concursos", layout = MainLayout.class)
 @PageTitle("Concursos")
-@RolesAllowed({"ADMIN", "PED"})
+@PermitAll
 public class ConcursosView extends HorizontalLayout{
 	
 	public ConcursosView(SecurityService secutiryService, CadastroRepository cr){
@@ -32,10 +32,12 @@ public class ConcursosView extends HorizontalLayout{
         layout.add(novoButton);
         
         novoButton.addClickListener(e->{
-        	novoButton.getUI().ifPresent(ui->{
-				ui.navigate(FormularioConcursoView.class);
-			});
+			 novoButton.getUI().ifPresent(ui->{
+			 ui.navigate(FormularioConcursoView.class); });
+
 		});
+        
+        
 		
 
         this.add(layout);
