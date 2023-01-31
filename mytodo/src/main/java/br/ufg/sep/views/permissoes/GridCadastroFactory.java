@@ -10,7 +10,7 @@ import br.ufg.sep.entity.Cadastro;
 
 public class GridCadastroFactory{
 	
-	Grid<Cadastro> grid;
+	public Grid<Cadastro> grid;
 	public GridCadastroFactory(CadastroRepository cadastroRepository) {
 		grid = new Grid<>(Cadastro.class,false);
 		
@@ -20,7 +20,7 @@ public class GridCadastroFactory{
 		grid.setItems(query-> cadastroRepository.findAll(PageRequest.of(query.getPage(), query.getPageSize())).stream());
 	}
 	
-	Grid<Cadastro> getGrid(){
+	public Grid<Cadastro> getGrid(){
 		return this.grid;
 	}
 	
