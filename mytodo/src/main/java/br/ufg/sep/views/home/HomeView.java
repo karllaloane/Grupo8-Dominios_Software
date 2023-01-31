@@ -29,12 +29,6 @@ public class HomeView extends HorizontalLayout{
 	
 	public HomeView(SecurityService secutiryService, CadastroRepository cr){
 	
-		Cadastro cadastro = new Cadastro();
-		
-	
-		RoleUser rU = new RoleUser(Role.PED,cadastro.getCpf());
-
-		
 		
 		Button arrumar = new Button("Navegar para teste");
 		

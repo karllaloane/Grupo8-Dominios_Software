@@ -1,5 +1,6 @@
 package br.ufg.sep.views.permissoes;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import com.vaadin.flow.component.grid.Grid;
@@ -12,7 +13,7 @@ import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.views.MainLayout;
 
 @Route(value="permissoes", layout= MainLayout.class)
-@RolesAllowed({"ADMIN"})
+@PermitAll
 @PageTitle("Permissoes")
 public class PermissoesView extends HorizontalLayout{
 	
