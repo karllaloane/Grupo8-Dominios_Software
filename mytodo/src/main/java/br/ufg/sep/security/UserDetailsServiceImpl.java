@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         if (cadastro == null) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         } else {
-        	RoleUser roleUser = roleUserRepository.findByUserCpf(cadastro.getCpf());
+        	List<RoleUser> roleUser = (List<RoleUser>) roleUserRepository.findByUserCpf(cadastro.getCpf());
         	if(roleUser==null) {
         		throw new UsernameNotFoundException("No user present with username: "+ username);
         	}else {
@@ -49,11 +49,14 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         }
     
 
-    private static List<GrantedAuthority> getAuthorities(RoleUser roleUser) {
-    	Role x = roleUser.getRole();
+    private static List<GrantedAuthority> getAuthorities(List<RoleUser> roleUsers) {
     	ArrayList<Role> y = new ArrayList<>();
-    	y.add(x);
-
+    	roleUsers.forEach(roleUser->{
+    	
+    	
+    	y.add(roleUser.getRole());
+    	
+    	});
     	
     	return y.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
     }

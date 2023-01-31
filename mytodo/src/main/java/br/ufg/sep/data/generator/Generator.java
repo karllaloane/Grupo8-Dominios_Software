@@ -64,6 +64,27 @@ public class Generator {
 			cadastroRepository.save(c2);
 		}
 		
+		if(cadastroRepository.count()<=4l) {
+			
+			Cadastro master = new Cadastro();
+			master.setCpf("999");
+			master.setSenha("ooo");
+			master.setEmail("master@gmail.com");
+			master.setGrauInstrução("Graduação");
+			master.setNome("Master");
+			ArrayList<RoleUser> roles = new ArrayList<>();
+			roles.add(new RoleUser(Role.ADMIN,master.getCpf()));
+			roles.add(new RoleUser(Role.PED,master.getCpf()));
+			roles.add(new RoleUser(Role.PROF,master.getCpf()));
+			roles.add(new RoleUser(Role.USER,master.getCpf()));
+		
+			roles.forEach(e->{
+				roleUserRepository.save(e);
+			});
+			
+			cadastroRepository.save(master);
+		}
+		
 	}
 
 }

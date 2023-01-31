@@ -1,15 +1,14 @@
 package br.ufg.sep.entity.role;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
 import javax.persistence.Table;
 
 import br.ufg.sep.entity.AbstractEntity;
-import br.ufg.sep.entity.Cadastro;
+
 
 @Entity
 @Table(name = "roles_user")
