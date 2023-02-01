@@ -31,7 +31,7 @@ public class ConcursosView extends VerticalLayout{
 	Button visualizarButton;
 	Button acessarProvasButton;
 	Grid<Concurso> concursos;
-	HorizontalLayout layout;
+	HorizontalLayout layout = new HorizontalLayout();
 	
 	public ConcursosView(SecurityService secutiryService, CadastroRepository cr, ConcursoService cS){
 	

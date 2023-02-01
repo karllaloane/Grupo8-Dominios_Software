@@ -34,6 +34,7 @@ public class FormularioConcursoView extends VerticalLayout {
 	
 	public FormularioConcursoView(ConcursoService cS) {
 		
+		/* Método descrito abaixo, cria uma tela já com alguns campos editaveis*/ 
 		criarTela();
 		
 		FormularioConcursoPresenter formPresenter = new FormularioConcursoPresenter(this, cS);

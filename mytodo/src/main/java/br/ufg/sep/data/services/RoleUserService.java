@@ -15,6 +15,10 @@ public RoleUserService(RoleUserRepository rUr) {
 	
 }
 
+public RoleUserRepository getRoleUserRepository() {
+	return roleUserRepository;
+}
+
 public void save(RoleUser roleUser) throws java.lang.NullPointerException{
 	
 	if(roleUser.getUserCpf()==null) {
@@ -25,5 +29,6 @@ public void save(RoleUser roleUser) throws java.lang.NullPointerException{
 	
 }
 
+	
 	
 }
