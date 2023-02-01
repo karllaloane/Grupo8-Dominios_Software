@@ -67,7 +67,7 @@ public class FormularioConcursoView extends VerticalLayout {
 
         save = new Button("Salvar");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        cancel = new Button("Cancel");
+        cancel = new Button("Cancelar");
         
         layout = new VerticalLayout(formLayout, formData);
         //layout.setAlignItems(FlexComponent.Alignment.CENTER);

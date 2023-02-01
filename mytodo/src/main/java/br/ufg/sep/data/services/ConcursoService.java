@@ -7,21 +7,25 @@ import br.ufg.sep.entity.Concurso;
 
 @Service
 public class ConcursoService {
-	private final ConcursoRepository concursoRepoitory;
+	private final ConcursoRepository concursoRepository;
 	
 	public ConcursoService(ConcursoRepository cR) {
 		// TODO Auto-generated constructor stub
-		this.concursoRepoitory = cR;
+		this.concursoRepository = cR;
 	}
 	
 	public ConcursoRepository getRepository() {
-		return this.concursoRepoitory;
+		return this.concursoRepository;
 	}
 	
 	public void save(Concurso c) throws java.lang.NullPointerException {
-		if(c.getNome()==null)throw new NullPointerException("Concurso sem Nome!");
-		this.concursoRepoitory.save(c);
+		if(c.getNome()==null) throw new NullPointerException("Concurso sem Nome!");
+		this.concursoRepository.save(c);
 	}
 	
+	public void delete(Concurso c) throws java.lang.NullPointerException {
+		if(c.getNome()==null) throw new NullPointerException("Concurso sem Nome!");
+		this.concursoRepository.delete(c);
+	}
 
 }

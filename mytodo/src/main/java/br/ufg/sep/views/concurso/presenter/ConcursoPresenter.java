@@ -13,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.views.concurso.ConcursosView;
+import br.ufg.sep.views.concurso.EditarConcursoView;
 import br.ufg.sep.views.concurso.FormularioConcursoView;
 import br.ufg.sep.views.concurso.VisualizarConcursoView;
 
@@ -49,11 +50,12 @@ public class ConcursoPresenter {
 						
 			view.getVisualizarButton().getUI().ifPresent(ui->{
 				 ui.navigate(VisualizarConcursoView.class, c.get(0).getId());});
+		});
+		
+		view.getEditarButton().addClickListener(e->{
 			
-			//passar o objeto capturado para setar os dados de VisualizarConcursoView?
-			
-			
-			
+			view.getEditarButton().getUI().ifPresent(ui->{
+				 ui.navigate(EditarConcursoView.class, c.get(0).getId());});
 		});
 	}
 
