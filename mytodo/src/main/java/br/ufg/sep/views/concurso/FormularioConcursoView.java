@@ -24,10 +24,10 @@ public class FormularioConcursoView extends VerticalLayout {
 	
 	Button save;
 	Button cancel;
-	TextField nomeTF;
-	TextField cidadeTF;
-	DatePicker dataInicioDP;
-	DatePicker dataFimDP;
+	TextField nome;
+	TextField cidade;
+	DatePicker dataInicio;
+	DatePicker dataFim;
 	VerticalLayout layout;
 	HorizontalLayout buttonLayout;
 	//FormularioConcursoPresenter formPresenter;
@@ -36,14 +36,7 @@ public class FormularioConcursoView extends VerticalLayout {
 		
 		criarTela();
 		
-		//FormularioConcursoPresenter formPresenter = new FormularioConcursoPresenter(this);
-		
-		
-		
-		//formPresenter = new FormularioConcursoPresenter(this);
-		
-		save.addClickListener(new FormularioConcursoPresenter(this, cS));
-		cancel.addClickListener(new FormularioConcursoPresenter(this, cS));
+		FormularioConcursoPresenter formPresenter = new FormularioConcursoPresenter(this, cS);
         
         setPadding(true);
         add(layout, buttonLayout);
@@ -55,18 +48,18 @@ public class FormularioConcursoView extends VerticalLayout {
 		DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
 		
-		nomeTF = new TextField("Nome", "", "");
-        cidadeTF = new TextField("Cidade", "", "");
-        dataInicioDP = new DatePicker("Data de Início");
-        dataFimDP = new DatePicker("Data Fim");
+		nome = new TextField("Nome", "", "");
+        cidade = new TextField("Cidade", "", "");
+        dataInicio = new DatePicker("Data de Início");
+        dataFim = new DatePicker("Data Fim");
         
-        dataInicioDP.setI18n(singleFormatI18n);
-        dataFimDP.setI18n(singleFormatI18n);
-        dataFimDP.setPlaceholder("DD/MM/AAAA");
-        dataInicioDP.setPlaceholder("DD/MM/AAAA");
+        dataInicio.setI18n(singleFormatI18n);
+        dataFim.setI18n(singleFormatI18n);
+        dataFim.setPlaceholder("DD/MM/AAAA");
+        dataInicio.setPlaceholder("DD/MM/AAAA");
         
-        FormLayout formLayout = new FormLayout(nomeTF, cidadeTF);
-        FormLayout formData = new FormLayout(dataInicioDP, dataFimDP);
+        FormLayout formLayout = new FormLayout(nome, cidade);
+        FormLayout formData = new FormLayout(dataInicio, dataFim);
         formLayout.setResponsiveSteps(new ResponsiveStep("0", 1));
         formData.setResponsiveSteps(new ResponsiveStep("0", 2));
         //formLayout.setMaxWidth("700px");
@@ -92,29 +85,27 @@ public class FormularioConcursoView extends VerticalLayout {
 		this.save = save;
 	}
 
-	public TextField getNomeTF() {
-		return nomeTF;
+	public TextField getNome() {
+		return nome;
 	}
 
-	public TextField getCidadeTF() {
-		return cidadeTF;
+	public TextField getCidade() {
+		return cidade;
 	}
 
-	public DatePicker getDataInicioDP() {
-		return dataInicioDP;
+	public DatePicker getDataInicio() {
+		return dataInicio;
 	}
 
-	public DatePicker getDataFimDP() {
-		return dataFimDP;
-	}
-
-	public void setCancel(Button cancel) {
-		this.cancel = cancel;
+	public DatePicker getDataFim() {
+		return dataFim;
 	}
 
 	public void setButtonLayout(HorizontalLayout buttonLayout) {
 		this.buttonLayout = buttonLayout;
 	}
 	
-	
+	public Button getCancel() {
+		return cancel;
+	}
 }
