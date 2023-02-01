@@ -114,7 +114,7 @@ public class MainLayout extends AppLayout {
         }
         
         if (accessChecker.hasAccess(TestView.class)) {
-            nav.add(createTab(VaadinIcon.PENCIL, "Provas", ProvasView.class));
+            nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Provas", ProvasView.class));
         }
         
         if (accessChecker.hasAccess(PermissoesView.class)) {
