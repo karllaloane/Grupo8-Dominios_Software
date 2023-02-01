@@ -46,16 +46,13 @@ public class ConcursoPresenter {
 		});
 		
 		view.getVisualizarButton().addClickListener(e->{
-			
+						
 			view.getVisualizarButton().getUI().ifPresent(ui->{
-				 ui.navigate(VisualizarConcursoView.class);});
+				 ui.navigate(VisualizarConcursoView.class, c.get(0).getId());});
 			
 			//passar o objeto capturado para setar os dados de VisualizarConcursoView?
 			
-			Notification notification = Notification
-			        .show(" " + c.get(0).getNome());
-			notification.setPosition(Position.TOP_CENTER);
-			notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
+			
 			
 		});
 	}
