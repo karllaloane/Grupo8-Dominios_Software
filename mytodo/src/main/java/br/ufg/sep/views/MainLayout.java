@@ -49,6 +49,7 @@ public class MainLayout extends AppLayout {
     private VerticalLayout header;
     public  Tabs secondaryMenu;
     AuthenticatedUser authenticatedUser;
+    
     public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
@@ -109,11 +110,11 @@ public class MainLayout extends AppLayout {
             nav.add(createTab(VaadinIcon.HOME, "Home", HomeView.class));
         }
         
-        if (accessChecker.hasAccess(TestView.class)) {
+        if (accessChecker.hasAccess(ConcursosView.class)) {
             nav.add(createTab(VaadinIcon.GLOBE, "Concursos", ConcursosView.class));
         }
         
-        if (accessChecker.hasAccess(TestView.class)) {
+        if (accessChecker.hasAccess(ProvasView.class)) {
             nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Provas", ProvasView.class));
         }
         

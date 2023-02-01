@@ -1,6 +1,7 @@
 package br.ufg.sep.views.concurso;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,7 +23,7 @@ import br.ufg.sep.views.concurso.presenter.ConcursoPresenter;
 
 @Route(value="concursos", layout = MainLayout.class)
 @PageTitle("Concursos")
-@PermitAll
+@RolesAllowed({"ADMIN", "PED"})
 public class ConcursosView extends VerticalLayout{
 	
 	Button novoButton;

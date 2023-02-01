@@ -13,7 +13,7 @@ import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.views.MainLayout;
 
 @Route(value="permissoes", layout= MainLayout.class)
-@PermitAll
+@RolesAllowed({"ADMIN"})
 @PageTitle("Permissoes")
 public class PermissoesView extends HorizontalLayout{
 	
