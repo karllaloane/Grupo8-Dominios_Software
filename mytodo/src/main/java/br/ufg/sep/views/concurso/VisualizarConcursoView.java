@@ -62,10 +62,10 @@ public class VisualizarConcursoView extends VerticalLayout implements HasUrlPara
         cidade = new TextField("Cidade", "", "");
         dataInicio = new DatePicker("Data de Início");
         dataFim = new DatePicker("Data Fim");
-        nome.setEnabled(false);
-        cidade.setEnabled(false);
-        dataInicio.setEnabled(false);
-        dataFim.setEnabled(false);
+        
+        
+        
+        
         
         dataInicio.setI18n(singleFormatI18n);
         dataFim.setI18n(singleFormatI18n);
@@ -76,6 +76,17 @@ public class VisualizarConcursoView extends VerticalLayout implements HasUrlPara
         FormLayout formData = new FormLayout(dataInicio, dataFim);
         formLayout.setResponsiveSteps(new ResponsiveStep("0", 1));
         formData.setResponsiveSteps(new ResponsiveStep("0", 2));
+        
+        formLayout.getChildren().forEach(txtField->{
+        	
+        	((TextField)txtField).setReadOnly(true);
+        });
+        formData.getChildren().forEach(txtField->{
+        	
+        	((DatePicker)txtField).setReadOnly(true);
+        });
+        
+        
         //formLayout.setMaxWidth("700px");
         //formData.setMaxWidth("700px");
 

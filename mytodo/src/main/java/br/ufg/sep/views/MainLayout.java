@@ -29,6 +29,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.router.PageTitle;
+
 
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.AuthenticatedUser;
@@ -41,9 +43,10 @@ import br.ufg.sep.views.permissoes.PermissoesView;
 /**
  * The main view is a top-level placeholder for other views.
  */
+@PageTitle("MainLayout")
 public class MainLayout extends AppLayout {
 
-    private static H2 viewTitle;
+    private static H1 viewTitle;
 
     private AccessAnnotationChecker accessChecker;
     private VerticalLayout header;
@@ -67,10 +70,10 @@ public class MainLayout extends AppLayout {
         DrawerToggle toggle = new DrawerToggle();
         toggle.getElement().setAttribute("aria-label", "Menu toggle"); // botao de ocutar o drawer
 
-        viewTitle = new H2(); // titulo da página em exibição no momento 
+        viewTitle = new H1(); // titulo da página em exibição no momento 
         
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-        viewTitle.getStyle().set("font-size", "var(--lumo-font-size-l)")
+        viewTitle.getStyle().set("font-size", "var(--lumo-font-size-xl)")
         .set("margin", "0");
         
         HorizontalLayout upperHeader = new HorizontalLayout(toggle,viewTitle);

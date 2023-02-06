@@ -35,9 +35,25 @@ public class Prova extends AbstractEntity{
 	
 	@Column
 	private String descricao;
-	
-	
 
+	public Concurso getConcurso() {
+		return concurso;
+	}
+
+	public void setConcurso(Concurso concurso) {
+		this.concurso = concurso;
+	}
+
+	public int getNumeroQuestoes() {
+		return numeroQuestoes;
+	}
+
+	public void setNumeroQuestoes(int numeroQuestoes) {
+		this.numeroQuestoes = numeroQuestoes;
+	}
+
+	@Column
+	private int numeroQuestoes;
 
 	public String getAreaConhecimento() {
 		return areaConhecimento;

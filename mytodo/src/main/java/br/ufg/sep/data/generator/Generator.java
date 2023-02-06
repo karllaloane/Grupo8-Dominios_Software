@@ -29,7 +29,7 @@ public class Generator {
 			Cadastro cadastro = new Cadastro();
 			cadastro.setCpf("123");
 			cadastro.setSenha("123");
-			
+			cadastro.setNome("Gabriel");
 			
 			RoleUser rU = new RoleUser(Role.ADMIN,cadastro.getCpf());
 			
@@ -41,6 +41,7 @@ public class Generator {
 			Cadastro c = new Cadastro();
 			c.setCpf("456");
 			c.setSenha("456");
+			c.setNome("Guilherme");
 			RoleUser roleUser1 = new RoleUser(Role.PED,c.getCpf());
 			
 			roleUserRepository.save(roleUser1);
@@ -49,6 +50,7 @@ public class Generator {
 			Cadastro c1 = new Cadastro();
 			c1.setCpf("789");
 			c1.setSenha("789");
+			c1.setNome("Karlla");
 			RoleUser roleUser2 = new RoleUser(Role.PROF,c1.getCpf());
 			
 			roleUserRepository.save(roleUser2);
@@ -71,7 +73,7 @@ public class Generator {
 			master.setSenha("ooo");
 			master.setEmail("master@gmail.com");
 			master.setGrauInstrução("Graduação");
-			master.setNome("Master");
+			master.setNome("João Gabriel");
 			ArrayList<RoleUser> roles = new ArrayList<>();
 			roles.add(new RoleUser(Role.ADMIN,master.getCpf()));
 			roles.add(new RoleUser(Role.PED,master.getCpf()));

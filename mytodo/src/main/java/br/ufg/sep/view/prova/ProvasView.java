@@ -21,12 +21,10 @@ public class ProvasView extends HorizontalLayout{
 	
 	public ProvasView(SecurityService secutiryService, CadastroRepository cr){
 	
-		Cadastro cadastro = new Cadastro();
-		
-		Button arrumar = new Button("PROVAAAAAS");
 		
 		
-		add(new TextField(),arrumar);
+		
+		add();
 	}
 
 }

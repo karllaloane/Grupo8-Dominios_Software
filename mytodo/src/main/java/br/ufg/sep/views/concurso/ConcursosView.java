@@ -35,7 +35,7 @@ public class ConcursosView extends VerticalLayout{
 	
 	public ConcursosView(SecurityService secutiryService, CadastroRepository cr, ConcursoService cS){
 	
-		criarButton();
+		criarButton(); // inicializa os botões
 		
 		concursos = new Grid<>(Concurso.class,false);
 		
@@ -45,7 +45,7 @@ public class ConcursosView extends VerticalLayout{
         
         concursos.addColumn("nome").setAutoWidth(true);
 		concursos.addColumn("cidade").setAutoWidth(true);
-		concursos.addColumn("dataFim").setAutoWidth(true);
+		concursos.addColumn(presenter.getRenderizadorDatasConcurso()).setAutoWidth(true).setHeader("Fim do edital");
 		concursos.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         
         layout.add(novoButton, visualizarButton, editarButton, acessarProvasButton);
@@ -53,17 +53,18 @@ public class ConcursosView extends VerticalLayout{
         add(layout,concursos);
 	}
 
-	public void habilitarButtons() {
+	public void habilitarButtons() { // método controlado pelo ConcursoPresenter
 		editarButton.setEnabled(true);
 		visualizarButton.setEnabled(true);
 		acessarProvasButton.setEnabled(true);
 	}
-	
+
+	//******** método para inicializar os botões ********
 	private void criarButton() {
 		novoButton = new Button("Novo", new Icon(VaadinIcon.PLUS));
 		editarButton = new Button("Editar", new Icon(VaadinIcon.PENCIL));
 		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
-		acessarProvasButton = new Button("Acessar Provas", new Icon(VaadinIcon.FILE_TEXT_O ));
+		acessarProvasButton = new Button("Gerenciar Provas", new Icon(VaadinIcon.FILE_TEXT_O ));
 		
 		editarButton.setEnabled(false);
 		editarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -76,6 +77,9 @@ public class ConcursosView extends VerticalLayout{
 		layout.setWidthFull();
         layout.setPadding(true);		
 	}
+	
+	/******************************/
+	/*Getters and Setters*/
 
 	public Grid<Concurso> getGrid() {
 		return concursos;
@@ -98,7 +102,7 @@ public class ConcursosView extends VerticalLayout{
 	}
 	
 	public Button getAcessarProvasButton() {
-		return visualizarButton;
+		return acessarProvasButton;
 	}
 
 }

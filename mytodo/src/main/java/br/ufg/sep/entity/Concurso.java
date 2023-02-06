@@ -1,6 +1,7 @@
 package br.ufg.sep.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,7 +25,7 @@ public class Concurso extends AbstractEntity{
 		private LocalDate dataFim;
 		
 		@OneToMany(mappedBy="concurso", cascade = CascadeType.ALL)
-		List<Prova> provas;	
+		List<Prova> provas = new ArrayList<>();
 		
 //		@OneToMany(mappedBy="cadastro", cascade = CascadeType.ALL)
 //		List<Cadastro> colaboradores;	
@@ -37,6 +38,13 @@ public class Concurso extends AbstractEntity{
 		public void setProvas(List<Prova> provas) {
 			this.provas = provas;
 		}
+
+
+	public void addProvas(List<Prova> ps){
+		ps.forEach(p->{
+			this.provas.add(p);
+		});
+	}
 
 		public String getNome() {
 			return nome;
