@@ -4,14 +4,11 @@ import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
-import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.gerenciarProvas.presenter.NovaProvaPresenter;
 import br.ufg.sep.views.permissoes.GridCadastroFactory;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -22,15 +19,16 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Optional;
 
 @Route(value = "nova-prova", layout = MainLayout.class)
 @PageTitle("Nova Prova")
 @RolesAllowed({"ADMIN","PROF"})
 public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Long> {
-    private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
+    private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     private ProvaService provaService;
     private ConcursoService concursoService;
+
+    private CadastroRepository cadastroRepository;
     private TextField nomeConcurso = new TextField();
 
     private TextField areaConhecimento = new TextField();
@@ -41,21 +39,18 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
     private NovaProvaPresenter presenter;
 
-    private Grid<Cadastro> colaboradoresGrid;
+    private Grid<Cadastro> elaboradoresGrid;
+
+    private Grid<Cadastro> revisor1Grid;
+
+    private Grid<Cadastro> revisor2Grid;
 
     private Button salvarButton = new Button("Salvar"); // Btn: Button
 
 
-    public Button getSalvarButton() {
-        return salvarButton;
-    }
-
-    public void setSalvarButton(Button salvarButton) {
-        this.salvarButton = salvarButton;
-    }
-
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
                          CadastroRepository cadastroRepository){
+        this.cadastroRepository = cadastroRepository;
         this.provaService = provaService;
         this.concursoService = concursoService;
         this.setAlignItems(Alignment.CENTER); // Alinhar a NovaProvaView no geral
@@ -74,30 +69,45 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
         HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes);
 
-        this.colaboradoresGrid = new GridCadastroFactory(cadastroRepository).getGrid();
-        this.colaboradoresGrid.setHeight("300px");
+        elaboradoresGrid = new GridCadastroFactory(cadastroRepository).getGrid();
+        elaboradoresGrid.setHeight("300px");
+        elaboradoresGrid.setWidth("500px");
+
+
 
         this.presenter = new NovaProvaPresenter( this);
-        add(nomeConcurso,contatinterCima,colaboradorAssociado,colaboradoresGrid,salvarButton);
+        add(nomeConcurso,contatinterCima,colaboradorAssociado, elaboradoresGrid,salvarButton);
     }
 
     @Override
     public void setParameter(BeforeEvent event, Long parameter) { //Método executado após o construtor.
 
-        concurso = concursoService.getRepository().findById(parameter).get();
-        nomeConcurso.setValue(concurso.getNome());
+        concursoId = parameter;
+        nomeConcurso.setValue(
+                concursoService.getRepository().findById(parameter).get()
+                        .getNome());
 
     }
-    /****************************************************************/
-    //Geters and Setters
-
-    public Concurso getConcurso() {
-        return concurso;
+    /***********************************************************************************/
+    //Geters and Setters//
+    public Button getSalvarButton() {
+        return salvarButton;
     }
 
-    public void setConcurso(Concurso concurso) {
-        this.concurso = concurso;
+    public void setSalvarButton(Button salvarButton) {
+        this.salvarButton = salvarButton;
     }
+    public Long getConcursoId(){
+        return this.concursoId;
+    }
+    public CadastroRepository getCadastroRepository() {
+        return cadastroRepository;
+    }
+
+    public void setCadastroRepository(CadastroRepository cadastroRepository) {
+        this.cadastroRepository = cadastroRepository;
+    }
+
 
     public ProvaService getProvaService() {
         return provaService;
@@ -155,12 +165,12 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.presenter = presenter;
     }
 
-    public Grid<Cadastro> getColaboradoresGrid() {
-        return colaboradoresGrid;
+    public Grid<Cadastro> getElaboradoresGrid() {
+        return elaboradoresGrid;
     }
 
-    public void setColaboradoresGrid(Grid<Cadastro> colaboradoresGrid) {
-        this.colaboradoresGrid = colaboradoresGrid;
+    public void setElaboradoresGrid(Grid<Cadastro> elaboradoresGrid) {
+        this.elaboradoresGrid = elaboradoresGrid;
     }
 
 

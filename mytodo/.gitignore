@@ -5,8 +5,8 @@
 .project
 .classpath
 
-# Properties
-mytodo/src/main/resources/application.properties
+
+
 
 *.iml
 .DS_Store

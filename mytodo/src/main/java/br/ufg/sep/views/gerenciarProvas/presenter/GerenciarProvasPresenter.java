@@ -36,8 +36,15 @@ public class GerenciarProvasPresenter {
             }
         });
 
-        view.getProvas().setItems(query-> provaService.getRepository()
-                .findAll(PageRequest.of(query.getPage(), query.getPageSize())).stream());
+        view.getProvas().setItems(
+                view.getConcursoService().getRepository().findById(
+                        view.getConcursoId()
+                ).get().getProvas()
+                /*query-> provaService.getRepository()
+                .findAll(PageRequest.of(query.getPage(), query.getPageSize())).stream()
+                */
+        );
+
 
 
 
@@ -48,7 +55,7 @@ public class GerenciarProvasPresenter {
     private void configBotoes(){
         view.getNovo().addClickListener(e->{
             view.getNovo().getUI().ifPresent(ui->{
-                ui.navigate(NovaProvaView.class, view.getConcurso().getId());
+                ui.navigate(NovaProvaView.class, view.getConcursoId());
             });
         });
 

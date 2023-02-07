@@ -28,7 +28,7 @@ import java.util.Optional;
 @PageTitle("Gerenciar Provas")
 @RolesAllowed({"ADMIN","PROF"})
 public class GerenciarProvasView extends VerticalLayout implements HasUrlParameter<Long>{
-	private Concurso concurso;
+	private Long concursoId;
 	private ConcursoService concursoService;
 	private Grid<Prova> provas = new Grid<>(Prova.class,false);
 	private GerenciarProvasPresenter presenter;//presenter fora do construtor, para que tenha escopo por toda classe
@@ -42,7 +42,7 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		this.provaService = provaService;
 		iniciarGrid();
 		iniciarBotoes(); // instanciar e editar o front end deles
-		presenter = new GerenciarProvasPresenter(provaService,this); //iniciar o presenter
+
 		 provasOptionsLayout =
 				new HorizontalLayout(novo,editar,visualizar); // layout em cima da grid
 
@@ -66,13 +66,8 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		visualizar.setEnabled(false);
 	}
 
-	public Concurso getConcurso() {
-		return concurso;
-	}
 
-	public void setConcurso(Concurso concurso) {
-		this.concurso = concurso;
-	}
+
 
 	public ConcursoService getConcursoService() {
 		return concursoService;
@@ -101,13 +96,16 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
 	Optional<Concurso> talvezConcurso= concursoService.getRepository().findById(parameter);
-	if(talvezConcurso.isPresent())concurso = talvezConcurso.get();
-
+	if(talvezConcurso.isPresent())concursoId = talvezConcurso.get().getId();
+		this.presenter = new GerenciarProvasPresenter(provaService,this); //iniciar o presenter
 	}
 
 
 	/*************************************************/
 	// Getters and Setters
+	public Long getConcursoId(){
+		return  this.concursoId;
+	}
 	public Grid<Prova> getProvas() {
 		return provas;
 	}
