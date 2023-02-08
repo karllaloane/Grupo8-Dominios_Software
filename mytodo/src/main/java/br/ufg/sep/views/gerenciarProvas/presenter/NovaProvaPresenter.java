@@ -27,27 +27,7 @@ public class NovaProvaPresenter {
 		configComboBox();
 		view.getSalvarButton().addClickListener( e->salvarProva(e));
     }
-    
-<<<<<<< HEAD
-    private void salvarProva(ClickEvent<Button> event, NovaProvaView novaProvaView, Cadastro cadastro) {
-    	this.cadastro = cadastro;  
-    	
-    	/* Criando e armazenando os valores dos Inputs*/
-    	Concurso concurso = novaProvaView.getConcurso();	
-		String areaconhecimento = novaProvaView.getAreaConhecimento().getValue();
-		String descricao = novaProvaView.getDescricaoDaProva().getValue();
-		int numQuestoes = 0; 
-		numQuestoes = Integer.parseInt(novaProvaView.getNumQuestoes().getValue());
-		LocalDate prazo = novaProvaView.getPrazo().getValue();
-		String tipoProva = novaProvaView.getRadioTipoProva().getValue(); 
-		String nivelProva = novaProvaView.getRadioNivelProva().getValue(); 
-		
-		
-		
-		//verificando campos em branco
-		if(areaconhecimento.isEmpty() || novaProvaView.getPrazo().isEmpty() 
-				|| descricao.isEmpty() || numQuestoes == 0 || tipoProva.isEmpty() || nivelProva.isEmpty()) {
-=======
+  
     private void salvarProva(ClickEvent<Button> event) {
 
     	/* Criando e armazenando os valores do Input*/
@@ -63,7 +43,6 @@ public class NovaProvaPresenter {
 		//verificando campos em branco
 		if(areaconhecimento.isEmpty() || view.getPrazo().isEmpty()
 				|| descricao.isEmpty() || numQuestoes == 0) {
->>>>>>> 2cc38a04de9ee28d7e46388e32e1232b6c922166
 					
 				/* Notifica que existe campo em branco*/
 				Notification notification = Notification
@@ -107,12 +86,7 @@ public class NovaProvaPresenter {
 		prova.setNumeroQuestoes(numQuestoes);
 		prova.setDataEntrega(prazo);
 		prova.setDescricao(descricao);
-<<<<<<< HEAD
-		prova.setResponsavel(cadastro);
-		prova.setNivel(nivelProva);
-=======
 
->>>>>>> 2cc38a04de9ee28d7e46388e32e1232b6c922166
 
 		/*Adiciona a prova no concurso*/
 		concurso.getProvas().add(prova);

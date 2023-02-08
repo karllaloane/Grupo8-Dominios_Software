@@ -166,25 +166,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public void ComboBoxPresentation() {
     	
     	/* Filtro do ComboBox*/
-         /* ItemFilter<Person> filter = (person,
-                filterString) -> (person.getFirstName() + " "
-                        + person.getLastName() + " " + person.getProfession())
-                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; */ 
+         ItemFilter<Cadastro> filter = (cadastro,
+                filterString) -> (cadastro.getNome() + " "
+                        + cadastro.getCpf())
+                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; 
 
     	/*Criação do comboBoxMembroBancaQuestao*/
-<<<<<<< HEAD
-        ComboBox<Cadastro> comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
-        // comboBoxCadastro.setItems(DataService.getPeople());
-        comboBoxMembroBancaQuestao.setItemLabelGenerator(
-                cadastro -> cadastro.getNome());
-        comboBoxMembroBancaQuestao.setRenderer(createRenderer()); /* Função abaixo*/
-=======
+
         comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
         comboBoxMembroBancaQuestao.setRenderer(createRenderer());/* Função abaixo*/
         comboBoxMembroBancaQuestao.setItemLabelGenerator(cad->
                 cad.getNome() == null ? "" : cad.getNome()
         );
->>>>>>> 2cc38a04de9ee28d7e46388e32e1232b6c922166
+
         comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroBancaQuestao.setWidth("610px");
         
@@ -232,27 +226,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     }
     
     private Renderer<Cadastro> createRenderer() {
-<<<<<<< HEAD
-        StringBuilder tpl = new StringBuilder();
-        /* -------------------------------------------------- Estilização
+    	
+    	/*Formatando para o CPF ficar abaixo do Nome no ComboBox*/
+    	StringBuilder tpl = new StringBuilder();
         tpl.append("<div style=\"display: flex;\">");
-        tpl.append(
-                "  <img style=\"height: var(--lumo-size-m); margin-right: var(--lumo-space-s);\" src=\"${item.pictureUrl}\" alt=\"Portrait of ${item.firstName} ${item.lastName}\" />");
+        
         tpl.append("  <div>");
-        tpl.append("    ${item.firstName} ${item.lastName}");
-        tpl.append(
-                "    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.profession}</div>");
-        tpl.append("  </div>");
-        tpl.append("</div>"); */
+        tpl.append("    ${item.nome}");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.cpf}</div>");
+        tpl.append("  </div>"); 
 
         return LitRenderer.<Cadastro> of(tpl.toString())
-                .withProperty("nomeCadastro", Cadastro::getNome)
-                .withProperty("firstName", Cadastro::getCpf);
-              //  .withProperty("email", Cadastro::getEmail)
-=======
-        return LitRenderer.<Cadastro> of("${item.nome}")
-                .withProperty("nome", Cadastro::getNome);
->>>>>>> 2cc38a04de9ee28d7e46388e32e1232b6c922166
+                .withProperty("nome", Cadastro::getNome)
+                .withProperty("cpf", Cadastro::getCpf);
     }
     
     
