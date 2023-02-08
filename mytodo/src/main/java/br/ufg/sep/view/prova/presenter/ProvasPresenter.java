@@ -9,34 +9,54 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.renderer.LitRenderer;
 
 import br.ufg.sep.data.services.ProvaService;
+import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.view.prova.ProvasView;
+import br.ufg.sep.views.concurso.VisualizarConcursoView;
+import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
 
 public class ProvasPresenter {
 
 	ProvaService provaService;
 	private Prova provaSelecionada;
+	Prova prova;
 	
-	public ProvasPresenter(ProvasView view, ProvaService service) {
+	public ProvasPresenter(AuthenticatedUser authenticatedUser, ProvasView view, ProvaService service) {
 		this.provaService = service;
 		
-		view.getProvas().setItems(query-> provaService.getRepository()
-                .findAll(PageRequest.of(query.getPage(), query.getPageSize())).stream());
+		Cadastro user;
+		
+		Optional<Cadastro> maybeUser = authenticatedUser.get();
+		if(maybeUser.isPresent()) {
+			user = maybeUser.get();
+        
+			//populando a view
+			view.getGridProvas().setItems(provaService.getRepository()
+	                .findByResponsavel(user));
+		}
 		
 		//adicionando listener para os eventos da view
 		//grid
-		view.getProvas().addSelectionListener(selection -> {
+		view.getGridProvas().addSelectionListener(selection -> {
 			Optional<Prova> optionalProva = selection.getFirstSelectedItem();
             if (optionalProva.isPresent()) {
                 Long testeId = optionalProva.get().getId();
                 Optional<Prova> talvezProva = provaService.getRepository().findById(testeId);
-                if(talvezProva.isPresent()) {
-                    provaSelecionada = talvezProva.get();
-                    view.habilitarButtons();
-                }
+                if(!talvezProva.isEmpty())
+                	prova = talvezProva.get();
+                	view.habilitarButtons();
             }
         });
+		
+		/*Visualizar*/
+		view.getVisualizarButton().addClickListener(e->{
+						
+			view.getVisualizarButton().getUI().ifPresent(ui->{
+				 ui.navigate(VisualizarQuestoesProvaView.class, prova.getId());});
+		});
 	}
+	
 	
 }

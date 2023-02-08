@@ -21,6 +21,7 @@ import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.security.SecurityService;
 import br.ufg.sep.view.prova.presenter.ProvasPresenter;
 import br.ufg.sep.views.MainLayout;
@@ -31,29 +32,31 @@ import br.ufg.sep.views.MainLayout;
 public class ProvasView extends VerticalLayout{
 	
 	private Grid<Prova> provas;
+	private ProvasPresenter presenter;
 	private Button visualizarButton;
 	private HorizontalLayout layout;
 	
-	public ProvasView(SecurityService secutiryService, CadastroRepository cr, ProvaService provaService){
-		
+	public ProvasView(AuthenticatedUser authenticatedUser, SecurityService secutiryService, CadastroRepository cr, ProvaService provaService){
+			
+		//criacao do layout - grid e botoes
 		iniciaGrid();
+		criarButtons();
+		layout.add(visualizarButton);
 		
 		//criando presenter
-		ProvasPresenter presenter = new ProvasPresenter(this,provaService );
-		
-		//criacao do layout
-		//botao
+		presenter = new ProvasPresenter(authenticatedUser, this,provaService);
+				
+		add(layout, provas);
+	}
+	
+	private void criarButtons() {
 		layout = new HorizontalLayout();
 		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
 		visualizarButton.setEnabled(false);
 		visualizarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-		
-		layout.add(visualizarButton);
-		
-		add(layout, provas);
 	}
 	
-	//metodo para iniciar o grid, realizando as buscas ao banco
+	//metodo para iniciar o grid
 	private void iniciaGrid() {
 		provas = new Grid<>(Prova.class,false);
 		
@@ -80,8 +83,11 @@ public class ProvasView extends VerticalLayout{
 		this.provas = provas;	
 	}
 	
-	public Grid<Prova> getProvas() {
+	public Grid<Prova> getGridProvas() {
 		return provas;
 	}
 
+	public Button getVisualizarButton() {
+		return visualizarButton;
+	}
 }

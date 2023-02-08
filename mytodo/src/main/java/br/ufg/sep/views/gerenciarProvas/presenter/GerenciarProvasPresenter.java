@@ -15,6 +15,7 @@ public class GerenciarProvasPresenter {
     public GerenciarProvasPresenter(ProvaService provaService, GerenciarProvasView view){
         this.view = view;
     this.provaService = provaService;
+    
         //Adicionar um escutador de eventos de seleção de item na grid
         //Ele pega o item selecionado, o guarda em 'provaSelecionada' e habilita os botões.
         view.getProvas().addSelectionListener(selection -> {
