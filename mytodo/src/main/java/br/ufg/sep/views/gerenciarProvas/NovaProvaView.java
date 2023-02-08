@@ -72,6 +72,8 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
 
+    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
+
 
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
                          CadastroRepository cadastroRepository){
@@ -130,7 +132,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         /*Campo de escolher nível de prova*/
         radioNivelProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioNivelProva.setLabel("Escolha o nível da prova:");
-        radioNivelProva.setItems("Ensino Fundamental", "Ensino Médio", "Graduação", "Especialista");
+        radioNivelProva.setItems("Fundamental", "Médio", "Superior");
 
         /* Campo colaborador associado */
         colaboradorAssociado.setLabel("Colaborador associado");
@@ -196,6 +198,14 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         );
         comboBoxMembroRevisorTecnico2.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroRevisorTecnico2.setWidth("610px");
+
+        comboBoxMembroRevisorTecnico3 = new ComboBox<>("Revisor Técnico 3:");
+        comboBoxMembroRevisorTecnico3.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico3.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroRevisorTecnico3.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico3.setWidth("610px");
         
         
         comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
@@ -217,6 +227,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 comboBoxMembroBancaQuestao,
                 comboBoxMembroRevisorTecnico1,
                 comboBoxMembroRevisorTecnico2,
+                comboBoxMembroRevisorTecnico3,
                 comboBoxMembroRevisorLinguagem);
 
         verticalLayout.setAlignItems(Alignment.CENTER);
@@ -238,6 +249,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         nomeConcurso.setValue(concurso.getNome());
         this.presenter = new NovaProvaPresenter(this, provaService);
     }
+
+    public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico3() {
+        return comboBoxMembroRevisorTecnico3;
+    }
+
+    public void setComboBoxMembroRevisorTecnico3(ComboBox<Cadastro> comboBoxMembroRevisorTecnico3) {
+        this.comboBoxMembroRevisorTecnico3 = comboBoxMembroRevisorTecnico3;
+    }
+
+    public void setUtilArrayComboBoxCadastro(List<ComboBox<Cadastro>> utilArrayComboBoxCadastro) {
+        this.utilArrayComboBoxCadastro = utilArrayComboBoxCadastro;
+    }
+
     /***********************************************************************************/
     //Geters and Setters//
 

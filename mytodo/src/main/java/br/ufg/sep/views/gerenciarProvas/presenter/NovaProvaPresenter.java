@@ -1,12 +1,10 @@
 package br.ufg.sep.views.gerenciarProvas.presenter;
 
+import br.ufg.sep.entity.*;
 import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
 
 import br.ufg.sep.data.services.ProvaService;
-import br.ufg.sep.entity.Cadastro;
-import br.ufg.sep.entity.Concurso;
-import br.ufg.sep.entity.Prova;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -26,8 +24,15 @@ public class NovaProvaPresenter {
        this.view = view;
 		configComboBox();
 		view.getSalvarButton().addClickListener( e->salvarProva(e));
+		view.getRadioTipoProva().addValueChangeListener(value->{
+			if(value.getValue().equals("Objetiva")){
+				view.getRadioNivelNumAlternativas().setVisible(true);
+			}else{
+				view.getRadioNivelNumAlternativas().setVisible(false);
+			}
+		});
     }
-    
+
     private void salvarProva(ClickEvent<Button> event) {
 
     	/* Criando e armazenando os valores do Input*/
@@ -37,8 +42,11 @@ public class NovaProvaPresenter {
 		int numQuestoes = 0; 
 		numQuestoes = Integer.parseInt(view.getNumQuestoes().getValue());
 		LocalDate prazo = view.getPrazo().getValue();
+		TipoProva tipo;
+		NivelProva nivel;
 
-		
+
+
 		
 		//verificando campos em branco
 		if(areaconhecimento.isEmpty() || view.getPrazo().isEmpty()
@@ -73,7 +81,7 @@ public class NovaProvaPresenter {
 		);
 		//Revisor Técnico III *****************************TROCAR***************************************88888
 		prova.setRevisor3(
-				view.getComboBoxMembroRevisorTecnico2().getValue()
+				view.getComboBoxMembroRevisorTecnico3().getValue()
 				//O INPUT DO 2 TA INDO NO 3 APENAS PARA TESTEEEEEEEEEEEEEEEEEEEEEEEEE
 		);
 		//Revisor Linguistico
@@ -106,8 +114,8 @@ public class NovaProvaPresenter {
 		});
     }
 
-
-	private void configComboBox(){// para cara comboBox da grid adiconado em
+	private void configComboBox(){
+		// para cara comboBox da grid adiconado em
 		//   utilArrayComboBoxCadastro, ele irá fazer a mesma coisa
 		view.getUtilArrayComboBoxCadastro().forEach(comboBox->{
 			comboBox.setItems(
@@ -119,6 +127,8 @@ public class NovaProvaPresenter {
 			);
 		});
 	}
+
+
 
 
 }

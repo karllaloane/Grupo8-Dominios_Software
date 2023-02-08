@@ -3,14 +3,7 @@ package br.ufg.sep.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -21,10 +14,7 @@ public class Prova extends AbstractEntity{
 	@ManyToOne()
 	@JoinColumn(name="concurso_id", nullable = false)
 	private Concurso concurso;
-	
-	@Column(nullable = true)
-	private String areaConhecimento;
-	
+
 	@OneToMany(mappedBy="prova", fetch = FetchType.LAZY,cascade= CascadeType.ALL)
 	@Column(nullable = true)
 	private List<Questao> questoes;
@@ -47,7 +37,13 @@ public class Prova extends AbstractEntity{
 	private Cadastro revisorLinguagem;
 
 	@Column(nullable = true)
-	private String nivel;
+	private String areaConhecimento;
+
+	@Enumerated(EnumType.STRING)
+	private NivelProva nivel;
+
+	@Enumerated(EnumType.STRING)
+	private TipoProva tipo;
 	
 	@Column(nullable = true)
 	private String descricao;
@@ -56,6 +52,14 @@ public class Prova extends AbstractEntity{
 	private LocalDate dataEntrega;
 	@Column(nullable = true)
 	private int numeroQuestoes;
+
+	public TipoProva getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoProva tipo) {
+		this.tipo = tipo;
+	}
 
 	public LocalDate getDataEntrega() {
 		return dataEntrega;
@@ -123,21 +127,13 @@ public class Prova extends AbstractEntity{
 	}
 
 
-
-
-	public String getNivel() {
+	public NivelProva getNivel() {
 		return nivel;
 	}
 
-
-
-
-	public void setNivel(String nivel) {
+	public void setNivel(NivelProva nivel) {
 		this.nivel = nivel;
 	}
-
-
-
 
 	public String getDescricao() {
 		return descricao;
