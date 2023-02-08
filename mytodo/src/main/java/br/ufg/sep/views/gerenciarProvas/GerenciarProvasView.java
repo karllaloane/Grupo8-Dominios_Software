@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @Route(value="gerenciar", layout=MainLayout.class)
 @PageTitle("Gerenciar Provas")
-@RolesAllowed({"ADMIN","PROF"})
+@RolesAllowed({"ADMIN","PED"})
 public class GerenciarProvasView extends VerticalLayout implements HasUrlParameter<Long>{
 	
 	private Concurso concurso;
