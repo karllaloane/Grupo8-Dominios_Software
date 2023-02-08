@@ -54,7 +54,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private TextField nomeConcurso = new TextField();
     private TextField areaConhecimento = new TextField();
     private TextField numQuestoes = new TextField();
-    private TextField colaboradorAssociado = new TextField();
     private TextArea descricaoDaProva = new TextArea();
     private DatePicker prazo;
     private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
@@ -134,17 +133,14 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         radioNivelProva.setLabel("Escolha o nível da prova:");
         radioNivelProva.setItems("Fundamental", "Médio", "Superior");
 
-        /* Campo colaborador associado */
-        colaboradorAssociado.setLabel("Colaborador associado");
-        colaboradorAssociado.setReadOnly(true);
-        colaboradorAssociado.setWidth("610px");
+
 
         
         /* Disposição de todos os elementos*/
         HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
         VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelNumAlternativas,radioNivelProva, dropDisabledLabel, upload);
         VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, 
-        		descricaoDaProva, colaboradorAssociado);
+        		descricaoDaProva);
         HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
         
         /*Metodo que mostra layoutFinal na tela*/
@@ -168,17 +164,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public void ComboBoxPresentation() {
     	
     	/* Filtro do ComboBox*/
-         /* ItemFilter<Person> filter = (person,
-                filterString) -> (person.getFirstName() + " "
-                        + person.getLastName() + " " + person.getProfession())
-                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; */ 
+         ItemFilter<Cadastro> filter = (cadastro,
+                filterString) -> (cadastro.getNome() + " "
+                        + cadastro.getCpf())
+                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; 
 
     	/*Criação do comboBoxMembroBancaQuestao*/
+
         comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
         comboBoxMembroBancaQuestao.setRenderer(createRenderer());/* Função abaixo*/
         comboBoxMembroBancaQuestao.setItemLabelGenerator(cad->
                 cad.getNome() == null ? "" : cad.getNome()
         );
+
         comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroBancaQuestao.setWidth("610px");
         
@@ -235,8 +233,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     }
     
     private Renderer<Cadastro> createRenderer() {
-        return LitRenderer.<Cadastro> of("${item.nome}")
-                .withProperty("nome", Cadastro::getNome);
+    	
+    	/*Formatando para o CPF ficar abaixo do Nome no ComboBox*/
+    	StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        
+        tpl.append("  <div>");
+        tpl.append("    ${item.nome}");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.cpf}</div>");
+        tpl.append("  </div>"); 
+
+        return LitRenderer.<Cadastro> of(tpl.toString())
+                .withProperty("nome", Cadastro::getNome)
+                .withProperty("cpf", Cadastro::getCpf);
     }
     
     
@@ -386,13 +395,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.numQuestoes = numQuestoes;
     }
 
-    public TextField getColaboradorAssociado() {
-        return colaboradorAssociado;
-    }
 
-    public void setColaboradorAssociado(TextField colaboradorAssociado) {
-        this.colaboradorAssociado = colaboradorAssociado;
-    }
 
     public NovaProvaPresenter getPresenter() {
         return presenter;

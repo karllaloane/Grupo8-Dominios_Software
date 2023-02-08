@@ -14,6 +14,7 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.time.LocalDate;
 
 public class NovaProvaPresenter {
@@ -33,6 +34,34 @@ public class NovaProvaPresenter {
 		});
     }
 
+	TipoProva decidirTipo(String tipoSelecionado)throws InvalidAttributeIdentifierException{
+
+		if(tipoSelecionado.toLowerCase().contains("objetiva"))
+			return view.getRadioNivelNumAlternativas().equals("4") ?
+					TipoProva.OBJETIVA_4 : TipoProva.OBJETIVA_5;
+
+		if(tipoSelecionado.toLowerCase().contains("discussiva"))
+			return TipoProva.DISCUSSIVA;
+		if(
+				tipoSelecionado.toLowerCase().contains("redação")
+				|| tipoSelecionado.toLowerCase().contains("redacao")
+				|| tipoSelecionado.toLowerCase().contains("redacão")
+		)
+			return TipoProva.REDACAO;
+
+		throw new InvalidAttributeIdentifierException();
+	}
+
+	NivelProva decidirNivel(String nivelSelecionado)throws InvalidAttributeIdentifierException {
+
+		if(nivelSelecionado.toLowerCase().contains("fundamental"))
+			return NivelProva.FUNDAMENTAL;
+		if(nivelSelecionado.toLowerCase().contains("médio") ||nivelSelecionado.toLowerCase().contains("medio") )
+			return NivelProva.MEDIO;
+		if(nivelSelecionado.toLowerCase().contains("superior"))
+			return NivelProva.SUPERIOR;
+		throw new InvalidAttributeIdentifierException();
+	}
     private void salvarProva(ClickEvent<Button> event) {
 
     	/* Criando e armazenando os valores do Input*/
@@ -42,11 +71,19 @@ public class NovaProvaPresenter {
 		int numQuestoes = 0; 
 		numQuestoes = Integer.parseInt(view.getNumQuestoes().getValue());
 		LocalDate prazo = view.getPrazo().getValue();
-		TipoProva tipo;
-		NivelProva nivel;
+		TipoProva tipo = TipoProva.OBJETIVA_4; // Inicializando apenas para compilar
+		NivelProva nivel = NivelProva.FUNDAMENTAL;// Inicializando apenas para compilar
+		/*************/
+		//Atribuindo a escolha do TIPO da prova:
+		try {
+			tipo = decidirTipo(view.getRadioTipoProva().getValue());
+		}catch (Exception exp) {System.out.println(exp.getMessage());}
 
-
-
+		//Atribuindo a escolha do NIVEL da prova:
+		try{
+			nivel = decidirNivel(view.getRadioNivelProva().getValue());
+		}catch (Exception exp){System.out.println(exp.getMessage());}
+		/**************/
 		
 		//verificando campos em branco
 		if(areaconhecimento.isEmpty() || view.getPrazo().isEmpty()
@@ -81,7 +118,7 @@ public class NovaProvaPresenter {
 		);
 		//Revisor Técnico III *****************************TROCAR***************************************88888
 		prova.setRevisor3(
-				view.getComboBoxMembroRevisorTecnico3().getValue()
+				view.getComboBoxMembroRevisorTecnico2().getValue()
 				//O INPUT DO 2 TA INDO NO 3 APENAS PARA TESTEEEEEEEEEEEEEEEEEEEEEEEEE
 		);
 		//Revisor Linguistico
@@ -94,7 +131,8 @@ public class NovaProvaPresenter {
 		prova.setNumeroQuestoes(numQuestoes);
 		prova.setDataEntrega(prazo);
 		prova.setDescricao(descricao);
-
+		prova.setNivel(nivel);
+		prova.setTipo(tipo);
 
 		/*Adiciona a prova no concurso*/
 		concurso.getProvas().add(prova);
