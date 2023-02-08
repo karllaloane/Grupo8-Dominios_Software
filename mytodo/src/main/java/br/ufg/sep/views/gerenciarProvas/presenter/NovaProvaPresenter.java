@@ -1,5 +1,6 @@
 package br.ufg.sep.views.gerenciarProvas.presenter;
 
+import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
 
 import br.ufg.sep.data.services.ProvaService;
@@ -100,9 +101,9 @@ public class NovaProvaPresenter {
 		notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 		
 		/*Volta para a tela de NovaProvaView*/
-		event.getSource().getUI().ifPresent(ui -> ui.navigate(NovaProvaView.class,
-		view.getConcursoId()
-		));
+		view.getSalvarButton().getUI().ifPresent(ui -> {
+			ui.navigate(GerenciarProvasView.class,view.getConcursoId());
+		});
     }
 
 
