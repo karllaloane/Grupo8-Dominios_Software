@@ -1,20 +1,12 @@
 package br.ufg.sep.view.prova.presenter;
 
-import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.domain.PageRequest;
-
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.renderer.LitRenderer;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
-import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.view.prova.ProvasView;
-import br.ufg.sep.views.concurso.VisualizarConcursoView;
 import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
 
 public class ProvasPresenter {
@@ -34,7 +26,7 @@ public class ProvasPresenter {
         
 			//populando a view
 			view.getGridProvas().setItems(provaService.getRepository()
-	                .findByResponsavel(user));
+	                .findByElaborador(user));
 		}
 		
 		//adicionando listener para os eventos da view
