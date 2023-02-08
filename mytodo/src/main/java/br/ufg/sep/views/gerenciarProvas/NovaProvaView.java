@@ -166,7 +166,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
     	/*Criação do comboBoxMembroBancaQuestao*/
         ComboBox<Cadastro> comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
-        // comboBoxCadastro.setItems(filter, DataService.getPeople());
+        // comboBoxCadastro.setItems(DataService.getPeople());
         comboBoxMembroBancaQuestao.setItemLabelGenerator(
                 cadastro -> cadastro.getNome());
         comboBoxMembroBancaQuestao.setRenderer(createRenderer()); /* Função abaixo*/
@@ -220,7 +220,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         return LitRenderer.<Cadastro> of(tpl.toString())
                 .withProperty("nomeCadastro", Cadastro::getNome)
                 .withProperty("firstName", Cadastro::getCpf);
-              //  .withProperty("amial", Cadastro::getEmail)
+              //  .withProperty("email", Cadastro::getEmail)
     }
     
     

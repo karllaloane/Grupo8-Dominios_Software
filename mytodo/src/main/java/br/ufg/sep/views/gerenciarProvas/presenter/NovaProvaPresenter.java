@@ -42,19 +42,21 @@ public class NovaProvaPresenter {
     private void salvarProva(ClickEvent<Button> event, NovaProvaView novaProvaView, Cadastro cadastro) {
     	this.cadastro = cadastro;  
     	
-    	/* Criando e armazenando os valores do Input*/
+    	/* Criando e armazenando os valores dos Inputs*/
     	Concurso concurso = novaProvaView.getConcurso();	
 		String areaconhecimento = novaProvaView.getAreaConhecimento().getValue();
 		String descricao = novaProvaView.getDescricaoDaProva().getValue();
 		int numQuestoes = 0; 
 		numQuestoes = Integer.parseInt(novaProvaView.getNumQuestoes().getValue());
 		LocalDate prazo = novaProvaView.getPrazo().getValue();
+		String tipoProva = novaProvaView.getRadioTipoProva().getValue(); 
+		String nivelProva = novaProvaView.getRadioNivelProva().getValue(); 
 		
 		
 		
 		//verificando campos em branco
 		if(areaconhecimento.isEmpty() || novaProvaView.getPrazo().isEmpty() 
-				|| descricao.isEmpty() || numQuestoes == 0) {
+				|| descricao.isEmpty() || numQuestoes == 0 || tipoProva.isEmpty() || nivelProva.isEmpty()) {
 					
 				/* Notifica que existe campo em branco*/
 				Notification notification = Notification
@@ -74,6 +76,7 @@ public class NovaProvaPresenter {
 		// prova.setPrazo(prazo); - Criar atributo prazo em prova
 		prova.setDescricao(descricao);
 		prova.setResponsavel(cadastro);
+		prova.setNivel(nivelProva);
 
 		/*Adiciona a prova no concurso*/
 		concurso.getProvas().add(prova);
