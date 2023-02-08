@@ -9,7 +9,8 @@ import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.gerenciarProvas.presenter.NovaProvaPresenter;
 import br.ufg.sep.views.permissoes.GridCadastroFactory;
 import com.vaadin.flow.component.button.Button;
-
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBox.ItemFilter;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
@@ -22,6 +23,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
@@ -54,6 +57,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private DatePicker prazo;
     private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
     private RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
+    private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
     private Button salvarButton = new Button("Salvar"); // Btn: Button
     private NovaProvaPresenter presenter;
     private Grid<Cadastro> revisor1Grid;
@@ -111,11 +115,19 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         radioTipoProva.setLabel("Escolha o tipo de prova:");
         radioTipoProva.setItems("Objetiva", "Discursiva", "Redação");
         
+        /*RadioBox-down se selecionar prova objetiva*/ 
+        // radioNivelNumAlternativas.addThemeVariants(RadioGroupVariant.);
+        radioNivelNumAlternativas.setLabel("Quantidade de alternativas: ");
+        radioNivelNumAlternativas.setItems("4", "5");
+        radioNivelNumAlternativas.setVisible(false); /*Fica invisivel, no NovaProvaPresenter deve aparecer quando a opção
+         											   "objetiva" estiver selecionada*/
+        
+        
         /*Campo de escolher nível de prova*/
         radioNivelProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioNivelProva.setLabel("Escolha o nível da prova:");
         radioNivelProva.setItems("Ensino Fundamental", "Ensino Médio", "Graduação", "Especialista");
-        
+
         /* Campo colaborador associado */
         colaboradorAssociado.setLabel("Colaborador associado");
         colaboradorAssociado.setReadOnly(true);
@@ -127,15 +139,92 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         
         /* Disposição de todos os elementos*/
         HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
-        VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelProva, dropDisabledLabel, upload);
+        VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelNumAlternativas,radioNivelProva, dropDisabledLabel, upload);
         VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, 
         		descricaoDaProva, colaboradorAssociado);
         HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
         
+        /*Metodo que mostra layoutFinal na tela*/
+        add(layoutFinal); 
         
-        add(layoutFinal, elaboradoresGrid, salvarButton);
+        /*Metodo que apresenta o ComboBox na tela*/
+        ComboBoxPresentation(); 
+        
+        /*Metodo que mostra elaboradoresGrid, salvarButton na tela*/
+        add(elaboradoresGrid, salvarButton);
+        
 
     }
+    
+    public void ComboBoxPresentation() {
+    	
+    	/* Filtro do ComboBox*/
+         /* ItemFilter<Person> filter = (person,
+                filterString) -> (person.getFirstName() + " "
+                        + person.getLastName() + " " + person.getProfession())
+                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; */ 
+
+    	/*Criação do comboBoxMembroBancaQuestao*/
+        ComboBox<Cadastro> comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
+        // comboBoxCadastro.setItems(filter, DataService.getPeople());
+        comboBoxMembroBancaQuestao.setItemLabelGenerator(
+                cadastro -> cadastro.getNome());
+        comboBoxMembroBancaQuestao.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroBancaQuestao.setWidth("610px");
+        
+        ComboBox<Cadastro> comboBoxMembroRevisorTecnico1 = new ComboBox<>("Revisor técnico 1:");
+        // comboBoxCadastro.setItems(filter, DataService.getPeople());
+        comboBoxMembroRevisorTecnico1.setItemLabelGenerator(
+                cadastro -> cadastro.getNome());
+        comboBoxMembroRevisorTecnico1.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico1.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico1.setWidth("610px");
+        
+        
+        ComboBox<Cadastro> comboBoxMembroRevisorTecnico2 = new ComboBox<>("Revisor Técnico 2:");
+        // comboBoxCadastro.setItems(filter, DataService.getPeople());
+        comboBoxMembroRevisorTecnico2.setItemLabelGenerator(
+                cadastro -> cadastro.getNome());
+        comboBoxMembroRevisorTecnico2.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico2.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico2.setWidth("610px");
+        
+        
+        ComboBox<Cadastro> comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
+        // comboBoxCadastro.setItems(filter, DataService.getPeople());
+        comboBoxMembroRevisorLinguagem.setItemLabelGenerator(
+                cadastro -> cadastro.getNome());
+        comboBoxMembroRevisorLinguagem.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorLinguagem.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorLinguagem.setWidth("610px");
+        
+        VerticalLayout verticalLayout = new VerticalLayout(comboBoxMembroBancaQuestao, comboBoxMembroRevisorTecnico1, comboBoxMembroRevisorTecnico2, comboBoxMembroRevisorLinguagem);
+        
+        add(verticalLayout); 
+    }
+    
+    private Renderer<Cadastro> createRenderer() {
+        StringBuilder tpl = new StringBuilder();
+        /* -------------------------------------------------- Estilização
+        tpl.append("<div style=\"display: flex;\">");
+        tpl.append(
+                "  <img style=\"height: var(--lumo-size-m); margin-right: var(--lumo-space-s);\" src=\"${item.pictureUrl}\" alt=\"Portrait of ${item.firstName} ${item.lastName}\" />");
+        tpl.append("  <div>");
+        tpl.append("    ${item.firstName} ${item.lastName}");
+        tpl.append(
+                "    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.profession}</div>");
+        tpl.append("  </div>");
+        tpl.append("</div>"); */
+
+        return LitRenderer.<Cadastro> of(tpl.toString())
+                .withProperty("nomeCadastro", Cadastro::getNome)
+                .withProperty("firstName", Cadastro::getCpf);
+              //  .withProperty("amial", Cadastro::getEmail)
+    }
+    
+    
+    
 
     @Override
     public void setParameter(BeforeEvent event, Long parameter) { //Método executado após o construtor.
