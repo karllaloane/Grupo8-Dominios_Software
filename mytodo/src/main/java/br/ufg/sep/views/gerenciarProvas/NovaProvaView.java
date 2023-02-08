@@ -34,6 +34,8 @@ import javax.annotation.security.RolesAllowed;
 
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Route(value = "nova-prova", layout = MainLayout.class)
 @PageTitle("Nova Prova")
@@ -60,13 +62,15 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
     private Button salvarButton = new Button("Salvar"); // Btn: Button
     private NovaProvaPresenter presenter;
-    private Grid<Cadastro> revisor1Grid;
-    private Grid<Cadastro> revisor2Grid;
-    private Grid<Cadastro> elaboradoresGrid;
-    
+
     /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
     private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
     private Upload upload = new Upload(buffer);
+
+    private ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
+    private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
+    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
+    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
 
 
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
@@ -74,7 +78,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.provaService = provaService;
         this.concursoService = concursoService;
         this.cadastroRepository = cadastroRepository;
-    	
+    	this.setAlignItems(Alignment.CENTER);
     	/* Formatando o atributo prazo do tipo DatePicker para dd/MM/yyyy*/ 
     	DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
@@ -132,10 +136,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         colaboradorAssociado.setLabel("Colaborador associado");
         colaboradorAssociado.setReadOnly(true);
         colaboradorAssociado.setWidth("610px");
-        
-        /* Lista de colaboradores*/
-        this.elaboradoresGrid = new GridCadastroFactory(cadastroRepository).getGrid();
-        this.elaboradoresGrid.setHeight("300px");
+
         
         /* Disposição de todos os elementos*/
         HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
@@ -148,14 +149,20 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         add(layoutFinal); 
         
         /*Metodo que apresenta o ComboBox na tela*/
-        ComboBoxPresentation(); 
+        ComboBoxPresentation();
         
         /*Metodo que mostra elaboradoresGrid, salvarButton na tela*/
-        add(elaboradoresGrid, salvarButton);
+        add(salvarButton);
         
 
     }
-    
+
+
+
+
+    //Para facilitar a configuração de cada comboBox no presenter
+    // -->>>configComboBox()<<-- no presenter
+    List<ComboBox<Cadastro>> utilArrayComboBoxCadastro;
     public void ComboBoxPresentation() {
     	
     	/* Filtro do ComboBox*/
@@ -165,62 +172,60 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                         .toLowerCase().indexOf(filterString.toLowerCase()) > -1; */ 
 
     	/*Criação do comboBoxMembroBancaQuestao*/
-        ComboBox<Cadastro> comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
-        // comboBoxCadastro.setItems(filter, DataService.getPeople());
-        comboBoxMembroBancaQuestao.setItemLabelGenerator(
-                cadastro -> cadastro.getNome());
-        comboBoxMembroBancaQuestao.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
+        comboBoxMembroBancaQuestao.setRenderer(createRenderer());/* Função abaixo*/
+        comboBoxMembroBancaQuestao.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
         comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroBancaQuestao.setWidth("610px");
         
-        ComboBox<Cadastro> comboBoxMembroRevisorTecnico1 = new ComboBox<>("Revisor técnico 1:");
-        // comboBoxCadastro.setItems(filter, DataService.getPeople());
-        comboBoxMembroRevisorTecnico1.setItemLabelGenerator(
-                cadastro -> cadastro.getNome());
-        comboBoxMembroRevisorTecnico1.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico1 = new ComboBox<>("Revisor técnico 1:");
+        comboBoxMembroRevisorTecnico1.setRenderer(createRenderer());
+        comboBoxMembroRevisorTecnico1.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
         comboBoxMembroRevisorTecnico1.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroRevisorTecnico1.setWidth("610px");
         
         
-        ComboBox<Cadastro> comboBoxMembroRevisorTecnico2 = new ComboBox<>("Revisor Técnico 2:");
-        // comboBoxCadastro.setItems(filter, DataService.getPeople());
-        comboBoxMembroRevisorTecnico2.setItemLabelGenerator(
-                cadastro -> cadastro.getNome());
+        comboBoxMembroRevisorTecnico2 = new ComboBox<>("Revisor Técnico 2:");
         comboBoxMembroRevisorTecnico2.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico2.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
         comboBoxMembroRevisorTecnico2.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroRevisorTecnico2.setWidth("610px");
         
         
-        ComboBox<Cadastro> comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
-        // comboBoxCadastro.setItems(filter, DataService.getPeople());
-        comboBoxMembroRevisorLinguagem.setItemLabelGenerator(
-                cadastro -> cadastro.getNome());
+        comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
         comboBoxMembroRevisorLinguagem.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorLinguagem.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
         comboBoxMembroRevisorLinguagem.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroRevisorLinguagem.setWidth("610px");
         
-        VerticalLayout verticalLayout = new VerticalLayout(comboBoxMembroBancaQuestao, comboBoxMembroRevisorTecnico1, comboBoxMembroRevisorTecnico2, comboBoxMembroRevisorLinguagem);
-        
-        add(verticalLayout); 
+        VerticalLayout verticalLayout = new VerticalLayout(
+                comboBoxMembroBancaQuestao,
+                comboBoxMembroRevisorTecnico1,
+                comboBoxMembroRevisorTecnico2,
+                comboBoxMembroRevisorLinguagem
+        );
+
+        utilArrayComboBoxCadastro =List.of(
+                comboBoxMembroBancaQuestao,
+                comboBoxMembroRevisorTecnico1,
+                comboBoxMembroRevisorTecnico2,
+                comboBoxMembroRevisorLinguagem);
+
+        verticalLayout.setAlignItems(Alignment.CENTER);
+        add(verticalLayout);
     }
     
     private Renderer<Cadastro> createRenderer() {
-        StringBuilder tpl = new StringBuilder();
-        /* -------------------------------------------------- Estilização
-        tpl.append("<div style=\"display: flex;\">");
-        tpl.append(
-                "  <img style=\"height: var(--lumo-size-m); margin-right: var(--lumo-space-s);\" src=\"${item.pictureUrl}\" alt=\"Portrait of ${item.firstName} ${item.lastName}\" />");
-        tpl.append("  <div>");
-        tpl.append("    ${item.firstName} ${item.lastName}");
-        tpl.append(
-                "    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.profession}</div>");
-        tpl.append("  </div>");
-        tpl.append("</div>"); */
-
-        return LitRenderer.<Cadastro> of(tpl.toString())
-                .withProperty("nomeCadastro", Cadastro::getNome)
-                .withProperty("firstName", Cadastro::getCpf);
-              //  .withProperty("amial", Cadastro::getEmail)
+        return LitRenderer.<Cadastro> of("${item.nome}")
+                .withProperty("nome", Cadastro::getNome);
     }
     
     
@@ -228,17 +233,76 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
     @Override
     public void setParameter(BeforeEvent event, Long parameter) { //Método executado após o construtor.
-
         concursoId = parameter;
-
         concurso = concursoService.getRepository().findById(parameter).get();
         nomeConcurso.setValue(concurso.getNome());
         this.presenter = new NovaProvaPresenter(this, provaService);
-
-
     }
     /***********************************************************************************/
     //Geters and Setters//
+
+    public List<ComboBox<Cadastro>> getUtilArrayComboBoxCadastro() {
+        return utilArrayComboBoxCadastro;
+    }
+    public void setConcursoId(Long concursoId) {
+        this.concursoId = concursoId;
+    }
+
+    public RadioButtonGroup<String> getRadioNivelNumAlternativas() {
+        return radioNivelNumAlternativas;
+    }
+
+    public void setRadioNivelNumAlternativas(RadioButtonGroup<String> radioNivelNumAlternativas) {
+        this.radioNivelNumAlternativas = radioNivelNumAlternativas;
+    }
+
+    public MultiFileMemoryBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(MultiFileMemoryBuffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public Upload getUpload() {
+        return upload;
+    }
+
+    public void setUpload(Upload upload) {
+        this.upload = upload;
+    }
+
+    public ComboBox<Cadastro> getComboBoxMembroRevisorLinguagem() {
+        return comboBoxMembroRevisorLinguagem;
+    }
+
+    public void setComboBoxMembroRevisorLinguagem(ComboBox<Cadastro> comboBoxMembroRevisorLinguagem) {
+        this.comboBoxMembroRevisorLinguagem = comboBoxMembroRevisorLinguagem;
+    }
+
+    public ComboBox<Cadastro> getComboBoxMembroBancaQuestao() {
+        return comboBoxMembroBancaQuestao;
+    }
+
+    public void setComboBoxMembroBancaQuestao(ComboBox<Cadastro> comboBoxMembroBancaQuestao) {
+        this.comboBoxMembroBancaQuestao = comboBoxMembroBancaQuestao;
+    }
+
+    public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico1() {
+        return comboBoxMembroRevisorTecnico1;
+    }
+
+    public void setComboBoxMembroRevisorTecnico1(ComboBox<Cadastro> comboBoxMembroRevisorTecnico1) {
+        this.comboBoxMembroRevisorTecnico1 = comboBoxMembroRevisorTecnico1;
+    }
+
+    public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico2() {
+        return comboBoxMembroRevisorTecnico2;
+    }
+
+    public void setComboBoxMembroRevisorTecnico2(ComboBox<Cadastro> comboBoxMembroRevisorTecnico2) {
+        this.comboBoxMembroRevisorTecnico2 = comboBoxMembroRevisorTecnico2;
+    }
     public Button getSalvarButton() {
         return salvarButton;
     }
@@ -314,13 +378,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.presenter = presenter;
     }
 
-    public Grid<Cadastro> getElaboradoresGrid() {
-        return elaboradoresGrid;
-    }
-
-    public void setElaboradoresGrid(Grid<Cadastro> elaboradoresGrid) {
-        this.elaboradoresGrid = elaboradoresGrid;
-    }
 
 	public DatePicker getPrazo() {
 		return prazo;
@@ -361,5 +418,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public void setRadioNivelProva(RadioButtonGroup<String> radio) {
         this.radioNivelProva = radio;
     }
+
+
 
 }

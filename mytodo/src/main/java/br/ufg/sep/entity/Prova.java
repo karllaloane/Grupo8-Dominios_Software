@@ -1,5 +1,6 @@
 package br.ufg.sep.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,26 +16,54 @@ import javax.persistence.Table;
 @Entity
 @Table(name="provas")
 public class Prova extends AbstractEntity{
-	
+
+
 	@ManyToOne()
 	@JoinColumn(name="concurso_id", nullable = false)
 	private Concurso concurso;
 	
-	@Column
+	@Column(nullable = true)
 	private String areaConhecimento;
 	
 	@OneToMany(mappedBy="prova", fetch = FetchType.LAZY,cascade= CascadeType.ALL)
+	@Column(nullable = true)
 	private List<Questao> questoes;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="responsavel_id", nullable = false)
-	private Cadastro responsavel;
+	@ManyToOne()
+	@JoinColumn(name="elaborador_id", nullable = false)
+	private Cadastro elaborador;
+	@ManyToOne()
+	@JoinColumn(name="revisor1_id", nullable = false)
+	private Cadastro revisor1;
+	@ManyToOne()
+	@JoinColumn(name="revisor2_id", nullable = false)
+	private Cadastro revisor2;
+	@ManyToOne()
+	@JoinColumn(name="revisor3_id", nullable = false)
+	private Cadastro revisor3;
 
-	@Column
+	@ManyToOne()
+	@JoinColumn(name="revisor_linguagem_id", nullable = false)
+	private Cadastro revisorLinguagem;
+
+	@Column(nullable = true)
 	private String nivel;
 	
-	@Column
+	@Column(nullable = true)
 	private String descricao;
+
+	@Column(nullable = true)
+	private LocalDate dataEntrega;
+	@Column(nullable = true)
+	private int numeroQuestoes;
+
+	public LocalDate getDataEntrega() {
+		return dataEntrega;
+	}
+
+	public void setDataEntrega(LocalDate dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
 
 	public Concurso getConcurso() {
 		return concurso;
@@ -52,8 +81,7 @@ public class Prova extends AbstractEntity{
 		this.numeroQuestoes = numeroQuestoes;
 	}
 
-	@Column
-	private int numeroQuestoes;
+
 
 	public String getAreaConhecimento() {
 		return areaConhecimento;
@@ -83,15 +111,15 @@ public class Prova extends AbstractEntity{
 
 
 
-	public Cadastro getResponsavel() {
-		return responsavel;
+	public Cadastro getElaborador() {
+		return elaborador;
 	}
 
 
 
 
-	public void setResponsavel(Cadastro responsavel) {
-		this.responsavel = responsavel;
+	public void setElaborador(Cadastro elaborador) {
+		this.elaborador = elaborador;
 	}
 
 
@@ -116,7 +144,37 @@ public class Prova extends AbstractEntity{
 	}
 
 
+	public Cadastro getRevisor1() {
+		return revisor1;
+	}
 
+	public void setRevisor1(Cadastro revisor1) {
+		this.revisor1 = revisor1;
+	}
+
+	public Cadastro getRevisor2() {
+		return revisor2;
+	}
+
+	public void setRevisor2(Cadastro revisor2) {
+		this.revisor2 = revisor2;
+	}
+
+	public Cadastro getRevisor3() {
+		return revisor3;
+	}
+
+	public void setRevisor3(Cadastro revisor3) {
+		this.revisor3 = revisor3;
+	}
+
+	public Cadastro getRevisorLinguagem() {
+		return revisorLinguagem;
+	}
+
+	public void setRevisorLinguagem(Cadastro revisorLinguagem) {
+		this.revisorLinguagem = revisorLinguagem;
+	}
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;

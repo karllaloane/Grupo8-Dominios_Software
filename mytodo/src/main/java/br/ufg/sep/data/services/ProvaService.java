@@ -12,7 +12,7 @@ public class ProvaService {
     }
 
     public void save(Prova prova) throws NullPointerException{
-        if(prova.getResponsavel()==null){
+        if(prova.getElaborador()==null){
             throw new NullPointerException("Prova sem responsável");
         }
         if(prova.getConcurso()==null){
@@ -23,7 +23,7 @@ public class ProvaService {
     }
 
     public void update(Prova prova) throws NullPointerException{
-        if(prova.getResponsavel()==null){
+        if(prova.getElaborador()==null){
             throw new NullPointerException("Prova sem responsável");
         }
         if(this.repository.findById(prova.getId())==null){

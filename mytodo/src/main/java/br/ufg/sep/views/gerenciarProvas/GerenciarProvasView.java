@@ -67,7 +67,7 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	this.provas.addColumn("numeroQuestoes").setHeader("Numero de questoes");
 		this.provas.addColumn(LitRenderer
 				.<Prova>of("<b>${item.name}</b>")
-				.withProperty("name", prova -> prova.getResponsavel().getNome())
+				.withProperty("name", prova -> prova.getElaborador().getNome())
 		).setHeader("Name");
 	}
 
