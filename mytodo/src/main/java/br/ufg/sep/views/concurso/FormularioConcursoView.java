@@ -46,14 +46,17 @@ public class FormularioConcursoView extends VerticalLayout {
 	
 	private void criarTela() {
 
+		/* Formatando o atributo prazo do tipo DatePicker para dd/MM/yyyy*/ 
 		DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
 		
+		/*Inicializando os atributos*/
 		nome = new TextField("Nome", "", "");
         cidade = new TextField("Cidade", "", "");
         dataInicio = new DatePicker("Data de Início");
         dataFim = new DatePicker("Data Fim");
         
+        /*Formatando datas*/
         dataInicio.setI18n(singleFormatI18n);
         dataFim.setI18n(singleFormatI18n);
         dataFim.setPlaceholder("DD/MM/AAAA");

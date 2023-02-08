@@ -44,7 +44,7 @@ public class PermissoesView extends VerticalLayout{
         	 /* Nome do primeiro e único item do menu*/
         	 MenuItem options = menuBar.addItem("Alterar");
         	 
-        	 
+        	 /* */ 
         	 List<RoleUser> rolesUserPerson = roleUserService.getRoleUserRepository().findByUserCpf(person.getCpf());
         	 
         	 List<Role> roleList = new ArrayList<>();

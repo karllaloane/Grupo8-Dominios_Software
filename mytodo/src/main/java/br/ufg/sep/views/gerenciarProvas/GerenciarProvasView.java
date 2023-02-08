@@ -28,7 +28,17 @@ import java.util.Optional;
 @PageTitle("Gerenciar Provas")
 @RolesAllowed({"ADMIN","PROF"})
 public class GerenciarProvasView extends VerticalLayout implements HasUrlParameter<Long>{
+
+	public Long getConcursoId() {
+		return concursoId;
+	}
+
+	public void setConcursoId(Long concursoId) {
+		this.concursoId = concursoId;
+	}
+
 	private Long concursoId;
+	private Concurso concurso;
 	private ConcursoService concursoService;
 	private Grid<Prova> provas = new Grid<>(Prova.class,false);
 	private GerenciarProvasPresenter presenter;//presenter fora do construtor, para que tenha escopo por toda classe
@@ -37,18 +47,21 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	private Button editar;
 	private Button visualizar;
 	private HorizontalLayout provasOptionsLayout;
+	
+	
 	public GerenciarProvasView(ProvaService provaService, ConcursoService concursoService) {
 		this.concursoService = concursoService;
 		this.provaService = provaService;
 		iniciarGrid();
 		iniciarBotoes(); // instanciar e editar o front end deles
 
-		 provasOptionsLayout =
-				new HorizontalLayout(novo,editar,visualizar); // layout em cima da grid
+		provasOptionsLayout = new HorizontalLayout(novo,editar,visualizar); // layout dos botões em cima da grid
+
 
 		add(provasOptionsLayout,provas);
 	}
-
+	
+	/* Grid de provas com os campos: Area de conhecimento, numero de questões e nome do colaborador responsável*/ 
 	private void iniciarGrid() {
 	this.provas.addColumn("areaConhecimento").setHeader("Area de Conhecimento");
 	this.provas.addColumn("numeroQuestoes").setHeader("Numero de questoes");
@@ -58,6 +71,7 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		).setHeader("Name");
 	}
 
+	/* Inicialização dos botões */ 
 	private void iniciarBotoes(){
 		novo = new Button("Nova prova",new Icon(VaadinIcon.PLUS));
 		editar = new Button("Editar", new Icon(VaadinIcon.PENCIL));
@@ -65,8 +79,6 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		editar.setEnabled(false);
 		visualizar.setEnabled(false);
 	}
-
-
 
 
 	public ConcursoService getConcursoService() {
@@ -85,6 +97,7 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		this.provasOptionsLayout = provasOptionsLayout;
 	}
 
+
 	public void habilitarButtons(){ // controlado pelo presenter
 	this.provasOptionsLayout.getChildren().forEach(e->{
 		((Button)e).setEnabled(true);
@@ -96,16 +109,16 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
 	Optional<Concurso> talvezConcurso= concursoService.getRepository().findById(parameter);
-	if(talvezConcurso.isPresent())concursoId = talvezConcurso.get().getId();
+	if(talvezConcurso.isPresent())concurso = talvezConcurso.get();
+		this.concursoId = parameter;
 		this.presenter = new GerenciarProvasPresenter(provaService,this); //iniciar o presenter
+
 	}
 
 
 	/*************************************************/
 	// Getters and Setters
-	public Long getConcursoId(){
-		return  this.concursoId;
-	}
+
 	public Grid<Prova> getProvas() {
 		return provas;
 	}
@@ -153,6 +166,20 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	public void setVisualizar(Button visualizar) {
 		this.visualizar = visualizar;
 	}
+	
+	public Concurso getConcurso() {
+		return concurso;
+	}
+
+	public void setConcurso(Concurso concurso) {
+		this.concurso = concurso;
+	}
+
+
+
+
+
+
 
 
 

@@ -1,17 +1,10 @@
 package br.ufg.sep.views.gerenciarProvas.presenter;
 
-import br.ufg.sep.data.repositories.ProvaRepository;
 import br.ufg.sep.data.services.ProvaService;
-import br.ufg.sep.view.prova.ProvasView;
-import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
-import br.ufg.sep.views.concurso.EditarConcursoView;
 import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
-import org.springframework.data.domain.PageRequest;
-
 import java.util.Optional;
-import java.util.Set;
 
 public class GerenciarProvasPresenter {
 
