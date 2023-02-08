@@ -12,8 +12,11 @@ import com.vaadin.flow.component.button.Button;
 
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
@@ -49,19 +52,17 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private TextField colaboradorAssociado = new TextField();
     private TextArea descricaoDaProva = new TextArea();
     private DatePicker prazo;
+    private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
+    private RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
+    private Button salvarButton = new Button("Salvar"); // Btn: Button
+    private NovaProvaPresenter presenter;
+    private Grid<Cadastro> revisor1Grid;
+    private Grid<Cadastro> revisor2Grid;
+    private Grid<Cadastro> elaboradoresGrid;
     
     /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
     private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
     private Upload upload = new Upload(buffer);
-
-    private NovaProvaPresenter presenter;
-
-    private Grid<Cadastro> revisor1Grid;
-
-    private Grid<Cadastro> revisor2Grid;
-
-    private Grid<Cadastro> elaboradoresGrid;
-    private Button salvarButton = new Button("Salvar"); // Btn: Button
 
 
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
@@ -69,7 +70,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.provaService = provaService;
         this.concursoService = concursoService;
         this.cadastroRepository = cadastroRepository;
-        this.setAlignItems(Alignment.CENTER); // Alinhar a NovaProvaView no geral
     	
     	/* Formatando o atributo prazo do tipo DatePicker para dd/MM/yyyy*/ 
     	DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
@@ -93,29 +93,48 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");
         descricaoDaProva.setWidth("610px");
+        descricaoDaProva.setHeight("178px");
+           
+        /*Label do upload de arquivos*/
+        Label dropDisabledLabel = new Label("Adicionar um anexo");
+        dropDisabledLabel.getStyle().set("font-weight", "100");
         
         /*Upload de arquivos*/
         upload.addSucceededListener(event -> {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
         });
-        upload.setWidth("610px");
+        upload.setWidth("300px");
+        
+        /*Campo de escolher tipo de prova*/
+        radioTipoProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+        radioTipoProva.setLabel("Escolha o tipo de prova:");
+        radioTipoProva.setItems("Objetiva", "Discursiva", "Redação");
+        
+        /*Campo de escolher nível de prova*/
+        radioNivelProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+        radioNivelProva.setLabel("Escolha o nível da prova:");
+        radioNivelProva.setItems("Ensino Fundamental", "Ensino Médio", "Graduação", "Especialista");
         
         /* Campo colaborador associado */
         colaboradorAssociado.setLabel("Colaborador associado");
         colaboradorAssociado.setReadOnly(true);
         colaboradorAssociado.setWidth("610px");
         
-        /* Disposição horizontal dos elementos areaConhecimento,numQuestoes, prazo*/
-        HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
-
-
-
         /* Lista de colaboradores*/
         this.elaboradoresGrid = new GridCadastroFactory(cadastroRepository).getGrid();
         this.elaboradoresGrid.setHeight("300px");
+        
+        /* Disposição de todos os elementos*/
+        HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
+        VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelProva, dropDisabledLabel, upload);
+        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, 
+        		descricaoDaProva, colaboradorAssociado);
+        HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
+        
+        
+        add(layoutFinal, elaboradoresGrid, salvarButton);
 
-        add(nomeConcurso, contatinterCima, descricaoDaProva, colaboradorAssociado, elaboradoresGrid, upload, salvarButton);
     }
 
     @Override
@@ -221,8 +240,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 	public void setPrazo(DatePicker prazo) {
 		this.prazo = prazo;
 	}
-	
-
 
 	public TextArea getDescricaoDaProva() {
 		return descricaoDaProva;
@@ -231,6 +248,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 	public void setDescricaoDaProva(TextArea descricaoDaProva) {
 		this.descricaoDaProva = descricaoDaProva;
 	}
+	
     public Concurso getConcurso() {
         return concurso;
     }
@@ -238,6 +256,21 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public void setConcurso(Concurso concurso) {
         this.concurso = concurso;
     }
+    
+    public RadioButtonGroup<String> getRadioTipoProva() {
+        return radioTipoProva;
+    }
 
+    public void setRadioTipoProva(RadioButtonGroup<String> radio) {
+        this.radioTipoProva = radio;
+    }
+    
+    public RadioButtonGroup<String> getRadioNivelProva() {
+        return radioNivelProva;
+    }
+
+    public void setRadioNivelProva(RadioButtonGroup<String> radio) {
+        this.radioNivelProva = radio;
+    }
 
 }
