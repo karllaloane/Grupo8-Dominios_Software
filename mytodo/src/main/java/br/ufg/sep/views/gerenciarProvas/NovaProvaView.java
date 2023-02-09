@@ -70,7 +70,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
-
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
 
 
@@ -88,6 +87,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 		prazo = new DatePicker("Prazo de Entrega");
 		prazo.setI18n(singleFormatI18n);
 		prazo.setPlaceholder("DD/MM/AAAA");
+		prazo.setWidth("296px");
 		
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
@@ -95,14 +95,18 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         nomeConcurso.setReadOnly(true);
         nomeConcurso.setWidth("610px");
 
-        /* Campo Area de conhecimento e Numero de questões*/
+        /* Campo Area de conhecimento*/
         areaConhecimento.setLabel("Area de conhecimento");
+        areaConhecimento.setWidth("610px"); 
+        
+        /* Campo Numero de questões*/
         numQuestoes.setLabel("Numero de questoes");
+        numQuestoes.setWidth("296px");
         
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");
         descricaoDaProva.setWidth("610px");
-        descricaoDaProva.setHeight("178px");
+        descricaoDaProva.setHeight("148px");
            
         /*Label do upload de arquivos*/
         Label dropDisabledLabel = new Label("Adicionar um anexo");
@@ -137,9 +141,9 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
         
         /* Disposição de todos os elementos*/
-        HorizontalLayout contatinterCima = new HorizontalLayout(areaConhecimento,numQuestoes, prazo);
+        HorizontalLayout contatinterCima = new HorizontalLayout(numQuestoes, prazo);
         VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelNumAlternativas,radioNivelProva, dropDisabledLabel, upload);
-        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, 
+        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, areaConhecimento,
         		descricaoDaProva);
         HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
         
@@ -178,7 +182,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         );
 
         comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
-        comboBoxMembroBancaQuestao.setWidth("610px");
+        comboBoxMembroBancaQuestao.setWidth("450px");
         
         comboBoxMembroRevisorTecnico1 = new ComboBox<>("Revisor técnico 1:");
         comboBoxMembroRevisorTecnico1.setRenderer(createRenderer());
@@ -186,7 +190,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 cad.getNome() == null ? "" : cad.getNome()
         );
         comboBoxMembroRevisorTecnico1.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
-        comboBoxMembroRevisorTecnico1.setWidth("610px");
+        comboBoxMembroRevisorTecnico1.setWidth("450px");
         
         
         comboBoxMembroRevisorTecnico2 = new ComboBox<>("Revisor Técnico 2:");
@@ -195,7 +199,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 cad.getNome() == null ? "" : cad.getNome()
         );
         comboBoxMembroRevisorTecnico2.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
-        comboBoxMembroRevisorTecnico2.setWidth("610px");
+        comboBoxMembroRevisorTecnico2.setWidth("450px");
 
         comboBoxMembroRevisorTecnico3 = new ComboBox<>("Revisor Técnico 3:");
         comboBoxMembroRevisorTecnico3.setRenderer(createRenderer()); /* Função abaixo*/
@@ -203,7 +207,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 cad.getNome() == null ? "" : cad.getNome()
         );
         comboBoxMembroRevisorTecnico3.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
-        comboBoxMembroRevisorTecnico3.setWidth("610px");
+        comboBoxMembroRevisorTecnico3.setWidth("450px");
         
         
         comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
@@ -212,14 +216,14 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 cad.getNome() == null ? "" : cad.getNome()
         );
         comboBoxMembroRevisorLinguagem.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
-        comboBoxMembroRevisorLinguagem.setWidth("610px");
+        comboBoxMembroRevisorLinguagem.setWidth("450px");
         
-        VerticalLayout verticalLayout = new VerticalLayout(
-                comboBoxMembroBancaQuestao,
-                comboBoxMembroRevisorTecnico1,
-                comboBoxMembroRevisorTecnico2,
-                comboBoxMembroRevisorLinguagem
-        );
+        VerticalLayout verticalLayoutDireito = new VerticalLayout(comboBoxMembroBancaQuestao, comboBoxMembroRevisorLinguagem);
+        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(comboBoxMembroRevisorTecnico1, 
+        										comboBoxMembroRevisorTecnico2, comboBoxMembroRevisorTecnico3);
+        
+        
+        HorizontalLayout verticalLayout = new HorizontalLayout(verticalLayoutDireito, verticalLayoutEsquerdo);
 
         utilArrayComboBoxCadastro =List.of(
                 comboBoxMembroBancaQuestao,
@@ -228,7 +232,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
                 comboBoxMembroRevisorTecnico3,
                 comboBoxMembroRevisorLinguagem);
 
-        verticalLayout.setAlignItems(Alignment.CENTER);
+        
         add(verticalLayout);
     }
     
