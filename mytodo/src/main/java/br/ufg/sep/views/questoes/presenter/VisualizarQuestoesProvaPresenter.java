@@ -6,6 +6,7 @@ import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.test.TestView;
+import br.ufg.sep.views.questoes.CadastrarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
 
 public class VisualizarQuestoesProvaPresenter {
@@ -33,7 +34,7 @@ public class VisualizarQuestoesProvaPresenter {
 		view.getNovaQuestaoButton().addClickListener(e->{
 						
 			view.getNovaQuestaoButton().getUI().ifPresent(ui->{
-				 ui.navigate(TestView.class);});
+				 ui.navigate(CadastrarQuestaoObjetivaView.class);});
 		});
 	}
 }

@@ -9,32 +9,24 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility.Margin.Vertical;
-
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.Concurso;
+import br.ufg.sep.entity.NivelProva;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.gerenciarProvas.presenter.GerenciarProvasPresenter;
 import br.ufg.sep.views.questoes.presenter.VisualizarQuestoesProvaPresenter;
 
 @Route(value="visualizar_questoes_prova", layout = MainLayout.class)
@@ -57,7 +49,8 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 	/* TF em referencia ao componente textfield */
 	private TextField concursoTF;
 	private TextField areaConhecimentoTF;
-	private TextField descricaoTF;
+	private TextField nivelTF;
+	private TextArea descricaoTF;
 	private TextField numQuestoesFeitasTF;
 	private TextField numQuestoesTotalTF;
 	private Button novaQuestaoButton;
@@ -113,7 +106,8 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		//labels
 		concursoTF = new TextField("Concurso", "", "");
 		areaConhecimentoTF = new TextField("Area do conhecimento", "", "");
-		descricaoTF = new TextField("Descrição", "", "");
+		nivelTF = new TextField("Nível", "", "");
+		descricaoTF = new TextArea("Descrição", "", "");
 		numQuestoesFeitasTF = new TextField("Questões Elaboradas", "", "");
 		numQuestoesTotalTF = new TextField("Questões Solicitadas", "", "");
 		
@@ -123,9 +117,14 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		concursoTF.setWidthFull();
 		areaConhecimentoTF.setWidthFull();
 		descricaoTF.setWidthFull();
+		descricaoTF.setHeight("133px");
+		
+		//espacamento dos componentes
+		infosForm.setSpacing(false);
+		numQuestaoform.setSpacing(false);
 		
 		//adicionando componentes aos formularios
-		numQuestaoform.add(numQuestoesFeitasTF, numQuestoesTotalTF);
+		numQuestaoform.add(nivelTF, numQuestoesFeitasTF, numQuestoesTotalTF);
 		h.add(concursoTF, areaConhecimentoTF);
 		infosForm.add(h, descricaoTF, downloadButton);
 		
@@ -150,8 +149,6 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		details.setOpened(true);
 	}
 	
-	
-	
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
 		// TODO Auto-generated method stub
@@ -161,12 +158,18 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 			prova = optionalQuestao.get();
 			this.provaId = prova.getId();
 			
-			//setInfoProva(); //setar as informacoes sobre a prova 
+			setInfoProva(); //setar as informacoes sobre a prova 
 			
 			this.presenter = new VisualizarQuestoesProvaPresenter(provaService, questaoService,this); //iniciar o presenter
 		}
 	}
 	
+	public void setInfoProva(){
+		this.areaConhecimentoTF.setValue(prova.getAreaConhecimento());
+		this.descricaoTF.setValue(prova.getDescricao());
+		this.numQuestoesTotalTF.setValue("" + prova.getNumeroQuestoes());
+		this.nivelTF.setValue("" + prova.getNivel().toString());
+	}
 	// --------------- Getter e Setters
 	
 	public Button getNovaQuestaoButton() {
