@@ -26,6 +26,7 @@ import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.NivelProva;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.questoes.presenter.VisualizarQuestoesProvaPresenter;
 
@@ -92,10 +93,12 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 
 	//metodo para criar o layout superior com informacoes da prova
 	private void criarLayoutInfoProva() {
+		
 		//layouts para organizacao dos componentes
 		HorizontalLayout h = new HorizontalLayout();
 		VerticalLayout infosForm = new VerticalLayout();
 		VerticalLayout numQuestaoform = new VerticalLayout();
+		
 		
 		HorizontalLayout summary = new HorizontalLayout();
 		summary.setSpacing(false);
@@ -137,7 +140,7 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
         });
 		descricaoTF.setReadOnly(true);
 		
-
+		//organizando os componentes
 		infoProvaLayout.add(infosForm, numQuestaoform);
 		infoProvaLayout.setAlignItems(Alignment.BASELINE);
 		infoProvaLayout.setWidthFull();
@@ -158,7 +161,7 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 			prova = optionalQuestao.get();
 			this.provaId = prova.getId();
 			
-			setInfoProva(); //setar as informacoes sobre a prova 
+			setInfoProva(); //setar as informacoes sobre a prova
 			
 			this.presenter = new VisualizarQuestoesProvaPresenter(provaService, questaoService,this); //iniciar o presenter
 		}
