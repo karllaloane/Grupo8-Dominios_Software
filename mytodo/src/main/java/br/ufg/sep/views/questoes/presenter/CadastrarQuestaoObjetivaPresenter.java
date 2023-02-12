@@ -1,12 +1,7 @@
 package br.ufg.sep.views.questoes.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.naming.directory.InvalidAttributeIdentifierException;
-
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -19,7 +14,6 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.NivelDificuldade;
-import br.ufg.sep.entity.NivelProva;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.questoes.CadastrarQuestaoObjetivaView;

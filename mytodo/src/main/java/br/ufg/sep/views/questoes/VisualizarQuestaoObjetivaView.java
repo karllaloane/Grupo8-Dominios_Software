@@ -7,19 +7,13 @@ import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
@@ -30,20 +24,19 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.NivelDificuldade;
-import br.ufg.sep.entity.Prova;
-import br.ufg.sep.entity.TipoProva;
+import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.questoes.presenter.CadastrarQuestaoObjetivaPresenter;
-import br.ufg.sep.views.questoes.presenter.VisualizarQuestoesProvaPresenter;
+import br.ufg.sep.views.questoes.presenter.VisualizarQuestaoObjetivaPresenter;
 
-@Route(value="cadastrar_questoes_prova", layout = MainLayout.class)
+@Route(value="visualizar_questao", layout = MainLayout.class)
 @PageTitle("Cadastrar Questão")
 @PermitAll
-public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
+public class VisualizarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
 
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private CadastrarQuestaoObjetivaPresenter presenter;
+	private VisualizarQuestaoObjetivaPresenter presenter;
 	
 	//inputs gerais
 	private TextField subareaTF;
@@ -55,9 +48,7 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 	private List<TextArea> alternativasList;
 	private List<Checkbox> checkboxList;
 
-	private Button salvarButton;
-
-	private Button enviarButton;
+	private Button voltarButton;
 
 	//layouts final
 	//todos eles são criados no construtor
@@ -67,10 +58,10 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 	private VerticalLayout justificativaLayout;
 	private VerticalLayout buttonsLayout;
 
-	private Prova prova;
+	private QuestaoObjetiva questaoObjetiva;
 	private int quantAlternativas;
 
-	public CadastrarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
+	public VisualizarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 
@@ -97,10 +88,12 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 		
 		//criando os componentes de informacoes sobre a questao a ser cadastrada
 		subareaTF = new TextField("Subárea da questão");
+		subareaTF.setReadOnly(true);
 		
 		//criação do combobx
 		nivelDificuldadeCombo = new ComboBox<>("Nível de dificuldade");
 		nivelDificuldadeCombo.setItems(EnumSet.allOf(NivelDificuldade.class));
+		nivelDificuldadeCombo.setReadOnly(true);
 		
 		//alterando estilos
 		subareaTF.setWidth("400px");
@@ -115,6 +108,7 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 		//alterando estilos
 		enunciado.setWidthFull();
 		enunciado.setMinHeight("150px");
+		enunciado.setReadOnly(true);
 
 		enunciadoLayout.add(enunciadoLabel, enunciado);
 		
@@ -168,8 +162,16 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 			alternativasList.add(new TextArea());
 			alternativasList.get(i).setWidth("570px");
 			
+			//setando o valor da alternativa
+			alternativasList.get(i).setValue(questaoObjetiva.getAlternativas().get(i));
+			alternativasList.get(i).setReadOnly(true);
+			
 			//cria o textbox e adiciona ao list
 			checkboxList.add(new Checkbox());
+			checkboxList.get(i).setReadOnly(true);
+			
+			if(i == questaoObjetiva.getAlternativaCorreta())
+				checkboxList.get(i).setValue(true);
 			
 			//layout para organizar o checkbox
 			auxLayout.add(new HorizontalLayout());
@@ -196,6 +198,9 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 		justificativaTA = new TextArea();
 		justificativaTA.setWidthFull();
 		
+		justificativaTA.setValue(questaoObjetiva.getJustificativa());
+		justificativaTA.setReadOnly(true);
+		
 		justificativaLayout.add(justificativaLabel, justificativaTA);
 		
 		justificativaLayout.setSpacing(false);
@@ -208,16 +213,12 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 		
 		HorizontalLayout h = new HorizontalLayout();
 		
-		salvarButton = new Button("Salvar");
+		voltarButton = new Button("Voltar");
 		
-		//este botão poderá sofrer mudanças de acordo com o status da questão
-		enviarButton = new Button("Enviar para Revisão Técnica 1");
-		
-		h.add(salvarButton, enviarButton);
-		//h.setAlignItems(Alignment.END);
+		h.add(voltarButton);
 		
 		buttonsLayout.add(h);
-		buttonsLayout.setAlignItems(Alignment.END);
+		buttonsLayout.setAlignItems(Alignment.START);
 		
 		this.add(buttonsLayout);
 	}
@@ -226,16 +227,16 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 	public void setParameter(BeforeEvent event, Long parameter) {
 		// TODO Auto-generated method stub
 		
-		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
-		if (optionalProva.isPresent()) {
-			prova = optionalProva.get();
-			//this.provaId = prova.getId();
+		Optional<Questao> optionalQuestao = questaoService.getRepository().findById(parameter);
+		if (optionalQuestao.isPresent()) {
+			questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();	
+			quantAlternativas = questaoObjetiva.getQuantAlternativas();
 			
-			//tornando a quinta alternativa falta caso a prova seja objetiva com 4 alternativas
-			if(prova.getTipo() == TipoProva.OBJETIVA_4) {
-				quantAlternativas = 4;				
-			} else 
-				quantAlternativas = 5;
+			//setando o valor dos campos criados no construtor
+			//pode virar uma funcao mas fiquei com preguica
+			enunciado.setValue(questaoObjetiva.getEnunciado());
+			subareaTF.setValue(questaoObjetiva.getConteudoEspecifico());
+			nivelDificuldadeCombo.setValue(questaoObjetiva.getNivelDificuldade());
 			
 			//chama o método que adiciona o layout de alternativas de acordo com a quantidade de questoes
 			//definidas no cadastro da prova
@@ -245,49 +246,9 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 			addJustificativa();
 			addBotões();
 
-			this.presenter = new CadastrarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
+			//this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}
 		
 	}
 	
-	// Getters and setters *********************************************
-	public List<TextArea> getAlternativasList() {
-		return alternativasList;
-	}
-	
-	public List<Checkbox> getCheckboxList() {
-		return checkboxList;
-	}
-	
-	public int getQuantAlternativas() {
-		return quantAlternativas;
-	}
-	
-	public Button getSalvarButton() {
-		return salvarButton;
-	}
-
-	public Button getEnviarButton() {
-		return enviarButton;
-	}
-	
-	public TextField getSubareaTF() {
-		return subareaTF;
-	}
-
-	public ComboBox<NivelDificuldade> getNivelDificuldadeCombo() {
-		return nivelDificuldadeCombo;
-	}
-
-	public TextArea getJustificativaTA() {
-		return justificativaTA;
-	}
-
-	public TextArea getEnunciado() {
-		return enunciado;
-	}
-	
-	public Prova getProva() {
-		return prova;
-	}
 }

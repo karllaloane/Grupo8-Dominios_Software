@@ -54,7 +54,9 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 	private TextArea descricaoTF;
 	private TextField numQuestoesFeitasTF;
 	private TextField numQuestoesTotalTF;
+	
 	private Button novaQuestaoButton;
+	private Button visualizarButton;
 	private Button downloadButton;
 	
 
@@ -66,7 +68,7 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		criarButtons();
 		criarLayoutInfoProva(); //cria o layout com informacoes da prova
 		
-		layoutButton.add(novaQuestaoButton);
+		layoutButton.add(novaQuestaoButton, visualizarButton);
 		
 		add(details, layoutButton, questoesGrid);
 	}
@@ -87,6 +89,9 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		layoutButton = new HorizontalLayout();
 		novaQuestaoButton = new Button("Cadastrar Questão", new Icon(VaadinIcon.PLUS));
 		novaQuestaoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+		
+		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
+		visualizarButton.setEnabled(false);
 		
 		downloadButton = new Button("Baixar arquivo", new Icon(VaadinIcon.DOWNLOAD));
 	}
@@ -167,6 +172,10 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		}
 	}
 	
+	public void habilitarButtons() {
+		this.visualizarButton.setEnabled(true);
+	}
+
 	public void setInfoProva(){
 		this.areaConhecimentoTF.setValue(prova.getAreaConhecimento());
 		this.descricaoTF.setValue(prova.getDescricao());
@@ -193,6 +202,10 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 
 	public Long getProvaId() {
 		return provaId;
+	}
+	
+	public Button getVisualizarButton() {
+		return visualizarButton;
 	}
 
 }
