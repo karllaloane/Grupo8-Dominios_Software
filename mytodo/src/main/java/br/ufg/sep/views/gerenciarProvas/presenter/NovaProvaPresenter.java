@@ -36,7 +36,6 @@ public class NovaProvaPresenter {
 
 	TipoProva decidirTipo(String tipoSelecionado)throws InvalidAttributeIdentifierException{
 
-		Notification notification;
 		if(tipoSelecionado.toLowerCase().contains("objetiva")) {
 			if(view.getRadioNivelNumAlternativas().getValue().equals("4"))
 				return TipoProva.OBJETIVA_4;

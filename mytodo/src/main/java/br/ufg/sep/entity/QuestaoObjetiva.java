@@ -1,5 +1,6 @@
 package br.ufg.sep.entity;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
@@ -9,16 +10,35 @@ import javax.persistence.Entity;
 public class QuestaoObjetiva extends Questao {
 	
 	@ElementCollection
-	private Map<String, Boolean> alternativas;
+	private List<String> alternativas;
 
-	public Map<String, Boolean> getAlternativas() {
+	private int quantAlternativas;
+	
+	private int alternativaCorreta;
+
+	public int getQuantAlternativas() {
+		return quantAlternativas;
+	}
+
+	public void setQuantAlternativas(int quantAlternativas) {
+		this.quantAlternativas = quantAlternativas;
+	}
+
+	public int getAlternativaCorreta() {
+		return alternativaCorreta;
+	}
+
+	public void setAlternativaCorreta(int alternativaCorreta) {
+		this.alternativaCorreta = alternativaCorreta;
+	}
+
+	public List<String> getAlternativas() {
 		return alternativas;
 	}
 
-	public void setAlternativas(Map<String, Boolean> alternativas) {
+	public void setAlternativas(List<String> alternativas) {
 		this.alternativas = alternativas;
 	}
-
 
 
 }

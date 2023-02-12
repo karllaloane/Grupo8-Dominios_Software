@@ -12,6 +12,7 @@ public class GerenciarProvasPresenter {
     private GerenciarProvasView view;
 
     private Prova provaSelecionada;
+    
     public GerenciarProvasPresenter(ProvaService provaService, GerenciarProvasView view){
         this.view = view;
     this.provaService = provaService;

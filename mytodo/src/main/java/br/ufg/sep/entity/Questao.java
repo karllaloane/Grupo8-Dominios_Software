@@ -2,6 +2,8 @@ package br.ufg.sep.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -15,17 +17,15 @@ public class Questao extends AbstractEntity {
 	private Prova prova;
 	
 	private int idQuestao;
-
-	// motivo?
-	private String numeroCaracteres;
 	
 	private String enunciado;
 	
 	private String conteudoEspecifico;
 	
-	private int nivelDificuldade;
+	@Enumerated(EnumType.STRING)
+	private NivelDificuldade nivelDificuldade;
 	
-	private String descricao;
+	//private String descricao;
 	
 	private String justificativa;
 	
@@ -41,10 +41,6 @@ public class Questao extends AbstractEntity {
 	public Questao(int num) {
 		this.idQuestao = num;
 	}
-	
-	
-	
-	
 	
 	public String getEnunciado() {
 		return enunciado;
@@ -62,21 +58,21 @@ public class Questao extends AbstractEntity {
 		this.conteudoEspecifico = conteudoEspecifico;
 	}
 
-	public int getNivelDificuldade() {
+	public NivelDificuldade getNivelDificuldade() {
 		return nivelDificuldade;
 	}
 
-	public void setNivelDificuldade(int nivelDificuldade) {
+	public void setNivelDificuldade(NivelDificuldade nivelDificuldade) {
 		this.nivelDificuldade = nivelDificuldade;
 	}
 
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+//	public String getDescricao() {
+//		return descricao;
+//	}
+//
+//	public void setDescricao(String descricao) {
+//		this.descricao = descricao;
+//	}
 
 	public String getJustificativa() {
 		return justificativa;
@@ -100,15 +96,6 @@ public class Questao extends AbstractEntity {
 
 	public void setProva(Prova prova) {
 		this.prova = prova;
-	}
-
-
-	public String getNumeroCaracteres() {
-		return numeroCaracteres;
-	}
-
-	public void setNumeroCaracteres(String numeroCaracteres) {
-		this.numeroCaracteres = numeroCaracteres;
 	}
 
 
