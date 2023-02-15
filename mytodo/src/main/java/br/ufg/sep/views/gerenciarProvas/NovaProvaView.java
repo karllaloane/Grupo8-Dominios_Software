@@ -176,7 +176,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         comboBoxMembroBancaQuestao.setItemLabelGenerator(cad->
                 cad.getNome() == null ? "" : cad.getNome()
         );
-
         comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
         comboBoxMembroBancaQuestao.setWidth("610px");
         

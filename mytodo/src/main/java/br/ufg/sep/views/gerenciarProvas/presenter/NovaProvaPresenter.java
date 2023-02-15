@@ -71,13 +71,14 @@ public class NovaProvaPresenter {
 		int numQuestoes = 0; 
 		numQuestoes = Integer.parseInt(view.getNumQuestoes().getValue());
 		LocalDate prazo = view.getPrazo().getValue();
-		TipoProva tipo = TipoProva.OBJETIVA_4; // Inicializando apenas para compilar
-		NivelProva nivel = NivelProva.FUNDAMENTAL;// Inicializando apenas para compilar
+		TipoProva tipo=null; // Inicializando apenas para compilar
+		NivelProva nivel=null ;// Inicializando apenas para compilar
 		/*************/
 		//Atribuindo a escolha do TIPO da prova:
 		try {
 			tipo = decidirTipo(view.getRadioTipoProva().getValue());
-		}catch (Exception exp) {System.out.println(exp.getMessage());}
+		}catch (Exception exp) {
+			System.out.println(exp.getMessage());}
 
 		//Atribuindo a escolha do NIVEL da prova:
 		try{
