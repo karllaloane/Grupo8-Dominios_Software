@@ -26,6 +26,7 @@ import br.ufg.sep.views.MainLayout;
 @Route(value="visualizar_concurso", layout = MainLayout.class)
 @PageTitle("Concursos")
 @RolesAllowed({"ADMIN", "PED"})
+
 public class VisualizarConcursoView extends VerticalLayout implements HasUrlParameter<Long> {
 	
 	Button save;
@@ -62,10 +63,6 @@ public class VisualizarConcursoView extends VerticalLayout implements HasUrlPara
         cidade = new TextField("Cidade", "", "");
         dataInicio = new DatePicker("Data de Início");
         dataFim = new DatePicker("Data Fim");
-        
-        
-        
-        
         
         dataInicio.setI18n(singleFormatI18n);
         dataFim.setI18n(singleFormatI18n);

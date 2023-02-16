@@ -49,6 +49,8 @@ public class GerenciarProvasPresenter {
     }
 
     private void configBotoes(){
+    	
+    	 
         view.getNovo().addClickListener(e->{
             view.getNovo().getUI().ifPresent(ui->{
                 ui.navigate(NovaProvaView.class, view.getConcursoId());
@@ -60,7 +62,10 @@ public class GerenciarProvasPresenter {
                ui.navigate(NovaProvaView.class,view.getConcursoId());
            });
         });
+
+       
         
+
 		
 
     }
