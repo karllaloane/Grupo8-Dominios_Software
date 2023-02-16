@@ -79,6 +79,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.concursoService = concursoService;
         this.cadastroRepository = cadastroRepository;
     	this.setAlignItems(Alignment.CENTER);
+    	
     	/* Formatando o atributo prazo do tipo DatePicker para dd/MM/yyyy*/ 
     	DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
