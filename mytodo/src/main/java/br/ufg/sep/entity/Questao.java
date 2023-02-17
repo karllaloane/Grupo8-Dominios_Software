@@ -1,12 +1,7 @@
 package br.ufg.sep.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Questao extends AbstractEntity {
@@ -17,7 +12,7 @@ public class Questao extends AbstractEntity {
 	private Prova prova;
 	
 	private int idQuestao;
-	
+	@Column(length = 2054)
 	private String enunciado;
 	
 	private String conteudoEspecifico;

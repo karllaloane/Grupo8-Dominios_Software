@@ -50,6 +50,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 
 	private Button voltarButton;
 
+	private Button enviarButton;
+
 	//layouts final
 	//todos eles são criados no construtor
 	//e adicionados posteriormente
@@ -214,8 +216,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		HorizontalLayout h = new HorizontalLayout();
 		
 		voltarButton = new Button("Voltar");
-		
-		h.add(voltarButton);
+		this.enviarButton = new Button("Enviar para revisão 1");
+		h.add(voltarButton,enviarButton);
 		
 		buttonsLayout.add(h);
 		buttonsLayout.setAlignItems(Alignment.START);

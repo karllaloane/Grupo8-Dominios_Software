@@ -176,11 +176,14 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		this.visualizarButton.setEnabled(true);
 	}
 
+	//setar Informações Gerais da Prova.
 	public void setInfoProva(){
+		this.concursoTF.setValue(prova.getConcurso().getNome());
 		this.areaConhecimentoTF.setValue(prova.getAreaConhecimento());
 		this.descricaoTF.setValue(prova.getDescricao());
 		this.numQuestoesTotalTF.setValue("" + prova.getNumeroQuestoes());
 		this.nivelTF.setValue("" + prova.getNivel().toString());
+		this.numQuestoesFeitasTF.setValue(String.format("%d",prova.getQuestoes().size()));
 	}
 	// --------------- Getter e Setters
 	
