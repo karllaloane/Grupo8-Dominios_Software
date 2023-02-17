@@ -49,7 +49,7 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 	Button cancel;
 	Prova prova; 
 	private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
-    private ProvaService provaService;
+    ProvaService provaService;
     private ConcursoService concursoService;
     private CadastroRepository cadastroRepository;
     private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
@@ -73,15 +73,13 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
     private ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
     private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
     
-    private ProvaService service;
-    
     VerticalLayout layout;
 	HorizontalLayout buttonLayout;
     
 	
     public void EditarProvaView(ProvaService PS) {
 		
-		this.service = PS;
+		this.provaService = PS;
 		
 		criarTela();
 		
@@ -169,7 +167,7 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
     
 	public void setParameter(BeforeEvent event, Long parameter) {
 		// TODO Auto-generated method stub
-		Optional<Prova> optionalProva = service.getRepository().findById(parameter);
+		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
 		
 		if (optionalProva.isPresent()) {
 			prova = optionalProva.get();
@@ -422,14 +420,5 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
 
-
-	public ProvaService getService() {
-		return service;
-	}
-
-
-	public void setService(ProvaService service) {
-		this.service = service;
-	} 
 
 }

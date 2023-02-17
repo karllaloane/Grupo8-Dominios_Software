@@ -76,9 +76,8 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
     
 	
     public void EditarProvaView(ProvaService PS) {
-		
 		this.service = PS;
-		
+
 		criarTela();
 		
 		EditarProvaPresenter formPresenter = new EditarProvaPresenter(this, PS);
