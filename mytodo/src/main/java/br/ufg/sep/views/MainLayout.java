@@ -39,6 +39,7 @@ import br.ufg.sep.view.prova.ProvasView;
 import br.ufg.sep.views.concurso.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
+import br.ufg.sep.views.revisao.GerenciarRevisaoView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -122,8 +123,14 @@ public class MainLayout extends AppLayout {
         }
         
         if (accessChecker.hasAccess(PermissoesView.class)) {
-        	nav.add(createTab(VaadinIcon.USER, "Administrador", PermissoesView.class));
+        	nav.add(createTab(VaadinIcon.FILE_SEARCH, "Revisão", PermissoesView.class));
         }
+        
+        /* if (accessChecker.hasAccess(GerenciarRevisaoView.class)) {
+        	nav.add(createTab(VaadinIcon.USER, "Administrador", GerenciarRevisaoView.class));
+        } */ 
+        
+        
         
         nav.setOrientation(Orientation.VERTICAL);
 
