@@ -157,7 +157,7 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
         		descricaoDaProva);
         HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
         
-        /* Buttons salvar e calcelar */
+        /* Buttons salvar e cancelar */
         save = new Button("Salvar alterações");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancel = new Button("Cancelar");
@@ -190,7 +190,7 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 			
 		} else {
 			Notification notification = Notification
-			        .show("Impossível acessar o concurso");
+			        .show("Impossível acessar a prova");
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
@@ -431,11 +431,5 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 	public void setService(ProvaService service) {
 		this.service = service;
 	} 
-
-	
-
-
-
-
 
 }
