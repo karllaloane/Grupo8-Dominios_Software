@@ -95,6 +95,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
         nomeConcurso.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER); // Alinhar o texto dentro do nomeConcurso
+        nomeConcurso.setReadOnly(true);
         nomeConcurso.setWidth("610px");
 
         /* Campo Area de conhecimento*/
