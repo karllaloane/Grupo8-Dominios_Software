@@ -13,6 +13,7 @@ import br.ufg.sep.views.gerenciarProvas.presenter.NovaProvaPresenter;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.ComboBox.ItemFilter;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -24,6 +25,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.data.renderer.LitRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
@@ -32,10 +35,11 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.views.MainLayout;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 @Route(value="editar", layout=MainLayout.class)
-@PageTitle("Gerenciar Provas")
+@PageTitle("Editar Prova")
 @RolesAllowed({"ADMIN","PED"})
 
 public class EditarProvasView extends VerticalLayout implements HasUrlParameter<Long> {
@@ -43,9 +47,7 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
 	private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     private ProvaService provaService;
     private ConcursoService concursoService;
-
     private CadastroRepository cadastroRepository;
-
     private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     
     /*Inputs para cadastrar uma nova Prova*/
@@ -57,7 +59,8 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
     private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
     private RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
     private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
-    private Button salvarButton = new Button("Salvar"); // Btn: Button
+    private Button salvarButton = new Button("Salvar"); 
+    private Button cancelarButton = new Button("Cancelar"); 
     private NovaProvaPresenter presenter;
 
     /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
@@ -69,21 +72,19 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
     
     private ProvaService service;
     
-    VerticalLayout layout;
-	HorizontalLayout buttonLayout;
-	Button save;
-	Button cancel;
+    private VerticalLayout layout;
+    private HorizontalLayout buttonLayout;
+    HorizontalLayout layoutFinal = new HorizontalLayout();
     
 	
-    public void EditarProvaView(ProvaService PS) {
+    public EditarProvasView(ProvaService PS) {
 		this.service = PS;
-
-		criarTela();
 		
+		criarTela();
+
 		EditarProvaPresenter formPresenter = new EditarProvaPresenter(this, PS);
         
         setPadding(true);
-        add(layout, buttonLayout);
         
 	}	
 	
@@ -101,7 +102,6 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
         nomeConcurso.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER); // Alinhar o texto dentro do nomeConcurso
-        nomeConcurso.setReadOnly(true);
         nomeConcurso.setWidth("610px");
 
         /* Campo Area de conhecimento*/
@@ -150,17 +150,117 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
         VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelNumAlternativas,radioNivelProva, dropDisabledLabel, upload);
         VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, areaConhecimento,
         		descricaoDaProva);
-        HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
+        layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
+        
+        add(layoutFinal);
+        
+        /*Metodo que apresenta o ComboBox na tela*/
+        ComboBoxPresentation();
         
         /* Buttons salvar e calcelar */
-        save = new Button("Salvar alterações");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        cancel = new Button("Cancelar");
+        salvarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        HorizontalLayout horizontalbotao = new HorizontalLayout(salvarButton, cancelarButton);
+        VerticalLayout aux = new VerticalLayout(horizontalbotao); 
         
-        buttonLayout = new HorizontalLayout(save, cancel);
-        buttonLayout.setPadding(true);
-        
+        /*Metodo que mostra elaboradoresGrid, salvarButton na tela*/
+        add(aux);
 	}
+	
+
+	@Override
+	public void setParameter(BeforeEvent event, Long parameter) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	//Para facilitar a configuração de cada comboBox no presenter
+    // -->>>configComboBox()<<-- no presenter
+    List<ComboBox<Cadastro>> utilArrayComboBoxCadastro;
+    public void ComboBoxPresentation() {
+    	
+    	/* Filtro do ComboBox*/
+         ItemFilter<Cadastro> filter = (cadastro,
+                filterString) -> (cadastro.getNome() + " "
+                        + cadastro.getCpf())
+                        .toLowerCase().indexOf(filterString.toLowerCase()) > -1; 
+
+    	/*Criação do comboBoxMembroBancaQuestao*/
+
+        comboBoxMembroBancaQuestao = new ComboBox<>("Membro da banca de questão:");
+        comboBoxMembroBancaQuestao.setRenderer(createRenderer());/* Função abaixo*/
+        comboBoxMembroBancaQuestao.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroBancaQuestao.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroBancaQuestao.setWidth("450px");
+        
+        comboBoxMembroRevisorTecnico1 = new ComboBox<>("Revisor técnico 1:");
+        comboBoxMembroRevisorTecnico1.setRenderer(createRenderer());
+        comboBoxMembroRevisorTecnico1.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroRevisorTecnico1.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico1.setWidth("450px");
+        
+        
+        comboBoxMembroRevisorTecnico2 = new ComboBox<>("Revisor Técnico 2:");
+        comboBoxMembroRevisorTecnico2.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico2.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroRevisorTecnico2.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico2.setWidth("450px");
+
+        comboBoxMembroRevisorTecnico3 = new ComboBox<>("Revisor Técnico 3:");
+        comboBoxMembroRevisorTecnico3.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorTecnico3.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroRevisorTecnico3.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorTecnico3.setWidth("450px");
+        
+        
+        comboBoxMembroRevisorLinguagem = new ComboBox<>("Revisor de Linguagem:");
+        comboBoxMembroRevisorLinguagem.setRenderer(createRenderer()); /* Função abaixo*/
+        comboBoxMembroRevisorLinguagem.setItemLabelGenerator(cad->
+                cad.getNome() == null ? "" : cad.getNome()
+        );
+        comboBoxMembroRevisorLinguagem.getStyle().set("--vaadin-combo-box-overlay-width", "16em");
+        comboBoxMembroRevisorLinguagem.setWidth("450px");
+        
+        VerticalLayout verticalLayoutDireito = new VerticalLayout(comboBoxMembroBancaQuestao, comboBoxMembroRevisorLinguagem);
+        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(comboBoxMembroRevisorTecnico1, 
+        										comboBoxMembroRevisorTecnico2, comboBoxMembroRevisorTecnico3);
+        
+        
+        HorizontalLayout verticalLayout = new HorizontalLayout(verticalLayoutDireito, verticalLayoutEsquerdo);
+
+        utilArrayComboBoxCadastro =List.of(
+                comboBoxMembroBancaQuestao,
+                comboBoxMembroRevisorTecnico1,
+                comboBoxMembroRevisorTecnico2,
+                comboBoxMembroRevisorTecnico3,
+                comboBoxMembroRevisorLinguagem);
+
+        
+        add(verticalLayout);
+    }
+    
+    private Renderer<Cadastro> createRenderer() {
+    	
+    	/*Formatando para o CPF ficar abaixo do Nome no ComboBox*/
+    	StringBuilder tpl = new StringBuilder();
+        tpl.append("<div style=\"display: flex;\">");
+        
+        tpl.append("  <div>");
+        tpl.append("    ${item.nome}");
+        tpl.append("    <div style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">${item.cpf}</div>");
+        tpl.append("  </div>"); 
+
+        return LitRenderer.<Cadastro> of(tpl.toString())
+                .withProperty("nome", Cadastro::getNome)
+                .withProperty("cpf", Cadastro::getCpf);
+    }
     
      /* Gets e Sets de todos os campos */ 
     public Long getConcursoId() {
@@ -388,11 +488,6 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
 	
 	
-	@Override
-	public void setParameter(BeforeEvent event, Long parameter) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	public ProvaService getService() {

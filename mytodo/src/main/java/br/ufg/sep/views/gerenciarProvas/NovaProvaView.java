@@ -45,9 +45,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     private ProvaService provaService;
     private ConcursoService concursoService;
-
     private CadastroRepository cadastroRepository;
-
     private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     
     /*Inputs para cadastrar uma nova Prova*/
@@ -61,17 +59,15 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
     private Button salvarButton = new Button("Salvar"); // Btn: Button
     private NovaProvaPresenter presenter;
-
-    /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
-    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private Upload upload = new Upload(buffer);
-
     private ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
     private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
     private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
 
+    /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
+    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+    private Upload upload = new Upload(buffer);
 
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
                          CadastroRepository cadastroRepository){
@@ -80,6 +76,12 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         this.cadastroRepository = cadastroRepository;
     	this.setAlignItems(Alignment.CENTER);
     	
+    	criarTela(); 
+        
+
+    }
+    
+    public void criarTela() {
     	/* Formatando o atributo prazo do tipo DatePicker para dd/MM/yyyy*/ 
     	DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
 		singleFormatI18n.setDateFormat("dd/MM/yyyy");
@@ -93,7 +95,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
         nomeConcurso.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER); // Alinhar o texto dentro do nomeConcurso
-        nomeConcurso.setReadOnly(true);
         nomeConcurso.setWidth("610px");
 
         /* Campo Area de conhecimento*/
@@ -138,8 +139,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         radioNivelProva.setLabel("Escolha o nível da prova:");
         radioNivelProva.setItems("Fundamental", "Médio", "Superior");
 
-
-
         
         /* Disposição de todos os elementos*/
         HorizontalLayout contatinterCima = new HorizontalLayout(numQuestoes, prazo);
@@ -156,8 +155,6 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         
         /*Metodo que mostra elaboradoresGrid, salvarButton na tela*/
         add(salvarButton);
-        
-
     }
 
 

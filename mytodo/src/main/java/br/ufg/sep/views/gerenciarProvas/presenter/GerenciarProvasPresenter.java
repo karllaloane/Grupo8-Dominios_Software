@@ -14,7 +14,7 @@ public class GerenciarProvasPresenter {
 
     private ProvaService provaService;
     private GerenciarProvasView view;
-
+    
     private Prova provaSelecionada;
     
     public GerenciarProvasPresenter(ProvaService provaService, GerenciarProvasView view){
