@@ -1,29 +1,24 @@
-package br.ufg.sep.view.prova;
+package br.ufg.sep.views.prova;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.data.services.ProvaService;
-import br.ufg.sep.entity.Cadastro;
-import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.security.SecurityService;
-import br.ufg.sep.view.prova.presenter.ProvasPresenter;
+import br.ufg.sep.views.prova.presenter.ProvasPresenter;
 import br.ufg.sep.views.MainLayout;
 
 @Route(value="provas", layout = MainLayout.class)

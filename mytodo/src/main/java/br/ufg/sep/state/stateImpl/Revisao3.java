@@ -1,40 +1,41 @@
 package br.ufg.sep.state.stateImpl;
 
+import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.Revisao;
 import br.ufg.sep.state.QuestaoState;
 
 import javax.persistence.Entity;
 
 @Entity
-public class Revisao1 extends QuestaoState {
+public class Revisao3 extends QuestaoState {
 
-    public Revisao1(){
+    public Revisao3(){
         super();
     }
 
-
     @Override
-    public void enviarParaRevisao(Questao questao) {
-
+    public Boolean enviarParaRevisaoLinguagem(Questao questao, Revisao revisao) {
+        RevisaoLinguagem revisaoLinguagem = new RevisaoLinguagem();
+        revisaoLinguagem.setQuestaoAnterior(this.questaoAnterior);// questao antes da correção
+        revisaoLinguagem.setCorrecao(this.correcao);// correção feita
+        revisaoLinguagem.setRevisao(revisao);// revisao da correção feita
+        questao.setState(revisaoLinguagem);
+        return true;
     }
 
     @Override
-    public void enviarParaCorrecao(Questao questao) {
-
+    public Boolean descartar(Questao questao, Revisao revisao) {
+        Descartada descartada = new Descartada();
+        descartada.setQuestaoAnterior(this.questaoAnterior);
+        descartada.setCorrecao(this.correcao);
+        descartada.setRevisao(this.revisao);
+        questao.setState(descartada);
+        return true;
     }
 
     @Override
-    public void concluir(Questao questao) {
-
-    }
-
-    @Override
-    public void guardar(Questao questao) {
-
-    }
-
-    @Override
-    public void descartar(Questao questao) {
-
+    public String toString() {
+        return "Em Revisão III";
     }
 }

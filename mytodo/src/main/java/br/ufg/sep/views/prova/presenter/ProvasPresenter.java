@@ -1,4 +1,4 @@
-package br.ufg.sep.view.prova.presenter;
+package br.ufg.sep.views.prova.presenter;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.security.AuthenticatedUser;
-import br.ufg.sep.view.prova.ProvasView;
+import br.ufg.sep.views.prova.ProvasView;
 import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
 
 public class ProvasPresenter {

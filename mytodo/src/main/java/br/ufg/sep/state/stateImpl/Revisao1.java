@@ -1,6 +1,8 @@
 package br.ufg.sep.state.stateImpl;
 
+import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.Revisao;
 import br.ufg.sep.state.QuestaoState;
 
 import javax.persistence.Entity;
@@ -12,29 +14,24 @@ public class Revisao1 extends QuestaoState {
         super();
     }
 
-
     @Override
-    public void enviarParaRevisao(Questao questao) {
+    public Boolean enviarParaRevisao(Questao questao, Correcao corr) {// ENVIA PARA REVISAO
 
+        Revisao2 revisao2 = new Revisao2();
+        revisao2.setCorrecao(corr);
+        questao.setState(revisao2);
+        return true;
     }
 
-    @Override
-    public void enviarParaCorrecao(Questao questao) {
 
+    @Override
+    public Boolean enviarParaCorrecao(Questao questao, Revisao rev1) {//envia de volta para banca pela primeira vez
+        Correcao1 corr1State = new Correcao1(questao);
+        corr1State.setRevisao(rev1);; //envia para banca com a revisão realizada
+        questao.setState(corr1State); //muda o estado
+        return true;
     }
-
-    @Override
-    public void concluir(Questao questao) {
-
-    }
-
-    @Override
-    public void guardar(Questao questao) {
-
-    }
-
-    @Override
-    public void descartar(Questao questao) {
-
+    public String toString(){
+        return "Em Revisão I";
     }
 }

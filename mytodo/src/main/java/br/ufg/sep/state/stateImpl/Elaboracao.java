@@ -1,40 +1,32 @@
 package br.ufg.sep.state.stateImpl;
 
+import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.Revisao;
 import br.ufg.sep.state.QuestaoState;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
 
 @Entity
-public class Revisao1 extends QuestaoState {
+public class Elaboracao extends QuestaoState {
 
-    public Revisao1(){
+    public Elaboracao(){
         super();
+
     }
 
 
     @Override
-    public void enviarParaRevisao(Questao questao) {
-
+    public Boolean enviarParaRevisao(Questao questao, Correcao correcao/*null*/) { //enviar para REVISAO 1
+        // como não veio de uma corrreção, não havera uso do objeto correcao.
+    Revisao1 revisao1 = new Revisao1();
+    questao.setState(revisao1);
+    return true;
     }
 
-    @Override
-    public void enviarParaCorrecao(Questao questao) {
-
+    public String toString(){
+        return "Em Elaboração";
     }
 
-    @Override
-    public void concluir(Questao questao) {
-
-    }
-
-    @Override
-    public void guardar(Questao questao) {
-
-    }
-
-    @Override
-    public void descartar(Questao questao) {
-
-    }
 }

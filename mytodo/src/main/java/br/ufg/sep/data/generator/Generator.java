@@ -1,8 +1,15 @@
 package br.ufg.sep.data.generator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import br.ufg.sep.data.repositories.QuestaoRepository;
+import br.ufg.sep.entity.Correcao;
+import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.Revisao;
+import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.state.stateImpl.Revisao1;
 import org.springframework.context.annotation.Bean;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -18,9 +25,41 @@ public class Generator {
 	
 	CadastroRepository cadastroRepository;
 	RoleUserRepository roleUserRepository;
-	Generator(CadastroRepository cadastroRepository, RoleUserRepository roleUserRepository){
+
+	QuestaoRepository questaoRepository;
+	Generator(CadastroRepository cadastroRepository, RoleUserRepository roleUserRepository, QuestaoRepository questaoRepository){
 		this.cadastroRepository = cadastroRepository;
 		this.roleUserRepository = roleUserRepository;
+		this.questaoRepository = questaoRepository;
+	}
+	@Bean
+	public int testarState(){
+		Questao q = new Questao();
+if(true) return 0;
+
+		//criando rev1
+		Revisao revisao = new Revisao();
+		revisao.setOrientacoes("TesteOrientacoes");
+		HashMap<String,Integer> hashMap = new HashMap<>();
+		hashMap.put("Paralelismo",2);
+		hashMap.put("Contextualizacao",1);
+		revisao.setItemAnalisado(hashMap);
+		//criando corr1
+		Correcao correcao = new Correcao();
+		correcao.setJustificativa("Teste");
+		correcao.setAtendimentoSugestoes(2);
+
+		q.enviarParaRevisao(null); // r1
+		questaoRepository.save(q);
+		q.enviarParaCorrecao(revisao); // questao nao atendeu, e foi enviada para c1
+		questaoRepository.save(q);
+		q.enviarParaRevisao(correcao); // enviada para rev2, passando a corr1
+		System.out.println("\n--------------\n"+q.getState().toString()+"\n--------------\n");
+		questaoRepository.save(q);
+		return 0;
+//-> o que deve ter: 5 questao_state, o qual o ultimo é Revisao2
+		//-> ter um HashMap mapeado
+
 	}
 	
 	@Bean

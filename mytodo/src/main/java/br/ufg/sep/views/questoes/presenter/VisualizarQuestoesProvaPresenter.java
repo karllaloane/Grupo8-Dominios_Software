@@ -4,12 +4,9 @@ import java.util.Optional;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
-import br.ufg.sep.test.TestView;
-import br.ufg.sep.views.concurso.VisualizarConcursoView;
 import br.ufg.sep.views.questoes.CadastrarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
