@@ -40,16 +40,16 @@ import java.util.Optional;
 
 
 @Route(value="visualizar-prova", layout=MainLayout.class)
-@PageTitle("Gerenciar Provas")
+@PageTitle("Visualizar Provas")
 @RolesAllowed({"ADMIN","PED"})
 
 public class VisualizarProvaView extends VerticalLayout implements HasUrlParameter<Long> {
 	
-	Button save;
-	Button cancel;
+	Button cancel = new Button("Voltar");
+	Button arquivo = new Button("Baixar Arquivo anexado");
 	Prova prova; 
 	private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
-    private ProvaService provaService;
+    ProvaService provaService;
     private ConcursoService concursoService;
     private CadastroRepository cadastroRepository;
     private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
@@ -58,37 +58,29 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
     private TextField nomeConcurso = new TextField();
     private TextField areaConhecimento = new TextField();
     private TextField numQuestoes = new TextField();
-    private TextArea descricaoDaProva = new TextArea();
+    private TextField tipoProva = new TextField();
+    private TextField nivelNumAlternativas = new TextField();
+    private TextField nivelProva = new TextField();
+    private TextField revisorTecnico1 = new TextField();
+    private TextField revisorTecnico2 = new TextField();
+    private TextField revisorTecnico3 = new TextField();
+    private TextField revisorLinguagem = new TextField();
+    private TextField membroBanca = new TextField();
     private DatePicker prazo;
-    private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
-    private RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
-    private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
-    private Button salvarButton = new Button("Salvar"); // Btn: Button
+    private TextArea descricaoDaProva = new TextArea();
+    HorizontalLayout layoutFinal = new HorizontalLayout();
     private NovaProvaPresenter presenter;
-
-    /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
-    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private Upload upload = new Upload(buffer);
-
-    private ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
-    private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
-    
-    private ProvaService service;
-    
-    VerticalLayout layout;
-	HorizontalLayout buttonLayout;
     
 	
-    public void EditarProvaView(ProvaService PS) {
+    public VisualizarProvaView(ProvaService PS) {
 		
-		this.service = PS;
+		this.provaService = PS;
 		
 		criarTela();
 		
 		// EditarProvaPresenter formPresenter = new EditarProvaPresenter(this, PS);
         
         setPadding(true);
-        add(layout, buttonLayout);
         
 	}	
 	
@@ -101,75 +93,83 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 		prazo = new DatePicker("Prazo de Entrega");
 		prazo.setI18n(singleFormatI18n);
 		prazo.setPlaceholder("DD/MM/AAAA");
-		prazo.setWidth("296px");
+		prazo.setWidth("215px");
+		prazo.setEnabled(false);
 		
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
-        nomeConcurso.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER); // Alinhar o texto dentro do nomeConcurso
-        nomeConcurso.setReadOnly(true);
-        nomeConcurso.setWidth("610px");
+        nomeConcurso.setWidth("444px");
+        nomeConcurso.setEnabled(false);
+        
+        /*Alterando tema botão*/
+        arquivo.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         /* Campo Area de conhecimento*/
         areaConhecimento.setLabel("Area de conhecimento");
-        areaConhecimento.setWidth("610px"); 
+        areaConhecimento.setWidth("444px");
+        areaConhecimento.setEnabled(false);
         
         /* Campo Numero de questões*/
         numQuestoes.setLabel("Numero de questoes");
-        numQuestoes.setWidth("296px");
+        numQuestoes.setWidth("215px");
+        numQuestoes.setEnabled(false);
         
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");
-        descricaoDaProva.setWidth("610px");
+        descricaoDaProva.setWidth("936px");
         descricaoDaProva.setHeight("148px");
-           
-        /*Label do upload de arquivos*/
-        Label dropDisabledLabel = new Label("Adicionar um anexo");
-        dropDisabledLabel.getStyle().set("font-weight", "100");
+        descricaoDaProva.setEnabled(false);
         
-        /*Upload de arquivos*/
-        upload.addSucceededListener(event -> {
-            String fileName = event.getFileName();
-            InputStream inputStream = buffer.getInputStream(fileName);
-        });
-        upload.setWidth("300px");
+        /*Revidores e membro da banca*/
+        membroBanca.setLabel("Membro da banca");
+        membroBanca.setWidth("444px");
+        membroBanca.setEnabled(false);
+        revisorTecnico1.setLabel("Revisor Técnico 1");
+        revisorTecnico1.setWidth("444px");
+        revisorTecnico1.setEnabled(false);
+        revisorTecnico2.setLabel("Revisor Técnico 2");
+        revisorTecnico2.setWidth("444px");
+        revisorTecnico2.setEnabled(false);
+        revisorTecnico3.setLabel("Revisor Técnico 3");
+        revisorTecnico3.setWidth("444px");
+        revisorTecnico3.setEnabled(false);
+        revisorLinguagem.setLabel("Revisor de Linguagem");
+        revisorLinguagem.setWidth("444px");
+        revisorLinguagem.setEnabled(false);
         
         /*Campo de escolher tipo de prova*/
-        radioTipoProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        radioTipoProva.setLabel("Escolha o tipo de prova:");
-        radioTipoProva.setItems("Objetiva", "Discursiva", "Redação");
+        tipoProva.setLabel("Tipo de prova:");
+        tipoProva.setWidth("444px");
+        tipoProva.setEnabled(false);
         
         /*RadioBox-down se selecionar prova objetiva*/ 
-        // radioNivelNumAlternativas.addThemeVariants(RadioGroupVariant.);
-        radioNivelNumAlternativas.setLabel("Quantidade de alternativas: ");
-        radioNivelNumAlternativas.setItems("4", "5");
-        radioNivelNumAlternativas.setVisible(false); /*Fica invisivel, no NovaProvaPresenter deve aparecer quando a opção
-         											   "objetiva" estiver selecionada*/
+        nivelNumAlternativas.setLabel("Quantidade de alternativas: ");
+        nivelNumAlternativas.setWidth("444px");
+        nivelNumAlternativas.setVisible(false);
+        nivelNumAlternativas.setEnabled(false);
+    
         
         /*Campo de escolher nível de prova*/
-        radioNivelProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        radioNivelProva.setLabel("Escolha o nível da prova:");
-        radioNivelProva.setItems("Fundamental", "Médio", "Superior");
+        nivelProva.setLabel("Nível da prova:");
+        nivelProva.setWidth("444px");
+        nivelProva.setEnabled(false);
 
         /* Disposição de todos os elementos*/
         HorizontalLayout contatinterCima = new HorizontalLayout(numQuestoes, prazo);
-        VerticalLayout verticalLayoutdireito = new VerticalLayout(radioTipoProva, radioNivelNumAlternativas,radioNivelProva, dropDisabledLabel, upload);
-        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, areaConhecimento,
-        		descricaoDaProva);
-        HorizontalLayout layoutFinal = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
+        VerticalLayout verticalDescricao= new VerticalLayout(descricaoDaProva);
+        HorizontalLayout horizontalbotoes= new HorizontalLayout(cancel, arquivo);
+        VerticalLayout aux = new VerticalLayout(horizontalbotoes);
+        VerticalLayout verticalLayoutdireito = new VerticalLayout(membroBanca, revisorTecnico1, revisorTecnico2, revisorTecnico3, revisorLinguagem);
+        VerticalLayout verticalLayoutEsquerdo = new VerticalLayout(nomeConcurso, contatinterCima, areaConhecimento, tipoProva, nivelNumAlternativas, nivelProva);
+        HorizontalLayout l = new HorizontalLayout(verticalLayoutEsquerdo, verticalLayoutdireito);
+        VerticalLayout layoutFinal = new VerticalLayout(l, verticalDescricao, aux);
         
-        /* Buttons salvar e calcelar */
-        save = new Button("Salvar alterações");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        cancel = new Button("Cancelar");
-        
-        buttonLayout = new HorizontalLayout(save, cancel);
-        buttonLayout.setPadding(true);
-        
+        add(layoutFinal);
 	}
     
 	public void setParameter(BeforeEvent event, Long parameter) {
 		// TODO Auto-generated method stub
-		Optional<Prova> optionalProva = service.getRepository().findById(parameter);
+		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
 		
 		if (optionalProva.isPresent()) {
 			prova = optionalProva.get();
@@ -178,19 +178,12 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 			this.prazo.setValue(prova.getDataEntrega());
 			this.areaConhecimento.setValue(prova.getAreaConhecimento());
 			this.descricaoDaProva.setValue(prova.getDescricao());
-			this.radioTipoProva.setValue(null); // Ver depois
-			this.radioNivelNumAlternativas.setValue(null); // Ver depois
-			this.comboBoxMembroBancaQuestao.setValue(prova.getElaborador());
-			this.comboBoxMembroRevisorTecnico1.setValue(prova.getRevisor1());
-			this.comboBoxMembroRevisorTecnico2.setValue(prova.getRevisor2());
-			this.comboBoxMembroRevisorTecnico3.setValue(prova.getRevisor3());
-			this.comboBoxMembroRevisorLinguagem.setValue(prova.getRevisorLinguagem());
 			
 			
 			
 		} else {
 			Notification notification = Notification
-			        .show("Impossível acessar o concurso");
+			        .show("Impossível acessar a prova");
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
@@ -298,46 +291,6 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 	}
 
 
-	public RadioButtonGroup<String> getRadioTipoProva() {
-		return radioTipoProva;
-	}
-
-
-	public void setRadioTipoProva(RadioButtonGroup<String> radioTipoProva) {
-		this.radioTipoProva = radioTipoProva;
-	}
-
-
-	public RadioButtonGroup<String> getRadioNivelProva() {
-		return radioNivelProva;
-	}
-
-
-	public void setRadioNivelProva(RadioButtonGroup<String> radioNivelProva) {
-		this.radioNivelProva = radioNivelProva;
-	}
-
-
-	public RadioButtonGroup<String> getRadioNivelNumAlternativas() {
-		return radioNivelNumAlternativas;
-	}
-
-
-	public void setRadioNivelNumAlternativas(RadioButtonGroup<String> radioNivelNumAlternativas) {
-		this.radioNivelNumAlternativas = radioNivelNumAlternativas;
-	}
-
-
-	public Button getSalvarButton() {
-		return salvarButton;
-	}
-
-
-	public void setSalvarButton(Button salvarButton) {
-		this.salvarButton = salvarButton;
-	}
-
-
 	public NovaProvaPresenter getPresenter() {
 		return presenter;
 	}
@@ -346,96 +299,5 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
 	public void setPresenter(NovaProvaPresenter presenter) {
 		this.presenter = presenter;
 	}
-
-
-	public MultiFileMemoryBuffer getBuffer() {
-		return buffer;
-	}
-
-
-	public void setBuffer(MultiFileMemoryBuffer buffer) {
-		this.buffer = buffer;
-	}
-
-
-	public Upload getUpload() {
-		return upload;
-	}
-
-
-	public void setUpload(Upload upload) {
-		this.upload = upload;
-	}
-
-
-	public ComboBox<Cadastro> getComboBoxMembroRevisorLinguagem() {
-		return comboBoxMembroRevisorLinguagem;
-	}
-
-
-	public void setComboBoxMembroRevisorLinguagem(ComboBox<Cadastro> comboBoxMembroRevisorLinguagem) {
-		this.comboBoxMembroRevisorLinguagem = comboBoxMembroRevisorLinguagem;
-	}
-
-
-	public ComboBox<Cadastro> getComboBoxMembroBancaQuestao() {
-		return comboBoxMembroBancaQuestao;
-	}
-
-
-	public void setComboBoxMembroBancaQuestao(ComboBox<Cadastro> comboBoxMembroBancaQuestao) {
-		this.comboBoxMembroBancaQuestao = comboBoxMembroBancaQuestao;
-	}
-
-
-	public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico1() {
-		return comboBoxMembroRevisorTecnico1;
-	}
-
-
-	public void setComboBoxMembroRevisorTecnico1(ComboBox<Cadastro> comboBoxMembroRevisorTecnico1) {
-		this.comboBoxMembroRevisorTecnico1 = comboBoxMembroRevisorTecnico1;
-	}
-
-
-	public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico2() {
-		return comboBoxMembroRevisorTecnico2;
-	}
-
-
-	public void setComboBoxMembroRevisorTecnico2(ComboBox<Cadastro> comboBoxMembroRevisorTecnico2) {
-		this.comboBoxMembroRevisorTecnico2 = comboBoxMembroRevisorTecnico2;
-	}
-
-
-	public ComboBox<Cadastro> getComboBoxMembroRevisorTecnico3() {
-		return comboBoxMembroRevisorTecnico3;
-	}
-
-
-	public void setComboBoxMembroRevisorTecnico3(ComboBox<Cadastro> comboBoxMembroRevisorTecnico3) {
-		this.comboBoxMembroRevisorTecnico3 = comboBoxMembroRevisorTecnico3;
-	}
-
-
-	private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
-    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
-    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
-
-
-	public ProvaService getService() {
-		return service;
-	}
-
-
-	public void setService(ProvaService service) {
-		this.service = service;
-	} 
-
-	
-
-
-
-
 
 }

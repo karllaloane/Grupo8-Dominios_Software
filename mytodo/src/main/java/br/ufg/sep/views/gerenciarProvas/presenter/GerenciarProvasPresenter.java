@@ -6,13 +6,15 @@ import br.ufg.sep.views.concurso.EditarConcursoView;
 import br.ufg.sep.views.gerenciarProvas.EditarProvasView;
 import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
+import br.ufg.sep.views.gerenciarProvas.VisualizarProvaView;
+
 import java.util.Optional;
 
 public class GerenciarProvasPresenter {
 
     private ProvaService provaService;
     private GerenciarProvasView view;
-
+    
     private Prova provaSelecionada;
     
     public GerenciarProvasPresenter(ProvaService provaService, GerenciarProvasView view){
@@ -56,12 +58,20 @@ public class GerenciarProvasPresenter {
                 ui.navigate(NovaProvaView.class, view.getConcursoId());
             });
         });
-
+        
         view.getEditar().addClickListener(e->{
-           view.getNovo().getUI().ifPresent(ui->{
-               ui.navigate(NovaProvaView.class,view.getConcursoId());
-           });
+            view.getEditar().getUI().ifPresent(ui->{
+                ui.navigate(EditarProvasView.class, view.getConcursoId());
+            });
         });
+        
+        view.getVisualizar().addClickListener(e->{
+            view.getVisualizar().getUI().ifPresent(ui->{
+                ui.navigate(VisualizarProvaView.class, view.getConcursoId());
+            });
+        });
+
+
 
        
         
