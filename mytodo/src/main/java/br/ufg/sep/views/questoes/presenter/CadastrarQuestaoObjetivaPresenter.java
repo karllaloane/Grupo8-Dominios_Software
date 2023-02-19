@@ -1,7 +1,10 @@
 package br.ufg.sep.views.questoes.presenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import br.ufg.sep.entity.*;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -13,9 +16,6 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.NivelDificuldade;
-import br.ufg.sep.entity.Prova;
-import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.questoes.CadastrarQuestaoObjetivaView;
 
 public class CadastrarQuestaoObjetivaPresenter {
@@ -139,7 +139,18 @@ public class CadastrarQuestaoObjetivaPresenter {
 		questao.setNivelDificuldade(nivelSelecionado);
 		questao.setQuantAlternativas(view.getQuantAlternativas());
 		questao.setProva(view.getProva());
-		
+		/*****TEST****
+		Revisao revisao = new Revisao();
+		revisao.setOrientacoes("Orientatcoes orientadas");
+		HashMap<String,Integer> hashMap = new HashMap<>();
+		hashMap.put("Paralelismo",2);
+		Correcao correcao = new Correcao();
+		correcao.setAtendimentoSugestoes(2);
+		correcao.setJustificativa("Pq nos gostamos de atendender 2");
+		questao.enviarParaRevisao(correcao);
+		questao.enviarParaCorrecao(revisao);
+		questao.enviarParaRevisao(correcao);
+		/*****TEST*****/
 		prova.getQuestoes().add(questao);
 		
 		
@@ -148,7 +159,7 @@ public class CadastrarQuestaoObjetivaPresenter {
 		
 		/*Notifica ação bem sucedida*/
 		notification = Notification
-		        .show("Prova salva com sucesso!");
+		        .show("Questão salva com sucesso!");
 		notification.setPosition(Position.TOP_CENTER);
 		notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 	}

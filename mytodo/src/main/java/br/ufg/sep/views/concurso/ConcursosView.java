@@ -36,9 +36,9 @@ public class ConcursosView extends VerticalLayout{
 	public ConcursosView(SecurityService secutiryService, CadastroRepository cr, ConcursoService cS){
 	
 		criarButton(); // inicializa os botões
-		
+
+
 		concursos = new Grid<>(Concurso.class,false);
-		
 		ConcursoPresenter presenter = new ConcursoPresenter(this, cS);
 
 		//editarButton.getElement().getStyle().set("margin-left", "auto");

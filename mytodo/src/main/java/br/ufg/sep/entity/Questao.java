@@ -1,14 +1,18 @@
 package br.ufg.sep.entity;
 
+import br.ufg.sep.state.QuestaoState;
+import br.ufg.sep.state.stateImpl.Elaboracao;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 public class Questao extends AbstractEntity {
 
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="prova_id", nullable = false)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	QuestaoState state;
+	@ManyToOne()
+	@JoinColumn(name="prova_id", nullable = true)
 	private Prova prova;
 	
 	private int idQuestao;
@@ -29,12 +33,51 @@ public class Questao extends AbstractEntity {
 	
 	
 	public Questao(){
-		
-		
+		this.state = new Elaboracao();
 	}
-	
+
+
+
+
+	/************ Métodos STATE********/
+	public QuestaoState getState() {
+		return state;
+	}
+
+	public void setState(QuestaoState state) {
+		this.state = state;
+	}
+	public void enviarParaRevisao(Correcao correcao){
+	this.state.enviarParaRevisao(this,correcao);
+	}
+
+	public void enviarParaCorrecao(Revisao revisao){
+		this.state.enviarParaCorrecao(this,revisao);
+	}
+
+
+	public void concluir(){
+		this.state.concluir(this);
+	}
+
+	public void descartar(Revisao revisao){
+		this.state.descartar(this,revisao);
+	}
+
+	public void guardarNoBanco() {
+	this.state.guardar(this);
+	}
+
+
+	/************ Métodos STATE********/
+
+
+
 	public Questao(int num) {
 		this.idQuestao = num;
+	}
+	public Questao(String s){
+
 	}
 	
 	public String getEnunciado() {
