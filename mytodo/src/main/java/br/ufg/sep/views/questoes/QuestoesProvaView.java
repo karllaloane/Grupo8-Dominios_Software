@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -28,20 +29,21 @@ import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.questoes.presenter.VisualizarQuestoesProvaPresenter;
+import br.ufg.sep.views.questoes.presenter.QuestoesProvaPresenter;
 
 @Route(value="visualizar_questoes_prova", layout = MainLayout.class)
 @PageTitle("Questões")
 @PermitAll
-public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUrlParameter<Long> {
+public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter<Long> {
 	
 	private ProvaService provaService;
 	private QuestaoService questaoService;
 
 	private Prova prova;
+
 	private Long provaId;
 	private Grid<Questao> questoesGrid;
-	private VisualizarQuestoesProvaPresenter presenter;
+	private QuestoesProvaPresenter presenter;
 	
 	private HorizontalLayout layoutButton;
 	private HorizontalLayout infoProvaLayout;
@@ -57,18 +59,35 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 	
 	private Button novaQuestaoButton;
 	private Button visualizarButton;
+	private Button editarButton;
+	private Button excluirButton;
 	private Button downloadButton;
 	
+	private Dialog dialog;
+	private Button dialogDeletaButton;
 
-	public VisualizarQuestoesProvaView(ProvaService provaService, QuestaoService questaoService) {
+	public QuestoesProvaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		
+		dialog = new Dialog();
+		dialog.setHeaderTitle("Deletar questão");
+		dialog.add("Deseja excluir esta questão permanentemente?");
+		
+		dialogDeletaButton = new Button("Excluir");
+		dialogDeletaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
+                ButtonVariant.LUMO_ERROR);
+		dialogDeletaButton.getStyle().set("margin-right", "auto");
+		
+		dialogCancelaButton = new Button("Cancelar");
+		dialogCancelaButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		
+		dialog.getFooter().add(dialogDeletaButton);
+		dialog.getFooter().add(dialogCancelaButton);
+			
 		iniciaGrid();
 		criarButtons();
 		criarLayoutInfoProva(); //cria o layout com informacoes da prova
-		
-		layoutButton.add(novaQuestaoButton, visualizarButton);
 		
 		add(details, layoutButton, questoesGrid);
 	}
@@ -80,7 +99,7 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		questoesGrid.addColumn("enunciado").setHeader("Enunciado");
 		questoesGrid.addColumn("conteudoEspecifico").setHeader("Subárea");
 		questoesGrid.addColumn("nivelDificuldade").setHeader("Nível");
-		//provas.addColumn("atividade").setHeader("Atividade");
+		questoesGrid.addColumn("state").setHeader("Status");
 		questoesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 	
@@ -93,7 +112,17 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
 		visualizarButton.setEnabled(false);
 		
+		editarButton = new Button("Editar", new Icon(VaadinIcon.PENCIL));
+		editarButton.setVisible(false);
+		editarButton.getStyle().set("margin-right", "auto");
+		
+		excluirButton = new Button("Excluir", new Icon(VaadinIcon.TRASH));
+		excluirButton.setVisible(false);
+		excluirButton.getStyle().set("margin-right", "auto");
+		
 		downloadButton = new Button("Baixar arquivo", new Icon(VaadinIcon.DOWNLOAD));
+		
+		layoutButton.add(novaQuestaoButton, visualizarButton, editarButton, excluirButton);
 	}
 
 	//metodo para criar o layout superior com informacoes da prova
@@ -168,12 +197,16 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 			
 			setInfoProva(); //setar as informacoes sobre a prova
 			
-			this.presenter = new VisualizarQuestoesProvaPresenter(provaService, questaoService,this); //iniciar o presenter
+			this.presenter = new QuestoesProvaPresenter(provaService, questaoService,this); //iniciar o presenter
 		}
 	}
 	
-	public void habilitarButtons() {
+	public void habilitarBotoesQuestao() {
 		this.visualizarButton.setEnabled(true);
+	}
+	
+	public void desabilitarBotoesQuestao() {
+		this.visualizarButton.setEnabled(false);
 	}
 
 	//setar Informações Gerais da Prova.
@@ -209,6 +242,33 @@ public class VisualizarQuestoesProvaView extends VerticalLayout implements HasUr
 	
 	public Button getVisualizarButton() {
 		return visualizarButton;
+	}
+	
+	public Prova getProva() {
+		return prova;
+	}
+	
+	public Button getEditarButton() {
+		return editarButton;
+	}
+
+	public Button getExcluirButton() {
+		return excluirButton;
+	}
+	
+	public Button getDialogDeletaButton() {
+		return dialogDeletaButton;
+	}
+
+	public Button getDialogCancelaButton() {
+		return dialogCancelaButton;
+	}
+
+	private Button dialogCancelaButton;
+	
+
+	public Dialog getDialog() {
+		return dialog;
 	}
 
 }

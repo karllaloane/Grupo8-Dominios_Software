@@ -113,6 +113,7 @@ public class VisualizarProvaView extends VerticalLayout implements HasUrlParamet
         numQuestoes.setLabel("Numero de questoes");
         numQuestoes.setWidth("215px");
         numQuestoes.setEnabled(false);
+        numQuestoes.setAllowedCharPattern("[0-9]");
         
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");

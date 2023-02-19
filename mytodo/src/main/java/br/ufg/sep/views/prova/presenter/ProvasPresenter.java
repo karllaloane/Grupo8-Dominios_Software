@@ -7,7 +7,7 @@ import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.views.prova.ProvasView;
-import br.ufg.sep.views.questoes.VisualizarQuestoesProvaView;
+import br.ufg.sep.views.questoes.QuestoesProvaView;
 
 public class ProvasPresenter {
 
@@ -46,7 +46,7 @@ public class ProvasPresenter {
 		view.getVisualizarButton().addClickListener(e->{
 						
 			view.getVisualizarButton().getUI().ifPresent(ui->{
-				 ui.navigate(VisualizarQuestoesProvaView.class, prova.getId());});
+				 ui.navigate(QuestoesProvaView.class, prova.getId());});
 		});
 	}
 	

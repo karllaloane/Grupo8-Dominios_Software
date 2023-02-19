@@ -98,6 +98,7 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
 		prazo.setI18n(singleFormatI18n);
 		prazo.setPlaceholder("DD/MM/AAAA");
 		prazo.setWidth("296px");
+		prazo.setAllowedCharPattern(("[0-9/]"));
 		
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
@@ -111,6 +112,7 @@ public class EditarProvasView extends VerticalLayout implements HasUrlParameter<
         /* Campo Numero de questões*/
         numQuestoes.setLabel("Numero de questoes");
         numQuestoes.setWidth("296px");
+        numQuestoes.setAllowedCharPattern("[0-9]");
         
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");

@@ -7,19 +7,13 @@ import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.component.orderedlayout.BoxSizing;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
@@ -33,17 +27,16 @@ import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.questoes.presenter.CadastrarQuestaoObjetivaPresenter;
-import br.ufg.sep.views.questoes.presenter.VisualizarQuestoesProvaPresenter;
+import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
 @Route(value="cadastrar_questoes_prova", layout = MainLayout.class)
 @PageTitle("Cadastrar Questão")
 @PermitAll
-public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
+public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
 
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private CadastrarQuestaoObjetivaPresenter presenter;
+	private NovaQuestaoObjetivaPresenter presenter;
 	
 	//inputs gerais
 	private TextField subareaTF;
@@ -70,7 +63,7 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 	private Prova prova;
 	private int quantAlternativas;
 
-	public CadastrarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
+	public NovaQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 
@@ -245,7 +238,7 @@ public class CadastrarQuestaoObjetivaView extends VerticalLayout implements HasU
 			addJustificativa();
 			addBotões();
 
-			this.presenter = new CadastrarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
+			this.presenter = new NovaQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}
 		
 	}

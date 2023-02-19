@@ -91,6 +91,8 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 		prazo.setI18n(singleFormatI18n);
 		prazo.setPlaceholder("DD/MM/AAAA");
 		prazo.setWidth("296px");
+		//setando para aceitar apenas número e /
+		prazo.setAllowedCharPattern(("[0-9/]"));
 		
 		/* Campo Nome do Concurso*/
         nomeConcurso.setLabel("Concurso pertencente");
@@ -105,6 +107,8 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         /* Campo Numero de questões*/
         numQuestoes.setLabel("Numero de questoes");
         numQuestoes.setWidth("296px");
+        //aceitar apenas numeros
+        numQuestoes.setAllowedCharPattern("[0-9]");
         
         /*Campo descrição da prova*/
         descricaoDaProva.setLabel("Descrição da Prova");

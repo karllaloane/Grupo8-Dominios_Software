@@ -49,7 +49,6 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private List<Checkbox> checkboxList;
 
 	private Button voltarButton;
-
 	private Button enviarButton;
 
 	//layouts final
@@ -61,6 +60,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private VerticalLayout buttonsLayout;
 
 	private QuestaoObjetiva questaoObjetiva;
+	private long questaoId;
+
 	private int quantAlternativas;
 
 	public VisualizarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
@@ -233,11 +234,11 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		if (optionalQuestao.isPresent()) {
 			questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();	
 			quantAlternativas = questaoObjetiva.getQuantAlternativas();
-			
+			questaoId = questaoObjetiva.getId();
 			//setando o valor dos campos criados no construtor
 			//pode virar uma funcao mas fiquei com preguica
 			enunciado.setValue(questaoObjetiva.getEnunciado());
-			subareaTF.setValue(questaoObjetiva.getConteudoEspecifico());
+			//subareaTF.setValue(questaoObjetiva.getConteudoEspecifico());
 			nivelDificuldadeCombo.setValue(questaoObjetiva.getNivelDificuldade());
 			
 			//chama o método que adiciona o layout de alternativas de acordo com a quantidade de questoes
@@ -248,9 +249,25 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			addJustificativa();
 			addBotões();
 
-			//this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
+			this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}
 		
+	}
+	
+	public Button getEnviarButton() {
+		return enviarButton;
+	}
+	
+	public Button getVoltarButton() {
+		return voltarButton;
+	}
+	
+	public Questao getQuestaoObjetiva() {
+		return questaoObjetiva;
+	}
+	
+	public long getQuestaoId() {
+		return questaoId;
 	}
 	
 }
