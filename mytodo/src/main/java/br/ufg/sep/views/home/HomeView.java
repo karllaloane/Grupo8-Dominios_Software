@@ -51,13 +51,13 @@ public class HomeView extends VerticalLayout {
 		testar.setText("GetEstado");
 		testar.setIcon(new Icon(VaadinIcon.ADJUST));
 		testar.addClickListener(e->{
-			Questao q = questaoRepository.findById(Long.valueOf("138")).get();
+			Questao q = questaoRepository.findById(Long.valueOf("272")).get();
 			console.setValue(q.getState().toString());
 		});
 
 		this.passarEstado.setIcon(new Icon((VaadinIcon.POINTER)));
 		passarEstado.addClickListener(c->{
-			Questao q = questaoRepository.findById(Long.valueOf("138")).get();
+			Questao q = questaoRepository.findById(Long.valueOf("272")).get();
 			Correcao corr = new Correcao();
 			corr.setAtendimentoSugestoes(2);
 			corr.setJustificativa("Paralelismo arrumador");
