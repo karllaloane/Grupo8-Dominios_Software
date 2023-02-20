@@ -12,6 +12,9 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -227,6 +230,7 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		Optional<Questao> optionalQuestao = questaoService.getRepository().findById(parameter);
 		if (optionalQuestao.isPresent()) {
 			questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();	
+			
 			quantAlternativas = questaoObjetiva.getQuantAlternativas();
 			questaoId = questaoObjetiva.getId();
 			//setando o valor dos campos criados no construtor
@@ -249,6 +253,13 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			addBotões();
 
 			this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
+		}
+		
+		else {
+			Notification notification = Notification
+			        .show("Impossível acessar a questão");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
 		
 	}

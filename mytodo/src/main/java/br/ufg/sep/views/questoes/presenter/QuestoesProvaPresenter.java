@@ -1,6 +1,11 @@
 package br.ufg.sep.views.questoes.presenter;
 
 import java.util.Optional;
+import java.util.Set;
+
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
@@ -11,6 +16,7 @@ import br.ufg.sep.state.stateImpl.Elaboracao;
 import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
+import br.ufg.sep.views.questoes.VisualizarQuestaoSubjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
 public class QuestoesProvaPresenter {
@@ -81,18 +87,21 @@ public class QuestoesProvaPresenter {
             }
 		});
 		
-		/*Visualizar*/
+		
+		/*Acessar a prova*/
 		view.getAcessarButton().addClickListener(e->{
 					
 			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
-					&& questao.getState() instanceof Elaboracao)
-			view.getAcessarButton().getUI().ifPresent(ui->{
-				 ui.navigate(VisualizarQuestaoObjetivaView.class, questao.getId());});
+					&& questao.getState() instanceof Elaboracao) {
+				
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(VisualizarQuestaoObjetivaView.class, questao.getId());});
+			}
 			
 			if((prova.getTipo() == TipoProva.DISCUSSIVA)
 					&& questao.getState() instanceof Elaboracao) {
-				//view.getAcessarButton().getUI().ifPresent(ui->{
-				//	 ui.navigate(VisualizarQuestaoSubjetivaView.class, questao.getId());});
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(VisualizarQuestaoSubjetivaView.class, questao.getId());});
 			}
 				
 		});
