@@ -29,7 +29,7 @@ import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
-@Route(value="cadastrar_questoes_prova", layout = MainLayout.class)
+@Route(value="cadastrar_questoes_objetiva", layout = MainLayout.class)
 @PageTitle("Cadastrar Questão")
 @PermitAll
 public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
@@ -201,7 +201,7 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		add(justificativaLayout);
 	}
 	
-	private void addBotões() {
+	private void addBotoes() {
 		//critando botoes
 		
 		HorizontalLayout h = new HorizontalLayout();
@@ -241,7 +241,7 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 
 			//chama o método para criar o resto do layout
 			addJustificativa();
-			addBotões();
+			addBotoes();
 
 			this.presenter = new NovaQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}

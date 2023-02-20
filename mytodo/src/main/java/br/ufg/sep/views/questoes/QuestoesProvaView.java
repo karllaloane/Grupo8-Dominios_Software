@@ -58,7 +58,7 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	private TextField numQuestoesTotalTF;
 	
 	private Button novaQuestaoButton;
-	private Button visualizarButton;
+	private Button acessarButton;
 	private Button editarButton;
 	private Button excluirButton;
 	private Button downloadButton;
@@ -109,8 +109,8 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		novaQuestaoButton = new Button("Cadastrar Questão", new Icon(VaadinIcon.PLUS));
 		novaQuestaoButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 		
-		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
-		visualizarButton.setEnabled(false);
+		acessarButton = new Button("Acessar", new Icon(VaadinIcon.EYE));
+		acessarButton.setEnabled(false);
 		
 		editarButton = new Button("Editar", new Icon(VaadinIcon.PENCIL));
 		editarButton.setVisible(false);
@@ -122,7 +122,7 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		
 		downloadButton = new Button("Baixar arquivo", new Icon(VaadinIcon.DOWNLOAD));
 		
-		layoutButton.add(novaQuestaoButton, visualizarButton, editarButton, excluirButton);
+		layoutButton.add(novaQuestaoButton, acessarButton, editarButton, excluirButton);
 	}
 
 	//metodo para criar o layout superior com informacoes da prova
@@ -202,11 +202,11 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	}
 	
 	public void habilitarBotoesQuestao() {
-		this.visualizarButton.setEnabled(true);
+		this.acessarButton.setEnabled(true);
 	}
 	
 	public void desabilitarBotoesQuestao() {
-		this.visualizarButton.setEnabled(false);
+		this.acessarButton.setEnabled(false);
 	}
 
 	//setar Informações Gerais da Prova.
@@ -240,8 +240,8 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		return provaId;
 	}
 	
-	public Button getVisualizarButton() {
-		return visualizarButton;
+	public Button getAcessarButton() {
+		return acessarButton;
 	}
 	
 	public Prova getProva() {

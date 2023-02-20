@@ -72,6 +72,8 @@ public class MetadadosQuestaoComponent extends VerticalLayout {
 		grid.setItems(subAreas);
 		grid.setAllRowsVisible(true);
 		
+		//adicionando a coluna
+		//conterá o arraylist e o botão de remover
 		grid.addColumn(item -> item).setFlexGrow(1);
 		grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
@@ -81,6 +83,8 @@ public class MetadadosQuestaoComponent extends VerticalLayout {
                     button.addClickListener(e -> this.removeSubArea(item));
                 })).setWidth("130px").setFlexGrow(0).setKey("remover");
 
+		//um pequeno listener pra adicionar as subareas
+		//no grid
 		addButton.addClickListener(e ->{
 			if(!this.subareaTextField.isEmpty()) {
 				this.subAreas.add(subareaTextField.getValue());
@@ -100,6 +104,7 @@ public class MetadadosQuestaoComponent extends VerticalLayout {
 		
 	}
 	
+	//atualizar o grid
 	public void atualizaGrid() {
 		if(subAreas.size() == 0) {
 			grid.setVisible(false);
@@ -110,9 +115,20 @@ public class MetadadosQuestaoComponent extends VerticalLayout {
 		}
 	}
 
+	//metodo pra remover uma subarea da lista
 	private void removeSubArea(String item) {
 		subAreas.remove(item);
 		atualizaGrid();
+	}
+	
+	//pra poder setar a edicao falta quando 
+	//for apenas visualização
+	public void setEdicaoFalse() {
+		this.addButton.setVisible(false);
+		this.subareaTextField.setVisible(false);
+		this.addSubAreaLayout.setVisible(false);
+		this.nivelDificuldadeCombo.setReadOnly(true);
+		grid.getColumnByKey("remover").setVisible(false);;
 	}
 
 	public Button getAdicionarButton() {
@@ -133,14 +149,6 @@ public class MetadadosQuestaoComponent extends VerticalLayout {
 
 	public void setNivelDificuldadeCombo(ComboBox<NivelDificuldade> nivelDificuldadeCombo) {
 		this.nivelDificuldadeCombo = nivelDificuldadeCombo;
-	}
-	
-	public void setEdicaoFalse() {
-		this.addButton.setVisible(false);
-		this.subareaTextField.setVisible(false);
-		this.addSubAreaLayout.setVisible(false);
-		this.nivelDificuldadeCombo.setReadOnly(true);
-		grid.getColumnByKey("remover").setVisible(false);;
 	}
 
 }

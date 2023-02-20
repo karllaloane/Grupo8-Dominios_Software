@@ -8,6 +8,7 @@ import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
@@ -44,8 +45,12 @@ public class QuestoesProvaPresenter {
 		view.getNovaQuestaoButton().addClickListener(e->{
 			
 			if(prova.getTipo() == TipoProva.OBJETIVA_5 || prova.getTipo() == TipoProva.OBJETIVA_4)
-			view.getNovaQuestaoButton().getUI().ifPresent(ui->{
+				view.getNovaQuestaoButton().getUI().ifPresent(ui->{
 				 ui.navigate(NovaQuestaoObjetivaView.class, prova.getId());});
+			
+			if(prova.getTipo() == TipoProva.DISCUSSIVA)
+				view.getNovaQuestaoButton().getUI().ifPresent(ui->{
+					 ui.navigate(NovaQuestaoDiscursivaView.class, prova.getId());});
 		});
 		
 		//listener da grid, busca a questao pelo id
@@ -77,10 +82,19 @@ public class QuestoesProvaPresenter {
 		});
 		
 		/*Visualizar*/
-		view.getVisualizarButton().addClickListener(e->{
-						
-			view.getVisualizarButton().getUI().ifPresent(ui->{
+		view.getAcessarButton().addClickListener(e->{
+					
+			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
+					&& questao.getState() instanceof Elaboracao)
+			view.getAcessarButton().getUI().ifPresent(ui->{
 				 ui.navigate(VisualizarQuestaoObjetivaView.class, questao.getId());});
+			
+			if((prova.getTipo() == TipoProva.DISCUSSIVA)
+					&& questao.getState() instanceof Elaboracao) {
+				//view.getAcessarButton().getUI().ifPresent(ui->{
+				//	 ui.navigate(VisualizarQuestaoSubjetivaView.class, questao.getId());});
+			}
+				
 		});
 		
 		/*Visualizar*/
