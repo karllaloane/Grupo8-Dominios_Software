@@ -62,6 +62,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private QuestaoObjetiva questaoObjetiva;
 	private long questaoId;
 
+	private MetadadosQuestaoComponent metadados;
+	
 	private int quantAlternativas;
 
 	public VisualizarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
@@ -89,18 +91,10 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		justificativaLayout.setWidth("700px");
 		buttonsLayout.setWidth("700px");
 		
-		//criando os componentes de informacoes sobre a questao a ser cadastrada
-		subareaTF = new TextField("Subárea da questão");
-		subareaTF.setReadOnly(true);
+		metadados = new MetadadosQuestaoComponent();
 		
-		//criação do combobx
-		nivelDificuldadeCombo = new ComboBox<>("Nível de dificuldade");
-		nivelDificuldadeCombo.setItems(EnumSet.allOf(NivelDificuldade.class));
-		nivelDificuldadeCombo.setReadOnly(true);
 		
-		//alterando estilos
-		subareaTF.setWidth("400px");
-		informacaoLayout.add(subareaTF, nivelDificuldadeCombo); //adicionando ao layout intermediario
+		informacaoLayout.add(metadados); //adicionando ao layout intermediario
 		
 		/**************** Layout do enunciado ***********************/
 	
@@ -238,8 +232,13 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			//setando o valor dos campos criados no construtor
 			//pode virar uma funcao mas fiquei com preguica
 			enunciado.setValue(questaoObjetiva.getEnunciado());
-			//subareaTF.setValue(questaoObjetiva.getConteudoEspecifico());
-			nivelDificuldadeCombo.setValue(questaoObjetiva.getNivelDificuldade());
+			
+			//setando os valores do componente de metadados
+			metadados.setSubAreas(questaoObjetiva.getSubAreas());
+			metadados.atualizaGrid(); //atualizando o grid apos setar a lista de subareas
+			metadados.setEdicaoFalse(); //desabilitando a edicao dos componentes
+			metadados.getNivelDificuldadeCombo().setValue(questaoObjetiva.getNivelDificuldade());
+	
 			
 			//chama o método que adiciona o layout de alternativas de acordo com a quantidade de questoes
 			//definidas no cadastro da prova

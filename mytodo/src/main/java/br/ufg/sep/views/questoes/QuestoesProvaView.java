@@ -97,7 +97,7 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		questoesGrid = new Grid<>(Questao.class,false);
 		
 		questoesGrid.addColumn("enunciado").setHeader("Enunciado");
-		questoesGrid.addColumn("conteudoEspecifico").setHeader("Subárea");
+		questoesGrid.addColumn("subAreas").setHeader("Subárea");
 		questoesGrid.addColumn("nivelDificuldade").setHeader("Nível");
 		questoesGrid.addColumn("state").setHeader("Status");
 		questoesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);

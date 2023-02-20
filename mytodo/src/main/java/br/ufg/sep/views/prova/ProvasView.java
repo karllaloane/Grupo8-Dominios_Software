@@ -61,12 +61,7 @@ public class ProvasView extends VerticalLayout{
 						).setHeader("Concurso");
 		provas.addColumn("areaConhecimento").setHeader("Área do Conhecimento");
 		provas.addColumn("numeroQuestoes").setHeader("Questões solicitadas");
-		//provas.addColumn("atividade").setHeader("Atividade");
-//		this.provas.addColumn(LitRenderer
-//				.<Prova>of("${item.name}</b>")
-//				.withProperty("name", prova -> prova.getResponsavel().getNome())
-//				).setHeader("Name");
-//		provas.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		provas.addColumn("tipo").setHeader("Tipo");
 	}
 
 	//habilita botao apos selecionar prova

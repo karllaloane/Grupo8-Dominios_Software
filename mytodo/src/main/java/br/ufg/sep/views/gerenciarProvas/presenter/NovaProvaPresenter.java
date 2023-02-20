@@ -44,8 +44,9 @@ public class NovaProvaPresenter {
 				
 		}
 
-		if(tipoSelecionado.toLowerCase().contains("discussiva"))
+		if(tipoSelecionado.toLowerCase().contains("discursiva"))
 			return TipoProva.DISCUSSIVA;
+		
 		if(
 				tipoSelecionado.toLowerCase().contains("redação")
 				|| tipoSelecionado.toLowerCase().contains("redacao")

@@ -59,6 +59,8 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 	private VerticalLayout alternativaLayout;
 	private VerticalLayout justificativaLayout;
 	private VerticalLayout buttonsLayout;
+	
+	private MetadadosQuestaoComponent metadados;
 
 	private Prova prova;
 	private int quantAlternativas;
@@ -66,6 +68,8 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 	public NovaQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
+		
+		setMetadados(new MetadadosQuestaoComponent());
 
 		//criando os layouts intermediarios
 		HorizontalLayout informacaoLayout = new HorizontalLayout();
@@ -97,7 +101,8 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		
 		//alterando estilos
 		subareaTF.setWidth("400px");
-		informacaoLayout.add(subareaTF, nivelDificuldadeCombo); //adicionando ao layout intermediario
+		//informacaoLayout.add(subareaTF, nivelDificuldadeCombo); //adicionando ao layout intermediario
+		informacaoLayout.add(metadados);
 		
 		/**************** Layout do enunciado ***********************/
 	
@@ -282,5 +287,13 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 	
 	public Prova getProva() {
 		return prova;
+	}
+
+	public MetadadosQuestaoComponent getMetadados() {
+		return metadados;
+	}
+
+	public void setMetadados(MetadadosQuestaoComponent metadados) {
+		this.metadados = metadados;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.ufg.sep.entity.*;
+
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -74,8 +76,9 @@ public class NovaQuestaoObjetivaPresenter {
 		
 		//chama o metodo enviar, que salva e envia a questao para relaboracao
 		view.getEnviarButton().addClickListener( e->enviarQuestao(e));	
-	}
 	
+	}
+
 	private void enviarQuestao(ClickEvent<Button> event) {
 		Notification notification;
 		questao = new QuestaoObjetiva();
@@ -132,10 +135,10 @@ public class NovaQuestaoObjetivaPresenter {
 		Notification notification;
 		
 		/* Criando e armazenando os valores do Input*/
-		NivelDificuldade nivelSelecionado = view.getNivelDificuldadeCombo().getValue();
+		NivelDificuldade nivelSelecionado = view.getMetadados().getNivelDificuldadeCombo().getValue();
 		String enunciado = view.getEnunciado().getValue();
 		String justificativa = view.getJustificativaTA().getValue();
-		String subarea = view.getSubareaTF().getValue();
+		List<String> subarea = view.getMetadados().getSubAreas();
 		List<String> alternativasList = new ArrayList<String>();
 		
 		//verifica qual checkbox esta com valor verdadeiro
@@ -180,7 +183,7 @@ public class NovaQuestaoObjetivaPresenter {
 		}
 
 		//verificando demais campos em branco
-		if(enunciado.isEmpty() || justificativa.isEmpty() || subarea.isEmpty()) {
+		if(enunciado.isEmpty() || justificativa.isEmpty() || subarea.size() == 0) {
 			notification = Notification
 			        .show("Campos em branco." );
 			notification.setPosition(Position.TOP_CENTER);
@@ -191,7 +194,7 @@ public class NovaQuestaoObjetivaPresenter {
 		//setando os dados do objeto
 		questao.setAlternativaCorreta(correta);
 		questao.setAlternativas(alternativasList);
-		//questao.setConteudoEspecifico(subarea);
+		questao.setSubAreas(subarea);
 		questao.setEnunciado(enunciado);
 		questao.setJustificativa(justificativa);
 		questao.setNivelDificuldade(nivelSelecionado);
