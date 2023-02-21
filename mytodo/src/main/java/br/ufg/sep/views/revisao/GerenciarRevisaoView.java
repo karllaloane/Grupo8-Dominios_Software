@@ -52,5 +52,7 @@ public class GerenciarRevisaoView extends HorizontalLayout{
 	private TextField nivelDificuldadeQuestaoCombo = new TextField("Nível de Dificuldade", "", "");
 	private TextArea justificativaQuestao;
 	
+	
+	
 
 }
