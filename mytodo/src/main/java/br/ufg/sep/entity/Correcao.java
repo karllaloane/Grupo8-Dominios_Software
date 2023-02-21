@@ -9,7 +9,8 @@ import java.util.Map;
 @Entity
 public class Correcao extends AbstractEntity{
 
-    int atendimentoSugestoes;
+    private AtendimentoSugestoes atendimentoSugestoes;
+    //troquei para enum
     // feito com referencia ao arquivo-referencia:SISTEMA ELABORACAO DE PROVAS.pdf
     //0 para nao atendimento, 1 para atendimento parcial, 2 para atendimento total
     // aceito refatorações (enum, classe, string, sla)
@@ -21,11 +22,11 @@ public class Correcao extends AbstractEntity{
 
     }
 
-    public int getAtendimentoSugestoes() {
+    public AtendimentoSugestoes getAtendimentoSugestoes() {
         return atendimentoSugestoes;
     }
 
-    public void setAtendimentoSugestoes(int atendimentoSugestoes) {
+    public void setAtendimentoSugestoes(AtendimentoSugestoes atendimentoSugestoes) {
         this.atendimentoSugestoes = atendimentoSugestoes;
     }
 

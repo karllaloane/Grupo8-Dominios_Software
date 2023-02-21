@@ -6,13 +6,18 @@ import java.util.Set;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
+import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
 import br.ufg.sep.views.questoes.EditarQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.EditarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
@@ -32,7 +37,7 @@ public class QuestoesProvaPresenter {
 			QuestaoService questaoService, QuestoesProvaView view) {
 		this.questaoService = questaoService;
 		this.view = view;
-				
+		
 		//buscando a prova
 		Optional<Prova> optionalProva = provaService.getRepository().findById(view.getProvaId());
 		if(optionalProva.isPresent()) {
@@ -80,7 +85,8 @@ public class QuestoesProvaPresenter {
             		}
             		
             		//a ideia aqui é habilitar para os outros estados do elaborador
-            		if(questao.getState() instanceof Elaboracao) {
+            		if(questao.getState() instanceof Elaboracao ||
+            				questao.getState() instanceof Correcao1 ) {
             			view.habilitarBotoesQuestao();
             		} else {
             			view.desabilitarBotoesQuestao();
@@ -103,6 +109,13 @@ public class QuestoesProvaPresenter {
 					&& questao.getState() instanceof Elaboracao) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(VisualizarQuestaoDiscursivaView.class, questao.getId());});
+			}
+			
+			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
+					&& questao.getState() instanceof Correcao1) {
+				
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(CorrecaoObjetivaBancaView.class, questao.getId());});
 			}
 				
 		});

@@ -16,6 +16,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 
 import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.data.repositories.RoleUserRepository;
+import br.ufg.sep.entity.AtendimentoSugestoes;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.role.Role;
 import br.ufg.sep.entity.role.RoleUser;
@@ -47,7 +48,7 @@ if(true) return 0;
 		//criando corr1
 		Correcao correcao = new Correcao();
 		correcao.setJustificativa("Teste");
-		correcao.setAtendimentoSugestoes(2);
+		correcao.setAtendimentoSugestoes(AtendimentoSugestoes.PARCIAL);
 
 		q.enviarParaRevisao(null); // r1
 		questaoRepository.save(q);
