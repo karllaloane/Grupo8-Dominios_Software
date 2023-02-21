@@ -46,7 +46,7 @@ public class ProvasView extends VerticalLayout{
 	
 	private void criarButtons() {
 		layout = new HorizontalLayout();
-		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
+		visualizarButton = new Button("Elaborar", new Icon(VaadinIcon.PENCIL));
 		visualizarButton.setEnabled(false);
 	}
 	
@@ -54,13 +54,14 @@ public class ProvasView extends VerticalLayout{
 	private void iniciaGrid() {
 		provas = new Grid<>(Prova.class,false);
 		
-		this.provas.addColumn(LitRenderer
-				.<Prova>of("<b>${item.name}</b>").
-				withProperty("name", prova -> prova.getConcurso().getNome())
-						).setHeader("Concurso");
+
 		provas.addColumn("areaConhecimento").setHeader("Área do Conhecimento");
 		provas.addColumn("numeroQuestoes").setHeader("Questões solicitadas");
 		provas.addColumn("tipo").setHeader("Tipo");
+		this.provas.addColumn(LitRenderer
+				.<Prova>of("<b>${item.name}</b>").
+				withProperty("name", prova -> prova.getConcurso().getNome())
+		).setHeader("Concurso");
 	}
 
 	//habilita botao apos selecionar prova
