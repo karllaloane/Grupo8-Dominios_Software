@@ -3,6 +3,7 @@ package br.ufg.sep.views;
 
 import java.util.Optional;
 
+import br.ufg.sep.views.revisao.RevisoesView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -35,7 +36,7 @@ import br.ufg.sep.views.prova.ProvasView;
 import br.ufg.sep.views.concurso.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
-import br.ufg.sep.views.revisao.GerenciarRevisaoView;
+import br.ufg.sep.views.revisao.RevisarQuestaoView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -118,8 +119,8 @@ public class MainLayout extends AppLayout {
             nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Provas", ProvasView.class));
         }
         
-        if (accessChecker.hasAccess(GerenciarRevisaoView.class)) {
-        	nav.add(createTab(VaadinIcon.FILE_SEARCH, "Revisão", GerenciarRevisaoView.class));
+        if (accessChecker.hasAccess(RevisarQuestaoView.class)) {
+        	nav.add(createTab(VaadinIcon.FILE_SEARCH, "Revisão", RevisoesView.class));
         }
         
         if (accessChecker.hasAccess(PermissoesView.class)) {

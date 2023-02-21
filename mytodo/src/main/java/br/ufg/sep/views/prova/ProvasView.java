@@ -48,7 +48,6 @@ public class ProvasView extends VerticalLayout{
 		layout = new HorizontalLayout();
 		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
 		visualizarButton.setEnabled(false);
-		visualizarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 	}
 	
 	//metodo para iniciar o grid

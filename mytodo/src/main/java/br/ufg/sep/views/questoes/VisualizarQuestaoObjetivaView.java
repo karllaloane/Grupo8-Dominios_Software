@@ -35,7 +35,7 @@ import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
 import br.ufg.sep.views.questoes.presenter.VisualizarQuestaoObjetivaPresenter;
 
 @Route(value="visualizar_questao", layout = MainLayout.class)
-@PageTitle("Cadastrar Questão")
+@PageTitle("Visualizar Questão Objetiva")
 @PermitAll
 public class VisualizarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
 

@@ -14,6 +14,9 @@ import br.ufg.sep.entity.Questao;
 public interface QuestaoRepository extends JpaRepository<Questao, Long>{
 
 	List<Questao> findByProva(Prova prova);
-	
+
+
+
+
 	//Questao findById(Long id);
 }

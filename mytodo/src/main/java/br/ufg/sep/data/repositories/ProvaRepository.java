@@ -13,4 +13,15 @@ public interface ProvaRepository extends JpaRepository<Prova,Long> {
 	
 	List<Prova> findByElaborador(Cadastro idElaborador);
 
+	List<Prova> findByRevisor1(Cadastro revisor1);
+	List<Prova> findByRevisor2(Cadastro revisor1);
+	List<Prova> findByRevisor3(Cadastro revisor1);
+	List<Prova> findByRevisorLinguagem(Cadastro revisor1);
+
+	List<Prova> findByRevisor1OrRevisor2OrRevisor3OrRevisorLinguagem(
+			Cadastro revisor1,
+			Cadastro revisor2,
+			Cadastro revisor3,
+			Cadastro revisorLinguagem
+	);
 }

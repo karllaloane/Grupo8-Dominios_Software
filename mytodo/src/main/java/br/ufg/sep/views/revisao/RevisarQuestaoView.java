@@ -1,7 +1,6 @@
 package br.ufg.sep.views.revisao;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -10,13 +9,10 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -30,22 +26,21 @@ import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.views.MainLayout;
 
-@Route(value="gerenciar-revisao", layout = MainLayout.class)
-@PageTitle("Revisão")
+@Route(value="revisar-questao", layout = MainLayout.class)
+@PageTitle("Revisar")
 @PermitAll
 
-public class GerenciarRevisaoView extends HorizontalLayout{
+public class RevisarQuestaoView extends HorizontalLayout{
 	
-	/* Imputs do concurso */ 
+	/* Inputs do concurso */
 	private TextField nomeConcurso = new TextField("Nome", "", "");
 	private TextField cidadeConcurso = new TextField("Cidade", "", "");
 	private DatePicker dataInicioConcurso = new DatePicker("Data de início");
 	private DatePicker dataFimConcurso = new DatePicker("Data do fim");
 	
-	/* Imputs da prova */
+	/* Inputs da prova */
 	private TextField areaConhecimento = new TextField("Área de conhecimento", "", "");
     private TextField tipoProva = new TextField("Tipo de Prova", "", "");
     private TextField numAlternativas = new TextField("Número de Alternativas ", "", "");
@@ -54,7 +49,7 @@ public class GerenciarRevisaoView extends HorizontalLayout{
     private TextArea descricaoDaProva = new TextArea("Descriçãop da Prova", "", "");
     private Button baixarAnexo = new Button("Baixar Anexo"); 
     
-    /* Imputs da questão */
+    /* Inputs da questão */
     /* Adicionar subareas da questão */
     private TextArea enunciadoQuestao = new TextArea("Enunciado", "", "");
 	private List<TextArea> alternativasQuestaoList;
@@ -79,7 +74,7 @@ public class GerenciarRevisaoView extends HorizontalLayout{
 	private HorizontalLayout addtopicosDeRevisaoLayout;
 	private List<String> topicosDeRevisao;
 
-	public GerenciarRevisaoView(ProvaService provaService, QuestaoService questaoService) {
+	public RevisarQuestaoView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		grid = new Grid<>();

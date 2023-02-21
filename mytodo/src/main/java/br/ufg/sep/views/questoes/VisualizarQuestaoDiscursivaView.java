@@ -31,7 +31,7 @@ import br.ufg.sep.views.questoes.presenter.NovaQuestaoDiscursivaPresenter;
 import br.ufg.sep.views.questoes.presenter.VisualizarQuestaoDiscursivaPresenter;
 
 @Route(value="visualizar_questoes_discursiva", layout = MainLayout.class)
-@PageTitle("Cadastrar Questão Discursiva")
+@PageTitle("Visualizar Questão Discursiva")
 @PermitAll
 public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements HasUrlParameter<Long>{
 
