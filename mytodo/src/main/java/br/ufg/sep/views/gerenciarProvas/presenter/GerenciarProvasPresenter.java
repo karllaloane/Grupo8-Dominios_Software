@@ -2,11 +2,11 @@ package br.ufg.sep.views.gerenciarProvas.presenter;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Prova;
-import br.ufg.sep.views.concurso.EditarConcursoView;
-import br.ufg.sep.views.gerenciarProvas.EditarProvasView;
 import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
 import br.ufg.sep.views.gerenciarProvas.VisualizarProvaView;
+import br.ufg.sep.views.gerenciarProvas.EditarProvaView;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 
 import java.util.Optional;
 
@@ -34,7 +34,12 @@ public class GerenciarProvasPresenter {
                 }
             }
         });
+        setarGrid();
 
+        configBotoes();
+    }
+
+    private void setarGrid(){
         view.getProvas().setItems(
                 view.getConcursoService().getRepository().findById(
                         view.getConcursoId()
@@ -43,11 +48,7 @@ public class GerenciarProvasPresenter {
                 .findAll(PageRequest.of(query.getPage(), query.getPageSize())).stream()
                 */
         );
-        
-        
 
-
-        configBotoes();
     }
 
     private void configBotoes(){
@@ -61,22 +62,37 @@ public class GerenciarProvasPresenter {
         
         view.getEditar().addClickListener(e->{
             view.getEditar().getUI().ifPresent(ui->{
-                ui.navigate(EditarProvasView.class, view.getConcursoId());
+                ui.navigate(EditarProvaView.class,provaSelecionada.getId());
             });
         });
         
         view.getVisualizar().addClickListener(e->{
             view.getVisualizar().getUI().ifPresent(ui->{
-                ui.navigate(VisualizarProvaView.class, view.getConcursoId());
+                ui.navigate(VisualizarProvaView.class, provaSelecionada.getId());
             });
         });
 
+        view.getDeletar().addClickListener(e->{
+            ConfirmDialog confirmDialog = new ConfirmDialog();
+            confirmDialog.setText("Você tem certeza de que deseja deletar essa prova?");
+            confirmDialog.setConfirmText("Sim");
+            confirmDialog.addConfirmListener(confirm->{
+                this.provaService.getRepository().deleteById(provaSelecionada.getId());
+                setarGrid();
 
+            });
+            confirmDialog.setRejectable(true);
+            confirmDialog.setRejectText("Não");
 
-       
-        
+            if(this.provaSelecionada.getQuestoes().size()<1){
+                confirmDialog.open();
+                return;
+            }
+            confirmDialog.setHeader("Existem questões associadas a essa prova");
+            confirmDialog.setText("Você tem certeza de que deseja deletá-la?");
 
-		
+            confirmDialog.open();
+        });
 
     }
 

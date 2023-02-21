@@ -5,14 +5,13 @@ import br.ufg.sep.views.gerenciarProvas.GerenciarProvasView;
 import br.ufg.sep.views.gerenciarProvas.NovaProvaView;
 
 import br.ufg.sep.data.services.ProvaService;
+import br.ufg.sep.views.gerenciarProvas.EditarProvaView;
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.time.LocalDate;
@@ -34,7 +33,7 @@ public class NovaProvaPresenter {
 		});
     }
 
-	TipoProva decidirTipo(String tipoSelecionado)throws InvalidAttributeIdentifierException{
+	public TipoProva decidirTipo(String tipoSelecionado)throws InvalidAttributeIdentifierException{
 
 		if(tipoSelecionado.toLowerCase().contains("objetiva")) {
 			if(view.getRadioNivelNumAlternativas().getValue().equals("4"))
@@ -104,7 +103,12 @@ public class NovaProvaPresenter {
 		}
 		
 		/*Instancia uma Prova*/
-		Prova prova = new Prova();
+		Prova prova;
+		if(view instanceof  EditarProvaView )
+			prova = view.getProvaService().getRepository().findById(view.getParameterId()).get();
+		else
+			prova = new Prova();
+
 
 		/*Setar as relações da prova*/
 		prova.setConcurso(concurso);
@@ -153,9 +157,15 @@ public class NovaProvaPresenter {
 		notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 		
 		/*Volta para a tela de NovaProvaView*/
+		if(this.view instanceof EditarProvaView)
 		view.getSalvarButton().getUI().ifPresent(ui -> {
-			ui.navigate(GerenciarProvasView.class,view.getConcursoId());
+			ui.navigate(GerenciarProvasView.class,prova.getConcurso().getId());
 		});
+		view.getSalvarButton().getUI().ifPresent(ui -> {
+			ui.navigate(GerenciarProvasView.class,view.getParameterId());
+		});
+
+
     }
 
 	private void configComboBox(){

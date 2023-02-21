@@ -47,7 +47,8 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	private Button editar;
 	private Button visualizar;
 	private HorizontalLayout provasOptionsLayout;
-	
+
+	private Button deletar;
 	
 	public GerenciarProvasView(ProvaService provaService, ConcursoService concursoService) {
 		this.concursoService = concursoService;
@@ -55,7 +56,7 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		iniciarGrid();
 		iniciarBotoes(); // instanciar e editar o front end deles
 
-		provasOptionsLayout = new HorizontalLayout(novo,editar,visualizar); // layout dos botões em cima da grid
+		provasOptionsLayout = new HorizontalLayout(novo,editar,visualizar,deletar); // layout dos botões em cima da grid
 
 
 		add(provasOptionsLayout,provas);
@@ -65,10 +66,31 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	private void iniciarGrid() {
 	this.provas.addColumn("areaConhecimento").setHeader("Area de Conhecimento");
 	this.provas.addColumn("numeroQuestoes").setHeader("Numero de questoes");
-		this.provas.addColumn(LitRenderer
+	this.provas.addColumn(LitRenderer
 				.<Prova>of("<b>${item.name}</b>")
 				.withProperty("name", prova -> prova.getElaborador().getNome())
-		).setHeader("Name");
+		).setHeader("Elaborador(a)");
+
+	this.provas.addColumn(LitRenderer
+				.<Prova>of("<b>${item.name}</b>")
+				.withProperty("name", prova -> prova.getRevisor1().getNome())
+		).setHeader("Revisor(a) I");
+
+		this.provas.addColumn(LitRenderer
+				.<Prova>of("<b>${item.name}</b>")
+				.withProperty("name", prova -> prova.getRevisor2().getNome())
+		).setHeader("Revisor(a) II");
+
+		this.provas.addColumn(LitRenderer
+				.<Prova>of("<b>${item.name}</b>")
+				.withProperty("name", prova -> prova.getRevisor3().getNome())
+		).setHeader("Revisor(a) III");
+
+		this.provas.addColumn(LitRenderer
+				.<Prova>of("<b>${item.name}</b>")
+				.withProperty("name", prova -> prova.getRevisorLinguagem().getNome())
+		).setHeader("Revisor(a) de Linguagem");
+
 	}
 
 	/* Inicialização dos botões */ 
@@ -76,8 +98,10 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 		novo = new Button("Nova prova",new Icon(VaadinIcon.PLUS));
 		editar = new Button("Editar", new Icon(VaadinIcon.PENCIL));
 		visualizar = new Button("Visualizar", new Icon(VaadinIcon.EYE));
+		deletar = new Button("Deletar", new Icon(VaadinIcon.TRASH));
 		editar.setEnabled(false);
 		visualizar.setEnabled(false);
+		deletar.setEnabled(false);
 	}
 
 
@@ -176,11 +200,11 @@ public class GerenciarProvasView extends VerticalLayout implements HasUrlParamet
 	}
 
 
+	public Button getDeletar() {
+		return deletar;
+	}
 
-
-
-
-
-
-
+	public void setDeletar(Button deletar) {
+		this.deletar = deletar;
+	}
 }

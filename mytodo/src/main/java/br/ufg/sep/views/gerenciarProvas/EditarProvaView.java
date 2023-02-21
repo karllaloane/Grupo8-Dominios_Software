@@ -1,4 +1,4 @@
-package br.ufg.sep.views.gerenciarProvas.update;
+package br.ufg.sep.views.gerenciarProvas;
 
 import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.data.services.ConcursoService;

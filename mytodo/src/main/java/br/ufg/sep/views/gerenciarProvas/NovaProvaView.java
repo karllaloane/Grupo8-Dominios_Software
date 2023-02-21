@@ -5,6 +5,8 @@ import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Concurso;
+import br.ufg.sep.entity.NivelProva;
+import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.gerenciarProvas.presenter.NovaProvaPresenter;
 import br.ufg.sep.views.permissoes.GridCadastroFactory;
@@ -42,32 +44,41 @@ import java.util.List;
 @RolesAllowed({"ADMIN","PROF"})
 public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Long> {
 
-    private Long concursoId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
-    private ProvaService provaService;
-    private ConcursoService concursoService;
-    private CadastroRepository cadastroRepository;
-    private Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
+    protected Long ParameterId; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
+    protected ProvaService provaService;
+    protected ConcursoService concursoService;
+    protected CadastroRepository cadastroRepository;
+    protected Concurso concurso; // só é instanciado após o construtor. (Só deve ser usado em Listeners)
     
     /*Inputs para cadastrar uma nova Prova*/
-    private TextField nomeConcurso = new TextField();
-    private TextField areaConhecimento = new TextField();
-    private TextField numQuestoes = new TextField();
-    private TextArea descricaoDaProva = new TextArea();
-    private DatePicker prazo;
-    private RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
-    private RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
-    private RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
-    private Button salvarButton = new Button("Salvar"); // Btn: Button
-    private NovaProvaPresenter presenter;
-    private ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
-    private ComboBox<Cadastro> comboBoxMembroBancaQuestao;
-    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
-    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
-    private ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
+    protected TextField nomeConcurso = new TextField();
+    protected TextField areaConhecimento = new TextField();
+    protected TextField numQuestoes = new TextField();
+    protected TextArea descricaoDaProva = new TextArea();
+    protected DatePicker prazo;
+    protected RadioButtonGroup<String> radioTipoProva = new RadioButtonGroup<>();
+    protected RadioButtonGroup<String> radioNivelProva = new RadioButtonGroup<>();
+    protected RadioButtonGroup<String> radioNivelNumAlternativas = new RadioButtonGroup<>();
+    protected Button salvarButton = new Button("Salvar"); // Btn: Button
+    protected NovaProvaPresenter presenter;
+    protected ComboBox<Cadastro> comboBoxMembroRevisorLinguagem;
+    protected ComboBox<Cadastro> comboBoxMembroBancaQuestao;
+    protected ComboBox<Cadastro> comboBoxMembroRevisorTecnico1;
+    protected ComboBox<Cadastro> comboBoxMembroRevisorTecnico2;
+    protected ComboBox<Cadastro> comboBoxMembroRevisorTecnico3;
 
     /* MultiFileMemoryBuffer e Upload para baixar arquivos*/
-    private MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private Upload upload = new Upload(buffer);
+    protected MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+    protected Upload upload = new Upload(buffer);
+
+    protected final String radioButtonItemObjetiva = TipoProva.OBJETIVA_4.toString();
+    protected final String radioButtonItemDiscussiva = TipoProva.DISCUSSIVA.toString();
+    protected final String radioButtonItemRedacao = TipoProva.REDACAO.toString();
+
+    protected final String radioButtonItemNivelSuperior = NivelProva.SUPERIOR.toString();
+    protected final String radioButtonItemNivelMedio = NivelProva.MEDIO.toString();
+    protected final String radioButtonItemNivelFundamental = NivelProva.FUNDAMENTAL.toString();
+
 
     public NovaProvaView(ProvaService provaService, ConcursoService concursoService,
                          CadastroRepository cadastroRepository){
@@ -129,7 +140,11 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         /*Campo de escolher tipo de prova*/
         radioTipoProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioTipoProva.setLabel("Escolha o tipo de prova:");
-        radioTipoProva.setItems("Objetiva", "Discursiva", "Redação");
+        radioTipoProva.setItems(
+                radioButtonItemObjetiva,
+                radioButtonItemDiscussiva,
+                radioButtonItemRedacao
+        );
         
         /*RadioBox-down se selecionar prova objetiva*/ 
         // radioNivelNumAlternativas.addThemeVariants(RadioGroupVariant.);
@@ -142,7 +157,9 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         /*Campo de escolher nível de prova*/
         radioNivelProva.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioNivelProva.setLabel("Escolha o nível da prova:");
-        radioNivelProva.setItems("Fundamental", "Médio", "Superior");
+        radioNivelProva.setItems(radioButtonItemNivelFundamental
+                , radioButtonItemNivelMedio,
+                radioButtonItemNivelSuperior);
 
         
         /* Disposição de todos os elementos*/
@@ -238,7 +255,7 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
         add(verticalLayout);
     }
     
-    private Renderer<Cadastro> createRenderer() {
+    protected Renderer<Cadastro> createRenderer() {
     	
     	/*Formatando para o CPF ficar abaixo do Nome no ComboBox*/
     	StringBuilder tpl = new StringBuilder();
@@ -259,9 +276,10 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
 
     @Override
     public void setParameter(BeforeEvent event, Long parameter) { //Método executado após o construtor.
-        concursoId = parameter;
-        concurso = concursoService.getRepository().findById(parameter).get();
+        ParameterId = parameter;
+            concurso = concursoService.getRepository().findById(parameter).get();
         nomeConcurso.setValue(concurso.getNome());
+
         this.presenter = new NovaProvaPresenter(this, provaService);
     }
 
@@ -283,8 +301,8 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public List<ComboBox<Cadastro>> getUtilArrayComboBoxCadastro() {
         return utilArrayComboBoxCadastro;
     }
-    public void setConcursoId(Long concursoId) {
-        this.concursoId = concursoId;
+    public void setParameterId(Long ParameterId) {
+        this.ParameterId = ParameterId;
     }
 
     public RadioButtonGroup<String> getRadioNivelNumAlternativas() {
@@ -349,8 +367,8 @@ public class NovaProvaView extends VerticalLayout implements HasUrlParameter<Lon
     public void setSalvarButton(Button salvarButton) {
         this.salvarButton = salvarButton;
     }
-    public Long getConcursoId(){
-        return this.concursoId;
+    public Long getParameterId(){
+        return this.ParameterId;
     }
     public CadastroRepository getCadastroRepository() {
         return cadastroRepository;
