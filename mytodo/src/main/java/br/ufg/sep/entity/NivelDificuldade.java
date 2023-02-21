@@ -1,5 +1,15 @@
 package br.ufg.sep.entity;
 
 public enum NivelDificuldade {
-	FACIL,MEDIO,DIFICIL
+	FACIL("Fácil"),MEDIO("Médio"),DIFICIL("Difícil");
+	
+	private String nivel;
+    private NivelDificuldade(String nivel) {
+        this.nivel = nivel;
+    }
+    
+    @Override
+    public String toString(){
+        return nivel;
+    }
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.ufg.sep.entity.*;
+
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -16,19 +18,25 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.views.questoes.CadastrarQuestaoObjetivaView;
+import br.ufg.sep.views.concurso.ConcursosView;
+import br.ufg.sep.views.concurso.FormularioConcursoView;
+import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
+import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
+import br.ufg.sep.views.questoes.QuestoesProvaView;
 
-public class CadastrarQuestaoObjetivaPresenter {
+public class NovaQuestaoObjetivaPresenter {
 
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private CadastrarQuestaoObjetivaView view;
+	private NovaQuestaoObjetivaView view;
+	private QuestaoObjetiva questao;
+	private Prova prova;
 	
 	private int correta;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public CadastrarQuestaoObjetivaPresenter(ProvaService provaService,
-			QuestaoService questaoService, CadastrarQuestaoObjetivaView view) {
+	public NovaQuestaoObjetivaPresenter(ProvaService provaService,
+			QuestaoService questaoService, NovaQuestaoObjetivaView view) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -63,21 +71,74 @@ public class CadastrarQuestaoObjetivaPresenter {
 			});
 		}
 		
+		//chama o metodo salvar, que salva mas nao envia a questao para relaboracao
 		view.getSalvarButton().addClickListener( e->salvarQuestao(e));
-	}
+		
+		//chama o metodo enviar, que salva e envia a questao para relaboracao
+		view.getEnviarButton().addClickListener( e->enviarQuestao(e));	
 	
+	}
+
+	private void enviarQuestao(ClickEvent<Button> event) {
+		Notification notification;
+		questao = new QuestaoObjetiva();
+		prova = view.getProva();
+		
+		//chama o método para coletar os dados da view
+		//verificando se ele retornou ture, ou seja
+		//todos os dados foram coletados com sucesso
+		if(coletarDados()) {
+
+			//envia para a correcao
+			questao.enviarParaRevisao(null);
+			
+			//salva a questao
+			questaoService.getRepository().save(questao);;
+			
+			/*Notifica ação bem sucedida*/
+			notification = Notification
+			        .show("Questão enviada para revisao 1 com sucesso!");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+			
+			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private void salvarQuestao(ClickEvent<Button> event) {
 		
 		Notification notification;
-		QuestaoObjetiva questao= new QuestaoObjetiva();
-		Prova prova = view.getProva();
+		questao = new QuestaoObjetiva();
+		prova = view.getProva();
+		
+		//chama o método para coletar os dados da view
+		//verificando se ele retornou ture, ou seja
+		//todos os dados foram coletados com sucesso
+		if(coletarDados()) {
+			prova.getQuestoes().add(questao);
+			
+			provaService.save(prova);
+			
+			/*Notifica ação bem sucedida*/
+			notification = Notification
+			        .show("Questão salva com sucesso!");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+			
+			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
+		}
+		
+	}
+	
+	private boolean coletarDados() {
+		Notification notification;
 		
 		/* Criando e armazenando os valores do Input*/
-		NivelDificuldade nivelSelecionado = view.getNivelDificuldadeCombo().getValue();
+		NivelDificuldade nivelSelecionado = view.getMetadados().getNivelDificuldadeCombo().getValue();
 		String enunciado = view.getEnunciado().getValue();
 		String justificativa = view.getJustificativaTA().getValue();
-		String subarea = view.getSubareaTF().getValue();
+		List<String> subarea = view.getMetadados().getSubAreas();
 		List<String> alternativasList = new ArrayList<String>();
 		
 		//verifica qual checkbox esta com valor verdadeiro
@@ -93,7 +154,7 @@ public class CadastrarQuestaoObjetivaPresenter {
 			        .show("Selecione a alternativa correta.");
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-			return;
+			return false;
 		}
 		
 		//pegando a lista de alternativas
@@ -108,7 +169,7 @@ public class CadastrarQuestaoObjetivaPresenter {
 				        .show("Campos em branco." );
 				notification.setPosition(Position.TOP_CENTER);
 				notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-				return;
+				return false;
 			}
 		}
 				
@@ -118,22 +179,22 @@ public class CadastrarQuestaoObjetivaPresenter {
 			        .show("Selecione o nível de dificuladade." );
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-			return;
+			return false;
 		}
 
 		//verificando demais campos em branco
-		if(enunciado.isEmpty() || justificativa.isEmpty() || subarea.isEmpty()) {
+		if(enunciado.isEmpty() || justificativa.isEmpty() || subarea.size() == 0) {
 			notification = Notification
 			        .show("Campos em branco." );
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-			return;
+			return false;
 		}
 		
 		//setando os dados do objeto
 		questao.setAlternativaCorreta(correta);
 		questao.setAlternativas(alternativasList);
-		questao.setConteudoEspecifico(subarea);
+		questao.setSubAreas(subarea);
 		questao.setEnunciado(enunciado);
 		questao.setJustificativa(justificativa);
 		questao.setNivelDificuldade(nivelSelecionado);
@@ -152,16 +213,7 @@ public class CadastrarQuestaoObjetivaPresenter {
 		questao.enviarParaRevisao(correcao);
 		/*****TEST*****/
 		prova.getQuestoes().add(questao);
-		
-		
-		provaService.save(prova);
-		
-		
-		/*Notifica ação bem sucedida*/
-		notification = Notification
-		        .show("Questão salva com sucesso!");
-		notification.setPosition(Position.TOP_CENTER);
-		notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+		return true;
 	}
-	
 }

@@ -4,6 +4,8 @@ import br.ufg.sep.state.QuestaoState;
 import br.ufg.sep.state.stateImpl.Elaboracao;
 import org.hibernate.annotations.Cascade;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,7 +21,8 @@ public class Questao extends AbstractEntity {
 	@Column(length = 2054)
 	private String enunciado;
 	
-	private String conteudoEspecifico;
+	@ElementCollection
+	private List<String> subAreas;
 	
 	@Enumerated(EnumType.STRING)
 	private NivelDificuldade nivelDificuldade;
@@ -90,12 +93,12 @@ public class Questao extends AbstractEntity {
 		this.enunciado = enunciado;
 	}
 
-	public String getConteudoEspecifico() {
-		return conteudoEspecifico;
+	public List<String> getSubAreas() {
+		return subAreas;
 	}
 
-	public void setConteudoEspecifico(String conteudoEspecifico) {
-		this.conteudoEspecifico = conteudoEspecifico;
+	public void setSubAreas(List<String> subareas) {
+		this.subAreas = subareas;
 	}
 
 	public NivelDificuldade getNivelDificuldade() {

@@ -59,13 +59,17 @@ public class HomeView extends VerticalLayout {
 		testar.setText("GetEstado");
 		testar.setIcon(new Icon(VaadinIcon.ADJUST));
 		testar.addClickListener(e->{
+
 			Questao q = questaoRepository.findById(Long.valueOf(id)).get();
+
 			console.setValue(q.getState().toString());
 		});
 
 		this.passarEstado.setIcon(new Icon((VaadinIcon.POINTER)));
 		passarEstado.addClickListener(c->{
+
 			Questao q = questaoRepository.findById(Long.valueOf(id)).get();
+
 			Correcao corr = new Correcao();
 			corr.setAtendimentoSugestoes(2);
 			corr.setJustificativa("Teste dia 20.02");

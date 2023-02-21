@@ -62,6 +62,10 @@ public class FormularioConcursoView extends VerticalLayout {
         dataFim.setPlaceholder("DD/MM/AAAA");
         dataInicio.setPlaceholder("DD/MM/AAAA");
         
+        //setando para receber apenas número e /
+        dataInicio.setAllowedCharPattern(("[0-9/]"));
+        dataFim.setAllowedCharPattern(("[0-9/]"));
+        
         FormLayout formLayout = new FormLayout(nome, cidade);
         FormLayout formData = new FormLayout(dataInicio, dataFim);
         formLayout.setResponsiveSteps(new ResponsiveStep("0", 1));

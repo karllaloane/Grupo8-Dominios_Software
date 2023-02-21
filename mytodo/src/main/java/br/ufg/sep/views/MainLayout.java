@@ -118,13 +118,13 @@ public class MainLayout extends AppLayout {
             nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Provas", ProvasView.class));
         }
         
-        if (accessChecker.hasAccess(PermissoesView.class)) {
-        	nav.add(createTab(VaadinIcon.FILE_SEARCH, "Revisão", PermissoesView.class));
+        if (accessChecker.hasAccess(GerenciarRevisaoView.class)) {
+        	nav.add(createTab(VaadinIcon.FILE_SEARCH, "Revisão", GerenciarRevisaoView.class));
         }
         
-        /* if (accessChecker.hasAccess(GerenciarRevisaoView.class)) {
-        	nav.add(createTab(VaadinIcon.USER, "Administrador", GerenciarRevisaoView.class));
-        } */ 
+        if (accessChecker.hasAccess(PermissoesView.class)) {
+        	nav.add(createTab(VaadinIcon.USER, "Administrador", PermissoesView.class));
+        }  
         
         
         
