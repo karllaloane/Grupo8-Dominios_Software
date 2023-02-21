@@ -14,5 +14,17 @@ public class Concluida extends QuestaoState {
         super();
     }
 
+    @Override
+    public Boolean guardarNoBanco(Questao questao) {
+        Guardada guardadaState = new Guardada();
+        guardadaState.setCorrecao(this.correcao);
+        guardadaState.setRevisao(this.revisao);
+        questao.setState(guardadaState);
+        return true;
+    }
 
+    @Override
+    public String toString() {
+        return "Concluída";
+    }
 }

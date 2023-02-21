@@ -200,7 +200,20 @@ public class NovaQuestaoObjetivaPresenter {
 		questao.setNivelDificuldade(nivelSelecionado);
 		questao.setQuantAlternativas(view.getQuantAlternativas());
 		questao.setProva(view.getProva());
-		
+		/*****TEST****
+		Revisao revisao = new Revisao();
+		revisao.setOrientacoes("Orientatcoes orientadas");
+		HashMap<String,Integer> hashMap = new HashMap<>();
+		hashMap.put("Paralelismo",2);
+		Correcao correcao = new Correcao();
+		correcao.setAtendimentoSugestoes(2);
+		correcao.setJustificativa("Pq nos gostamos de atendender 2");
+		questao.enviarParaRevisao(correcao);
+		questao.enviarParaBanca(revisao);
+		questao.enviarParaRevisao(correcao);
+		/*****TEST*****/
+		prova.getQuestoes().add(questao);
+
 		return true;
 	}
 }

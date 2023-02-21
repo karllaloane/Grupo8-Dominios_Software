@@ -15,10 +15,10 @@ public abstract  class QuestaoState extends AbstractEntity implements  Elaborave
     @OneToOne(cascade = CascadeType.ALL)
     protected Questao questaoAnterior;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="ultima_revisao_id")
     protected Revisao revisao;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="ultima_correcao_id")
     protected Correcao correcao;
 
@@ -30,7 +30,7 @@ public abstract  class QuestaoState extends AbstractEntity implements  Elaborave
     }
 
     @Override
-    public Boolean enviarParaCorrecao(Questao questao, Revisao revisao) {
+    public Boolean enviarParaBanca(Questao questao, Revisao revisao) {
         System.out.println("Nada a se fazer");
         return false; // false se não tiver nada a se fazer
 
@@ -57,7 +57,7 @@ public abstract  class QuestaoState extends AbstractEntity implements  Elaborave
     }
 
     @Override
-    public Boolean guardar(Questao questao) {
+    public Boolean guardarNoBanco(Questao questao) {
         System.out.println("Nada a se fazer");
         return false; // false se não tiver nada a se fazer
 

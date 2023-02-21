@@ -1,15 +1,18 @@
 package br.ufg.sep.entity;
 
+import org.hibernate.annotations.Cascade;
+
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 
 @Entity
 public class QuestaoObjetiva extends Questao {
 	
-	@ElementCollection
+	@ElementCollection()
 	private List<String> alternativas;
 
 	private int quantAlternativas;

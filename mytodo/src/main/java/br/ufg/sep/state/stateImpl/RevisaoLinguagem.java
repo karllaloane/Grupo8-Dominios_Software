@@ -15,8 +15,11 @@ public class RevisaoLinguagem extends QuestaoState {
     }
 
     @Override
-    public Boolean enviarParaRevisao(Questao questao, Correcao correcao) {
-
+    public Boolean enviarParaBanca(Questao questao, Revisao revisao) {
+        RevisaoBanca revisaoBanca = new RevisaoBanca();
+        revisaoBanca.setRevisao(revisao);
+        revisaoBanca.setCorrecao(this.correcao);
+        questao.setState(revisaoBanca);
         return true;
     }
 

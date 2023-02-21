@@ -29,7 +29,7 @@ public class Revisao2 extends QuestaoState {
 
 
     @Override
-    public Boolean enviarParaCorrecao(Questao questao, Revisao rev2) { // enviar para Correcao II
+    public Boolean enviarParaBanca(Questao questao, Revisao rev2) { // enviar para Correcao II
 
         Correcao2 corr2State = new Correcao2(questao);
         corr2State.setQuestaoAnterior(this.questaoAnterior);
