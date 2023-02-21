@@ -2,6 +2,7 @@ package br.ufg.sep.views.revisao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
@@ -21,19 +22,26 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
+
+import br.ufg.sep.entity.NivelDificuldade;
+import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
 @Route(value="revisar-questao", layout = MainLayout.class)
 @PageTitle("Revisar")
 @PermitAll
 
-public class RevisarQuestaoView extends HorizontalLayout{
-	
+public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlParameter<Long> */{
+
 	/* Inputs do concurso */
 	private TextField nomeConcurso = new TextField("Nome", "", "");
 	private TextField cidadeConcurso = new TextField("Cidade", "", "");
@@ -51,24 +59,35 @@ public class RevisarQuestaoView extends HorizontalLayout{
     
     /* Inputs da questão */
     /* Adicionar subareas da questão */
+    /* Imputs da questão */
+    private TextArea subAreasQuestao = new TextArea("Sub-áreas da questão ", "", "");
     private TextArea enunciadoQuestao = new TextArea("Enunciado", "", "");
-	private List<TextArea> alternativasQuestaoList;
 	private TextField nivelDificuldadeQuestaoCombo = new TextField("Nível de Dificuldade", "", "");
 	private TextArea justificativaQuestao = new TextArea("Justificativa da Alternativa Correta", "", "");
+	private TextArea alternativaAQuestao = new TextArea("A) ", "", "");
+	private TextArea alternativaBQuestao = new TextArea("B) ", "", "");
+	private TextArea alternativaCQuestao = new TextArea("C) ", "", "");
+	private TextArea alternativaDQuestao = new TextArea("D) ", "", "");
+	private TextArea alternativaEQuestao = new TextArea("E) ", "", "");
+	private TextArea observacaouestao = new TextArea("Observação da Revisão", "", "");
 	
+	/* Imputs gerais */
+	private Button enviarBanca = new Button("Voltar para a Banca de Elaboração");
+	private Button enviarRevisao = new Button("Enviar para a próxima Etapa");
 	private ProvaService provaService;
+	private Prova prova;
+	private int quantAlternativas;
 	private QuestaoService questaoService;
-	private Details details1;
-	private Details details2;
-	
 	VerticalLayout verticalDetails = new VerticalLayout();
 	VerticalLayout layoutQuestao = new VerticalLayout();
 	VerticalLayout layoutgrid = new VerticalLayout();
-	
-	
+	HorizontalLayout botoesLayout = new HorizontalLayout(enviarBanca, enviarRevisao);
+	private Details details1;
+	private Details details2;
+	private Details details3;
 	private TextField topicosDeRevisaoTF;
 	private Button adicionarButton;
-	final private Grid<String> grid;
+    private Grid<String> grid;
 	private Button addButton;
 	private VerticalLayout topicosDeRevisaoLayout;
 	private HorizontalLayout addtopicosDeRevisaoLayout;
@@ -83,10 +102,16 @@ public class RevisarQuestaoView extends HorizontalLayout{
 		dropMenuProva(); 
 		dadosQuestao();
 		topicosDeRevisaoComponent();
+		campoObservacao(); 
 		
-		verticalDetails.add(details1, details2, layoutQuestao, topicosDeRevisaoLayout);
+		verticalDetails.add(details1, details2, details3, layoutQuestao, topicosDeRevisaoLayout, observacaouestao, botoesLayout);
 		
 		add(verticalDetails);
+	}
+	
+	
+	public void campoObservacao() {
+		observacaouestao.setWidth("1030px");
 	}
 	
 	public void topicosDeRevisaoComponent(){
@@ -99,7 +124,7 @@ public class RevisarQuestaoView extends HorizontalLayout{
 		topicosDeRevisaoLayout = new VerticalLayout();
 		topicosDeRevisaoLayout.setPadding(false);
 		addtopicosDeRevisaoLayout.setWidthFull();
-		topicosDeRevisaoLayout.setWidth("665px");
+		topicosDeRevisaoLayout.setWidth("1030px");
 	
 		topicosDeRevisaoTF = new TextField();
 		topicosDeRevisaoTF.setTooltipText("Informe o Tópico a ser avaliado");
@@ -264,23 +289,68 @@ public class RevisarQuestaoView extends HorizontalLayout{
 	}
 
 	private void dadosQuestao() {
+		HorizontalLayout summary = new HorizontalLayout();
+		summary.setSpacing(false);
+		summary.add(new Text("Questão - Informações Gerais"));
+		
 		/* Formatando os campos */
 		enunciadoQuestao.setWidth("700px");
-		nivelDificuldadeQuestaoCombo.setWidth("300px");
-		justificativaQuestao.setWidth("1030px");
+		nivelDificuldadeQuestaoCombo.setWidth("310px");
+		justificativaQuestao.setWidth("1025px");
+		alternativaAQuestao.setWidth("700px");
+		alternativaBQuestao.setWidth("700px");
+		alternativaCQuestao.setWidth("700px");
+		alternativaDQuestao.setWidth("700px");
+		alternativaEQuestao.setWidth("700px");
+		subAreasQuestao.setWidth("1025px");
 		
 		/* Deixando campos não editaveis  */
 		enunciadoQuestao.setEnabled(false);
 		nivelDificuldadeQuestaoCombo.setEnabled(false);
 		justificativaQuestao.setEnabled(false);
+		alternativaAQuestao.setEnabled(false);
+		alternativaBQuestao.setEnabled(false);
+		alternativaCQuestao.setEnabled(false);
+		alternativaDQuestao.setEnabled(false);
+		alternativaEQuestao.setEnabled(false);
+		subAreasQuestao.setEnabled(false);
 		
 		/* Layout final de questão */
-		HorizontalLayout horizontalLayout1 = new HorizontalLayout();
-		horizontalLayout1.add(enunciadoQuestao, nivelDificuldadeQuestaoCombo);
-		HorizontalLayout horizontalLayout2 = new HorizontalLayout();
-		horizontalLayout2.add(justificativaQuestao);
-		layoutQuestao.add(horizontalLayout1, horizontalLayout2);
+		HorizontalLayout horizontalLayout1 = new HorizontalLayout(enunciadoQuestao, nivelDificuldadeQuestaoCombo);
+		HorizontalLayout horizontalLayout2 = new HorizontalLayout(justificativaQuestao); 
+		HorizontalLayout horizontalLayout3 = new HorizontalLayout(subAreasQuestao); 
+		VerticalLayout infosForm = new VerticalLayout(horizontalLayout1, horizontalLayout3, alternativaAQuestao, alternativaBQuestao, 
+								alternativaCQuestao, alternativaDQuestao, alternativaEQuestao, horizontalLayout2);
+		
+		/* Drop menu*/ 
+		details3 = new Details(summary, infosForm);
+		details3.addThemeVariants(DetailsVariant.FILLED);
+		details3.setWidthFull();
+		details3.setMinWidth("1070px");
+		details3.setOpened(false);
 	}
+	
+	/*
+	@Override
+	public void setParameter(BeforeEvent event, Long parameter) {
+		// TODO Auto-generated method stub
+		
+		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
+		if (optionalProva.isPresent()) {
+			prova = optionalProva.get();
+			//this.provaId = prova.getId();
+			
+			//tornando a quinta alternativa falta caso a prova seja objetiva com 4 alternativas
+			if(prova.getTipo() == TipoProva.OBJETIVA_4) {
+				quantAlternativas = 4;	
+				alternativaEQuestao.setVisible(false);
+			} else 
+				quantAlternativas = 5;
+
+			  this.presenter = new NovaQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
+		} 
+		
+	} */ 
     
     public TextField getNomeConcurso() {
 		return nomeConcurso;
@@ -346,9 +416,25 @@ public class RevisarQuestaoView extends HorizontalLayout{
 		this.nivelProva = nivelProva;
 	}
 
-
 	public DatePicker getPrazo() {
 		return prazo;
+	}
+	
+
+	public Prova getProva() {
+		return prova;
+	}
+
+	public void setProva(Prova prova) {
+		this.prova = prova;
+	}
+
+	public int getQuantAlternativas() {
+		return quantAlternativas;
+	}
+
+	public void setQuantAlternativas(int quantAlternativas) {
+		this.quantAlternativas = quantAlternativas;
 	}
 
 	public void setPrazo(DatePicker prazo) {
@@ -379,12 +465,92 @@ public class RevisarQuestaoView extends HorizontalLayout{
 		this.enunciadoQuestao = enunciadoQuestao;
 	}
 
-	public List<TextArea> getAlternativasQuestaoList() {
-		return alternativasQuestaoList;
+	public TextArea getAlternativaAQuestao() {
+		return alternativaAQuestao;
 	}
 
-	public void setAlternativasQuestaoList(List<TextArea> alternativasQuestaoList) {
-		this.alternativasQuestaoList = alternativasQuestaoList;
+	public void setAlternativaAQuestao(TextArea alternativaAQuestao) {
+		this.alternativaAQuestao = alternativaAQuestao;
+	}
+
+	public TextArea getAlternativaBQuestao() {
+		return alternativaBQuestao;
+	}
+
+	public void setAlternativaBQuestao(TextArea alternativaBQuestao) {
+		this.alternativaBQuestao = alternativaBQuestao;
+	}
+
+	public TextArea getAlternativaCQuestao() {
+		return alternativaCQuestao;
+	}
+
+	public void setAlternativaCQuestao(TextArea alternativaCQuestao) {
+		this.alternativaCQuestao = alternativaCQuestao;
+	}
+
+	public TextArea getAlternativaDQuestao() {
+		return alternativaDQuestao;
+	}
+
+	public void setAlternativaDQuestao(TextArea alternativaDQuestao) {
+		this.alternativaDQuestao = alternativaDQuestao;
+	}
+
+	public TextArea getAlternativaEQuestao() {
+		return alternativaEQuestao;
+	}
+
+	public void setAlternativaEQuestao(TextArea alternativaEQuestao) {
+		this.alternativaEQuestao = alternativaEQuestao;
+	}
+
+	public TextArea getObservacaouestao() {
+		return observacaouestao;
+	}
+
+	public void setObservacaouestao(TextArea observacaouestao) {
+		this.observacaouestao = observacaouestao;
+	}
+
+	public VerticalLayout getLayoutgrid() {
+		return layoutgrid;
+	}
+
+	public void setLayoutgrid(VerticalLayout layoutgrid) {
+		this.layoutgrid = layoutgrid;
+	}
+
+	public TextField getTopicosDeRevisaoTF() {
+		return topicosDeRevisaoTF;
+	}
+
+	public void setTopicosDeRevisaoTF(TextField topicosDeRevisaoTF) {
+		this.topicosDeRevisaoTF = topicosDeRevisaoTF;
+	}
+
+	public VerticalLayout getTopicosDeRevisaoLayout() {
+		return topicosDeRevisaoLayout;
+	}
+
+	public void setTopicosDeRevisaoLayout(VerticalLayout topicosDeRevisaoLayout) {
+		this.topicosDeRevisaoLayout = topicosDeRevisaoLayout;
+	}
+
+	public HorizontalLayout getAddtopicosDeRevisaoLayout() {
+		return addtopicosDeRevisaoLayout;
+	}
+
+	public void setAddtopicosDeRevisaoLayout(HorizontalLayout addtopicosDeRevisaoLayout) {
+		this.addtopicosDeRevisaoLayout = addtopicosDeRevisaoLayout;
+	}
+
+	public List<String> getTopicosDeRevisao() {
+		return topicosDeRevisao;
+	}
+
+	public void setTopicosDeRevisao(List<String> topicosDeRevisao) {
+		this.topicosDeRevisao = topicosDeRevisao;
 	}
 
 	public TextField getNivelDificuldadeQuestaoCombo() {
@@ -502,5 +668,13 @@ public class RevisarQuestaoView extends HorizontalLayout{
 
 	public Grid<String> getGrid() {
 		return grid;
+	}
+	
+	public Details getDetails3() {
+		return details3;
+	}
+
+	public void setDetails3(Details details3) {
+		this.details3 = details3;
 	}
 }

@@ -1,12 +1,10 @@
-package br.ufg.sep.views.questoes.presenter;
+package br.ufg.sep.views.correcao.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import br.ufg.sep.entity.*;
+import javax.naming.directory.InvalidAttributeIdentifierException;
 
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -18,33 +16,32 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.views.concurso.ConcursosView;
-import br.ufg.sep.views.concurso.FormularioConcursoView;
-import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
-import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
+import br.ufg.sep.entity.AtendimentoSugestoes;
+import br.ufg.sep.entity.NivelDificuldade;
+import br.ufg.sep.entity.Prova;
+import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
-public class NovaQuestaoObjetivaPresenter {
-
+public class CorrecaoObjetivaBancaPresenter {
+	
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private NovaQuestaoObjetivaView view;
-	
-	private QuestaoObjetiva questao;
-	private Prova prova;
+	private CorrecaoObjetivaBancaView view;
 	
 	private int correta;
 	
 	//variáveis para coletar os dados da view
-	private NivelDificuldade nivelSelecionado;
 	private String enunciado;
-	private String justificativa;
-	private List<String> subarea;
+	private String justificativaCorreta;
 	private List<String> alternativasList;
+	private String justificativaAtendimento;
+	private AtendimentoSugestoes atendimento;
+	
+	private Prova prova; 
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public NovaQuestaoObjetivaPresenter(ProvaService provaService,
-			QuestaoService questaoService, NovaQuestaoObjetivaView view) {
+	public CorrecaoObjetivaBancaPresenter(ProvaService provaService, QuestaoService questaoService,
+			CorrecaoObjetivaBancaView view) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -82,8 +79,8 @@ public class NovaQuestaoObjetivaPresenter {
 		}
 		
 		//chama o metodo salvar, que salva mas nao envia a questao para relaboracao
-		view.getSalvarButton().addClickListener( e->salvarQuestao(e));
-		
+				view.getSalvarButton().addClickListener( e->salvarCorrecao(e));
+				
 		//chama o diálogo para confirmar o envio da questao
 		view.getEnviarButton().addClickListener( e->{
 			if(verificaDadosPreenchidos())
@@ -119,71 +116,73 @@ public class NovaQuestaoObjetivaPresenter {
 		view.getCancelarDialogo().getcancelarDialogButton().addClickListener(e->{
 			view.getCancelarDialogo().getDialog().close();
 		});
+	}
 	
-	}
-
+	//aqui vai a lógica para salvar a correção e a questão, e enviar
 	private void enviarQuestao(ClickEvent<Button> event) {
+		
+		
 		Notification notification;
-		prova = view.getProva();
 		
 		//chama o método para verificar os dados da view
 		//se ele retornou true todos os dados foram coletados com sucesso
 		if(verificaDadosPreenchidos()) {
-			//cria a questão com os dados coletados
-			criarQuestao();
-
-			//envia para a correcao
-			questao.enviarParaRevisao(null);
 			
-			//salva a questao
-			questaoService.getRepository().save(questao);;
+			/*
+			 * IMPLEMENTAR
+			 */
 			
-			/*Notifica ação bem sucedida*/
-			notification = Notification
-			        .show("Questão enviada para revisao 1 com sucesso!");
-			notification.setPosition(Position.TOP_CENTER);
-			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			
-			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void salvarQuestao(ClickEvent<Button> event) {
-		
-		Notification notification;
-		prova = view.getProva();
-		
-		//chama o método para verificar os dados da view
-		//se ele retornou true todos os dados foram coletados com sucesso
-		if(verificaDadosPreenchidos()) {
-			//cria a questão com os dados coletados
-			criarQuestao();
-			
-			prova.getQuestoes().add(questao);
-			
-			provaService.save(prova);
-			
-			/*Notifica ação bem sucedida*/
+			//Notifica ação bem sucedida
 			notification = Notification
 			        .show("Questão salva com sucesso!");
 			notification.setPosition(Position.TOP_CENTER);
 			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			
 			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
+			
 		}
 		
 	}
-	
+
+	//aqui vai a lógica para salvar a correção e a questão, mas sem enviar
+	private void salvarCorrecao(ClickEvent<Button> event) {
+		
+		Notification notification;
+		
+		//chama o método para verificar os dados da view
+		//se ele retornou true todos os dados foram coletados com sucesso
+		if(verificaDadosPreenchidos()) {
+			
+			/*
+			 * IMPLEMENTAR
+			 */
+			
+			//Notifica ação bem sucedida
+			notification = Notification
+			        .show("Questão salva com sucesso!");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+			
+			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
+			
+		}
+	}
+
 	private boolean verificaDadosPreenchidos() {
 		Notification notification;
 		
 		/* Criando e armazenando os valores do Input*/
-		nivelSelecionado = view.getMetadados().getNivelDificuldadeCombo().getValue();
 		enunciado = view.getEnunciado().getValue();
-		justificativa = view.getJustificativaTA().getValue();
-		subarea = view.getMetadados().getSubAreas();
+		justificativaCorreta = view.getJustificativaCorretaTA().getValue();
+		justificativaAtendimento = view.getJustificativaAtendimentoTA().getValue();
 		alternativasList = new ArrayList<String>();
+		
+		try {
+			atendimento = dedicirAtendimento();
+		} catch (InvalidAttributeIdentifierException e) {
+			e.printStackTrace();
+		}
 		
 		//verifica qual checkbox esta com valor verdadeiro
 		//e marca a questao como correta
@@ -216,18 +215,9 @@ public class NovaQuestaoObjetivaPresenter {
 				return false;
 			}
 		}
-				
-		//pra nao deixar salvar sem selecionar o nivel de dificuldade
-		if(nivelSelecionado == null) {
-			notification = Notification
-			        .show("Selecione o nível de dificuladade." );
-			notification.setPosition(Position.TOP_CENTER);
-			notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
-			return false;
-		}
 
 		//verificando demais campos em branco
-		if(enunciado.isEmpty() || justificativa.isEmpty() || subarea.size() == 0) {
+		if(enunciado.isEmpty() || justificativaAtendimento.isEmpty() || justificativaCorreta.isEmpty()) {
 			notification = Notification
 			        .show("Campos em branco." );
 			notification.setPosition(Position.TOP_CENTER);
@@ -235,20 +225,26 @@ public class NovaQuestaoObjetivaPresenter {
 			return false;
 		}
 		
+		
+		
 		return true;
 	}
-	
-	private void criarQuestao() {
-		questao = new QuestaoObjetiva();
+
+	private AtendimentoSugestoes dedicirAtendimento() throws InvalidAttributeIdentifierException {
 		
-		//setando os dados do objeto
-		questao.setAlternativaCorreta(correta);
-		questao.setAlternativas(alternativasList);
-		questao.setSubAreas(subarea);
-		questao.setEnunciado(enunciado);
-		questao.setJustificativa(justificativa);
-		questao.setNivelDificuldade(nivelSelecionado);
-		questao.setQuantAlternativas(view.getQuantAlternativas());
-		questao.setProva(prova);
+		String valor = view.getRadioGroup().getValue();
+		
+		if(valor.toLowerCase().contains("totalmente")) {
+			return AtendimentoSugestoes.TOTAL;
+		}
+		if(valor.toLowerCase().contains("parcialmente")) {
+			return AtendimentoSugestoes.PARCIAL;
+		}
+		if(valor.toLowerCase().contains("não")) {
+			return AtendimentoSugestoes.NAO_ATENDIDA;
+		}
+		
+		throw new InvalidAttributeIdentifierException();
 	}
+	
 }
