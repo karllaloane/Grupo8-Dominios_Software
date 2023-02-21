@@ -91,62 +91,6 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		add();
 		
 	}
-	
-	public Grid<String> getGrid() {
-		return grid;
-	}
-
-	public TextArea getOrientacoesTextField() {
-		return orientacoesTextField;
-	}
-
-	public TextArea getJustificativaAtendimentoTA() {
-		return justificativaAtendimentoTA;
-	}
-
-	public TextArea getJustificativaCorretaTA() {
-		return justificativaCorretaTA;
-	}
-
-	public RadioButtonGroup<String> getRadioGroup() {
-		return radioGroup;
-	}
-
-	public TextArea getEnunciado() {
-		return enunciado;
-	}
-
-	public List<TextArea> getAlternativasList() {
-		return alternativasList;
-	}
-
-	public List<Checkbox> getCheckboxList() {
-		return checkboxList;
-	}
-
-	public Button getSalvarButton() {
-		return salvarButton;
-	}
-
-	public Button getDescartarButton() {
-		return descartarButton;
-	}
-
-	public Button getEnviarButton() {
-		return enviarButton;
-	}
-
-	public ConfirmaEnvioRevisaoDialog getEnvioDialogo() {
-		return envioDialogo;
-	}
-
-	public CancelarEdicaoDialog getCancelarDialogo() {
-		return cancelarDialogo;
-	}
-
-	public QuestaoObjetiva getQuestao() {
-		return questao;
-	}
 
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
@@ -444,6 +388,62 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	
 	public Prova getProva() {
 		return prova;
+	}
+	
+	public Grid<String> getGrid() {
+		return grid;
+	}
+
+	public TextArea getOrientacoesTextField() {
+		return orientacoesTextField;
+	}
+
+	public TextArea getJustificativaAtendimentoTA() {
+		return justificativaAtendimentoTA;
+	}
+
+	public TextArea getJustificativaCorretaTA() {
+		return justificativaCorretaTA;
+	}
+
+	public RadioButtonGroup<String> getRadioGroup() {
+		return radioGroup;
+	}
+
+	public TextArea getEnunciado() {
+		return enunciado;
+	}
+
+	public List<TextArea> getAlternativasList() {
+		return alternativasList;
+	}
+
+	public List<Checkbox> getCheckboxList() {
+		return checkboxList;
+	}
+
+	public Button getSalvarButton() {
+		return salvarButton;
+	}
+
+	public Button getDescartarButton() {
+		return descartarButton;
+	}
+
+	public Button getEnviarButton() {
+		return enviarButton;
+	}
+
+	public ConfirmaEnvioRevisaoDialog getEnvioDialogo() {
+		return envioDialogo;
+	}
+
+	public CancelarEdicaoDialog getCancelarDialogo() {
+		return cancelarDialogo;
+	}
+
+	public QuestaoObjetiva getQuestao() {
+		return questao;
 	}
 
 }
