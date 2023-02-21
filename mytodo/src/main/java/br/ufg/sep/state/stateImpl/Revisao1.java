@@ -25,7 +25,7 @@ public class Revisao1 extends QuestaoState {
 
 
     @Override
-    public Boolean enviarParaCorrecao(Questao questao, Revisao rev1) {//envia de volta para banca pela primeira vez
+    public Boolean enviarParaBanca(Questao questao, Revisao rev1) {//envia de volta para banca pela primeira vez
         Correcao1 corr1State = new Correcao1(questao);
         corr1State.setRevisao(rev1);; //envia para banca com a revisão realizada
         questao.setState(corr1State); //muda o estado

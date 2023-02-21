@@ -148,7 +148,7 @@ public class CadastrarQuestaoObjetivaPresenter {
 		correcao.setAtendimentoSugestoes(2);
 		correcao.setJustificativa("Pq nos gostamos de atendender 2");
 		questao.enviarParaRevisao(correcao);
-		questao.enviarParaCorrecao(revisao);
+		questao.enviarParaBanca(revisao);
 		questao.enviarParaRevisao(correcao);
 		/*****TEST*****/
 		prova.getQuestoes().add(questao);

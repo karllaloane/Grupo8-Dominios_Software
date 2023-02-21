@@ -15,4 +15,8 @@ public class Descartada extends QuestaoState {
     }
 
 
+    @Override
+    public String toString() {
+        return "Descartada";
+    }
 }

@@ -35,8 +35,12 @@ public class Questao extends AbstractEntity {
 	public Questao(){
 		this.state = new Elaboracao();
 	}
+	public Questao(int num) {
+		this.idQuestao = num;
+	}
+	public Questao(String s){
 
-
+	}
 
 
 	/************ Métodos STATE********/
@@ -51,10 +55,13 @@ public class Questao extends AbstractEntity {
 	this.state.enviarParaRevisao(this,correcao);
 	}
 
-	public void enviarParaCorrecao(Revisao revisao){
-		this.state.enviarParaCorrecao(this,revisao);
+	public void enviarParaBanca(Revisao revisao){
+		this.state.enviarParaBanca(this,revisao);
 	}
 
+	public void enviarParaRevisaoLinguagem(Revisao revisao) {
+	this.state.enviarParaRevisaoLinguagem(this,revisao);
+	}
 
 	public void concluir(){
 		this.state.concluir(this);
@@ -65,7 +72,7 @@ public class Questao extends AbstractEntity {
 	}
 
 	public void guardarNoBanco() {
-	this.state.guardar(this);
+	this.state.guardarNoBanco(this);
 	}
 
 
@@ -73,12 +80,7 @@ public class Questao extends AbstractEntity {
 
 
 
-	public Questao(int num) {
-		this.idQuestao = num;
-	}
-	public Questao(String s){
 
-	}
 	
 	public String getEnunciado() {
 		return enunciado;
