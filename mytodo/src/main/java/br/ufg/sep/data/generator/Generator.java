@@ -51,7 +51,7 @@ if(true) return 0;
 
 		q.enviarParaRevisao(null); // r1
 		questaoRepository.save(q);
-		q.enviarParaCorrecao(revisao); // questao nao atendeu, e foi enviada para c1
+		q.enviarParaBanca(revisao); // questao nao atendeu, e foi enviada para c1
 		questaoRepository.save(q);
 		q.enviarParaRevisao(correcao); // enviada para rev2, passando a corr1
 		System.out.println("\n--------------\n"+q.getState().toString()+"\n--------------\n");

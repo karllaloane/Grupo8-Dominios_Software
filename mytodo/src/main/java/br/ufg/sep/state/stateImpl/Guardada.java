@@ -14,5 +14,8 @@ public class Guardada extends QuestaoState {
         super();
     }
 
-
+    @Override
+    public String toString() {
+        return "Guardada";
+    }
 }

@@ -14,5 +14,12 @@ public class RevisaoBanca extends QuestaoState {
         super();
     }
 
-
+    @Override
+    public Boolean concluir(Questao questao) {
+        Concluida concluida = new Concluida();
+        concluida.setRevisao(this.revisao);
+        concluida.setCorrecao(this.correcao);
+        questao.setState(concluida);
+        return true;
+    }
 }
