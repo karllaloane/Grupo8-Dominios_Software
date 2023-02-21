@@ -1,10 +1,12 @@
 package br.ufg.sep.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class QuestaoDiscursiva extends Questao {
 	
+	@Column(length = 2054)
 	private String respostaEsperada;
 
 	public String getRespostaEsperada() {

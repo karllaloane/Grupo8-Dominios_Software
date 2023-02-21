@@ -5,7 +5,9 @@ import java.util.Optional;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.Questao;
 import br.ufg.sep.security.AuthenticatedUser;
+import br.ufg.sep.state.stateImpl.Elaboracao;
 import br.ufg.sep.views.prova.ProvasView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
@@ -41,6 +43,17 @@ public class ProvasPresenter {
                 	view.habilitarButtons();
             }
         });
+		
+		view.getGridProvas().addItemDoubleClickListener(event -> {
+			prova = event.getItem();
+			
+			if(prova != null) {
+				view.getVisualizarButton().getUI().ifPresent(ui->{
+					 ui.navigate(QuestoesProvaView.class, prova.getId());});
+			}
+			
+			
+		});
 		
 		/*Visualizar*/
 		view.getVisualizarButton().addClickListener(e->{

@@ -13,10 +13,12 @@ import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.views.questoes.EditarQuestaoDiscursivaView;
+import br.ufg.sep.views.questoes.EditarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
-import br.ufg.sep.views.questoes.VisualizarQuestaoSubjetivaView;
+import br.ufg.sep.views.questoes.VisualizarQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
 public class QuestoesProvaPresenter {
@@ -87,7 +89,6 @@ public class QuestoesProvaPresenter {
             }
 		});
 		
-		
 		/*Acessar a prova*/
 		view.getAcessarButton().addClickListener(e->{
 					
@@ -101,22 +102,41 @@ public class QuestoesProvaPresenter {
 			if((prova.getTipo() == TipoProva.DISCUSSIVA)
 					&& questao.getState() instanceof Elaboracao) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
-					 ui.navigate(VisualizarQuestaoSubjetivaView.class, questao.getId());});
+					 ui.navigate(VisualizarQuestaoDiscursivaView.class, questao.getId());});
 			}
 				
 		});
 		
-		/*Visualizar*/
+		/*Excluir*/
 		view.getExcluirButton().addClickListener(e->{
 			
 			view.getDialog().open();		
 			
 		});
 		
+		
+		view.getEditarButton().addClickListener(e->{
+			
+			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)) {
+				
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(EditarQuestaoObjetivaView.class, questao.getId());});
+			}
+			
+			if((prova.getTipo() == TipoProva.DISCUSSIVA)
+					&& questao.getState() instanceof Elaboracao) {
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(EditarQuestaoDiscursivaView.class, questao.getId());});
+			}	
+			
+		});
+
+		//evento do botao cancelar do dialogo
 		view.getDialogCancelaButton().addClickListener(e->{
 			view.getDialog().close();
 		});
 		
+		//evento do botao deletar do diálogo
 		view.getDialogDeletaButton().addClickListener(e->{
 			questaoService.questaoRepository.delete(questao);
 			view.getDialog().close();

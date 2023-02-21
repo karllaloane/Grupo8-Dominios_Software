@@ -12,11 +12,9 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
@@ -27,21 +25,26 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.NivelDificuldade;
+import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.QuestaoDiscursiva;
 import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
-import br.ufg.sep.views.questoes.presenter.VisualizarQuestaoObjetivaPresenter;
+import br.ufg.sep.views.questoes.presenter.EditarQuestaoObjetivaPresenter;
+import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
-@Route(value="visualizar_questao", layout = MainLayout.class)
-@PageTitle("Cadastrar Questão")
+@Route(value="editar_questao_objetiva", layout = MainLayout.class)
+@PageTitle("Editar Questão Objetiva")
 @PermitAll
-public class VisualizarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
+public class EditarQuestaoObjetivaView extends VerticalLayout implements HasUrlParameter<Long>{
 
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private VisualizarQuestaoObjetivaPresenter presenter;
+	private EditarQuestaoObjetivaPresenter presenter;
 	
 	//inputs gerais
 	private TextField subareaTF;
@@ -53,7 +56,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private List<TextArea> alternativasList;
 	private List<Checkbox> checkboxList;
 
-	private Button voltarButton;
+	private Button salvarButton;
+	private Button descartarButton;
 	private Button enviarButton;
 
 	//layouts final
@@ -63,18 +67,22 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private VerticalLayout alternativaLayout;
 	private VerticalLayout justificativaLayout;
 	private VerticalLayout buttonsLayout;
-
-	private QuestaoObjetiva questaoObjetiva;
-	private long questaoId;
-
+	
 	private MetadadosQuestaoComponent metadados;
 	private ConfirmaEnvioRevisaoDialog envioDialogo;
-	
+	private CancelarEdicaoDialog cancelarDialogo;
+
+	private QuestaoObjetiva questaoObjetiva;
 	private int quantAlternativas;
 
-	public VisualizarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
+	public EditarQuestaoObjetivaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
+		
+		//criando os componentes
+		setMetadados(new MetadadosQuestaoComponent());
+		envioDialogo = new ConfirmaEnvioRevisaoDialog();
+		cancelarDialogo = new CancelarEdicaoDialog();
 
 		//criando os layouts intermediarios
 		HorizontalLayout informacaoLayout = new HorizontalLayout();
@@ -95,13 +103,19 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		alternativaLayout.setWidth("700px");
 		informacaoLayout.setWidth("700px");
 		justificativaLayout.setWidth("699px");
-		buttonsLayout.setWidth("700px");
+		buttonsLayout.setWidth("699px");
 		
-		metadados = new MetadadosQuestaoComponent();
-		envioDialogo = new ConfirmaEnvioRevisaoDialog();
+		//criando os componentes de informacoes sobre a questao a ser cadastrada
+		subareaTF = new TextField("Subárea da questão");
 		
+		//criação do combobx
+		nivelDificuldadeCombo = new ComboBox<>("Nível de dificuldade");
+		nivelDificuldadeCombo.setItems(EnumSet.allOf(NivelDificuldade.class));
 		
-		informacaoLayout.add(metadados); //adicionando ao layout intermediario
+		//alterando estilos
+		subareaTF.setWidth("400px");
+		//informacaoLayout.add(subareaTF, nivelDificuldadeCombo); //adicionando ao layout intermediario
+		informacaoLayout.add(metadados);
 		
 		/**************** Layout do enunciado ***********************/
 	
@@ -112,7 +126,6 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		//alterando estilos
 		enunciado.setWidthFull();
 		enunciado.setMinHeight("150px");
-		enunciado.setReadOnly(true);
 
 		enunciadoLayout.add(enunciadoLabel, enunciado);
 		
@@ -136,11 +149,9 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		
 		alternativaLabel.setWidth("597px");
 		labelLayout.add(alternativaLabel, corretaLabel);
-		
-		
+
 		//lista de span que guarda as alternativas a), b)...
 		List<Span> spanList = new ArrayList<Span>();
-		
 		
 		//layout auxiliar para centralizar os checkbox
 		List<HorizontalLayout> auxLayout = new ArrayList<HorizontalLayout>();
@@ -166,13 +177,10 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			alternativasList.add(new TextArea());
 			alternativasList.get(i).setWidth("570px");
 			
-			//setando o valor da alternativa
 			alternativasList.get(i).setValue(questaoObjetiva.getAlternativas().get(i));
-			alternativasList.get(i).setReadOnly(true);
 			
 			//cria o textbox e adiciona ao list
 			checkboxList.add(new Checkbox());
-			checkboxList.get(i).setReadOnly(true);
 			
 			if(i == questaoObjetiva.getAlternativaCorreta())
 				checkboxList.get(i).setValue(true);
@@ -203,7 +211,6 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		justificativaTA.setWidthFull();
 		
 		justificativaTA.setValue(questaoObjetiva.getJustificativa());
-		justificativaTA.setReadOnly(true);
 		
 		justificativaLayout.add(justificativaLabel, justificativaTA);
 		
@@ -212,18 +219,18 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		add(justificativaLayout);
 	}
 	
-	private void addBotões() {
+	private void addBotoes() {
 		//critando botoes
 		
 		HorizontalLayout h = new HorizontalLayout();
 		
-		voltarButton = new Button("Voltar");
+		this.descartarButton = new Button("Descartar edição");
+		this.salvarButton = new Button("Salvar");
 		this.enviarButton = new Button("Enviar para revisão 1");
 		
-		voltarButton.getStyle().set("margin-right", "auto");
-		
-		enviarButton.getStyle().set("margin-left", "405px");
-		h.add(voltarButton,enviarButton);
+		this.salvarButton.getStyle().set("margin-left", "247px");
+		this.enviarButton.getStyle().set("margin-left", "auto");
+		h.add(descartarButton, salvarButton,enviarButton);
 		
 		buttonsLayout.add(h);
 		
@@ -239,7 +246,7 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();	
 			
 			quantAlternativas = questaoObjetiva.getQuantAlternativas();
-			questaoId = questaoObjetiva.getId();
+			
 			//setando o valor dos campos criados no construtor
 			//pode virar uma funcao mas fiquei com preguica
 			enunciado.setValue(questaoObjetiva.getEnunciado());
@@ -247,9 +254,7 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			//setando os valores do componente de metadados
 			metadados.setSubAreas(questaoObjetiva.getSubAreas());
 			metadados.atualizaGrid(); //atualizando o grid apos setar a lista de subareas
-			metadados.setEdicaoFalse(); //desabilitando a edicao dos componentes
 			metadados.getNivelDificuldadeCombo().setValue(questaoObjetiva.getNivelDificuldade());
-	
 			
 			//chama o método que adiciona o layout de alternativas de acordo com a quantidade de questoes
 			//definidas no cadastro da prova
@@ -257,38 +262,71 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 
 			//chama o método para criar o resto do layout
 			addJustificativa();
-			addBotões();
+			addBotoes();
 
-			this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
-		}
-		
-		else {
-			Notification notification = Notification
-			        .show("Impossível acessar a questão");
-			notification.setPosition(Position.TOP_CENTER);
-			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+			this.presenter = new EditarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}
 		
 	}
 	
+	// Getters and setters *********************************************
+	public List<TextArea> getAlternativasList() {
+		return alternativasList;
+	}
+	
+	public List<Checkbox> getCheckboxList() {
+		return checkboxList;
+	}
+	
+	public int getQuantAlternativas() {
+		return quantAlternativas;
+	}
+	
+	public Button getSalvarButton() {
+		return salvarButton;
+	}
+
 	public Button getEnviarButton() {
 		return enviarButton;
 	}
 	
-	public Button getVoltarButton() {
-		return voltarButton;
+	public Button getDescartarButton() {
+		return descartarButton;
 	}
 	
-	public Questao getQuestaoObjetiva() {
+	public TextField getSubareaTF() {
+		return subareaTF;
+	}
+
+	public ComboBox<NivelDificuldade> getNivelDificuldadeCombo() {
+		return nivelDificuldadeCombo;
+	}
+
+	public TextArea getJustificativaTA() {
+		return justificativaTA;
+	}
+
+	public TextArea getEnunciado() {
+		return enunciado;
+	}
+	
+	public MetadadosQuestaoComponent getMetadados() {
+		return metadados;
+	}
+
+	public void setMetadados(MetadadosQuestaoComponent metadados) {
+		this.metadados = metadados;
+	}
+	
+	public QuestaoObjetiva getQuestaoObjetiva() {
 		return questaoObjetiva;
-	}
-	
-	public long getQuestaoId() {
-		return questaoId;
 	}
 	
 	public ConfirmaEnvioRevisaoDialog getEnvioDialogo() {
 		return envioDialogo;
 	}
-	
+
+	public CancelarEdicaoDialog getCancelarDialogo() {
+		return cancelarDialogo;
+	}
 }

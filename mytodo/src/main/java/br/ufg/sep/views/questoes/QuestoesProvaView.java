@@ -65,7 +65,8 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	
 	private Dialog dialog;
 	private Button dialogDeletaButton;
-
+	private Button dialogCancelaButton;
+	
 	public QuestoesProvaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -262,10 +263,7 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 
 	public Button getDialogCancelaButton() {
 		return dialogCancelaButton;
-	}
-
-	private Button dialogCancelaButton;
-	
+	}	
 
 	public Dialog getDialog() {
 		return dialog;

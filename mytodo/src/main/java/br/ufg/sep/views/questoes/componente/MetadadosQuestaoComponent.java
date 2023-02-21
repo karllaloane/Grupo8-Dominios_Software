@@ -1,4 +1,4 @@
-package br.ufg.sep.views.questoes;
+package br.ufg.sep.views.questoes.componente;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

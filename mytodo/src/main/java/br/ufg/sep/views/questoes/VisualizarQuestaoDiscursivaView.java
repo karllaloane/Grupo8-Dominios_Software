@@ -6,8 +6,12 @@ import javax.annotation.security.PermitAll;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -17,24 +21,27 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.QuestaoDiscursiva;
+import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
 import br.ufg.sep.views.questoes.presenter.NovaQuestaoDiscursivaPresenter;
+import br.ufg.sep.views.questoes.presenter.VisualizarQuestaoDiscursivaPresenter;
 
-@Route(value="cadastrar_questoes_discursiva", layout = MainLayout.class)
+@Route(value="visualizar_questoes_discursiva", layout = MainLayout.class)
 @PageTitle("Cadastrar Questão Discursiva")
 @PermitAll
-public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlParameter<Long>{
+public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements HasUrlParameter<Long>{
+
 	
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private NovaQuestaoDiscursivaPresenter presenter;
+	private VisualizarQuestaoDiscursivaPresenter presenter;
 	
 	private MetadadosQuestaoComponent metadados;
 	private ConfirmaEnvioRevisaoDialog envioDialogo;
-	private CancelarEdicaoDialog cancelarDialogo;
 	
 	//layouts final
 	//todos eles são criados no construtor
@@ -46,20 +53,27 @@ public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlP
 	private TextArea enunciado;	
 	private TextArea respostaEsperada;	
 	
-	private Button salvarButton;
+	private Button voltarButton;
 	private Button enviarButton;
-	private Button descartarButton;
 	
 	private Prova prova;
+	private QuestaoDiscursiva questaoDiscursiva;
 	
-	public NovaQuestaoDiscursivaView(ProvaService provaService, QuestaoService questaoService) {
+	public Button getVoltarButton() {
+		return voltarButton;
+	}
+	public Button getEnviarButton() {
+		return enviarButton;
+	}
+	public QuestaoDiscursiva getQuestaoDiscursiva() {
+		return questaoDiscursiva;
+	}
+	public VisualizarQuestaoDiscursivaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		
-		//criando os componentes
 		metadados = new MetadadosQuestaoComponent();
 		envioDialogo = new ConfirmaEnvioRevisaoDialog();
-		cancelarDialogo = new CancelarEdicaoDialog();
 		
 		//criando os layouts intermediarios
 		HorizontalLayout informacaoLayout = new HorizontalLayout();
@@ -87,6 +101,7 @@ public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlP
 		//alterando estilos
 		enunciado.setWidthFull();
 		enunciado.setMinHeight("150px");
+		enunciado.setReadOnly(true);
 
 		enunciadoLayout.add(enunciadoLabel, enunciado);
 		
@@ -103,6 +118,7 @@ public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlP
 		//alterando estilos
 		respostaEsperada.setWidthFull();
 		respostaEsperada.setMinHeight("150px");
+		respostaEsperada.setReadOnly(true);
 		
 		respostaEsperadaLayout.add(labelRespEsperada, respostaEsperada);
 		
@@ -116,80 +132,57 @@ public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlP
 		
 		add(layoutFinal);
 	}
-	
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
 		// TODO Auto-generated method stub
-		
-		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
-		if (optionalProva.isPresent()) {
-			setProva(optionalProva.get());
-			//this.provaId = prova.getId();
+		Optional<Questao> optionalQuestao = questaoService.getRepository().findById(parameter);
+		if (optionalQuestao.isPresent()) {
+			questaoDiscursiva = (QuestaoDiscursiva) optionalQuestao.get();	
 			
+			setarDados();
 			
-
-			this.presenter = new NovaQuestaoDiscursivaPresenter(provaService, questaoService, this); //iniciar o presenter
+			presenter = new VisualizarQuestaoDiscursivaPresenter(provaService, questaoService, this);
+		} else {
+			Notification notification = Notification
+			        .show("Impossível acessar a questão");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
 		
 	}
 
+	private void setarDados() {
+		// TODO Auto-generated method stub
+		//setando os metadados
+		this.metadados.setEdicaoFalse();
+		this.metadados.getNivelDificuldadeCombo().setValue(questaoDiscursiva.getNivelDificuldade());
+		this.metadados.setSubAreas(questaoDiscursiva.getSubAreas());
+		this.metadados.atualizaGrid();
+		
+		//setando as informações das questões
+		this.enunciado.setValue(questaoDiscursiva.getEnunciado());
+		this.respostaEsperada.setValue(questaoDiscursiva.getRespostaEsperada());
+		
+	}
 	private void addBotoes() {
 		//critando botoes
 		
-		HorizontalLayout h = new HorizontalLayout();
+		HorizontalLayout h1 = new HorizontalLayout();
 		
-		this.descartarButton = new Button("Descartar edição");
-		this.salvarButton = new Button("Salvar");
-		this.enviarButton = new Button("Enviar para revisão 1");
+		voltarButton = new Button("Voltar");
+		voltarButton.getStyle().set("margin-right", "auto");
 		
-		this.salvarButton.getStyle().set("margin-left", "247px");
-		this.enviarButton.getStyle().set("margin-left", "auto");
-		h.add(descartarButton, salvarButton,enviarButton);
+		//este botão poderá sofrer mudanças de acordo com o status da questão
+		enviarButton = new Button("Enviar para Revisão Técnica 1");
+		enviarButton.getStyle().set("margin-left", "350px");
 		
+		h1.add(voltarButton, enviarButton);
+
 		buttonsLayout.setPadding(false);
-		
-		buttonsLayout.add(h);
-		
-		this.add(buttonsLayout);
-	}
-
-	public Prova getProva() {
-		return prova;
-	}
-
-	public void setProva(Prova prova) {
-		this.prova = prova;
+		buttonsLayout.add(h1);
 	}
 	
-	public Button getSalvarButton() {
-		return salvarButton;
-	}
-
-	public Button getEnviarButton() {
-		return enviarButton;
-	}
-	
-	public Button getCancelarButton() {
-		return descartarButton;
-	}
-	
-	public MetadadosQuestaoComponent getMetadados() {
-		return metadados;
-	}
-
-	public TextArea getEnunciado() {
-		return enunciado;
-	}
-	
-	public TextArea getRespostaEsperada() {
-		return respostaEsperada;
-	}
-
 	public ConfirmaEnvioRevisaoDialog getEnvioDialogo() {
 		return envioDialogo;
-	}
-
-	public CancelarEdicaoDialog getCancelarDialogo() {
-		return cancelarDialogo;
 	}
 }

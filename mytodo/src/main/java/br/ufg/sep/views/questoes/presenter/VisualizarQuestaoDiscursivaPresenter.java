@@ -1,10 +1,5 @@
 package br.ufg.sep.views.questoes.presenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.event.EventListenerList;
-
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -14,19 +9,17 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.Prova;
-import br.ufg.sep.entity.Questao;
-import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
-import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
+import br.ufg.sep.views.questoes.VisualizarQuestaoDiscursivaView;
 
-public class VisualizarQuestaoObjetivaPresenter {
+public class VisualizarQuestaoDiscursivaPresenter {
+
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private VisualizarQuestaoObjetivaView view;
+	private VisualizarQuestaoDiscursivaView view;
 	
-	public VisualizarQuestaoObjetivaPresenter(ProvaService provaService,
-			QuestaoService questaoService, VisualizarQuestaoObjetivaView view) {
+	public VisualizarQuestaoDiscursivaPresenter(ProvaService provaService,
+			QuestaoService questaoService, VisualizarQuestaoDiscursivaView view) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -47,7 +40,7 @@ public class VisualizarQuestaoObjetivaPresenter {
 		view.getEnvioDialogo().getcancelarDialogButton().addClickListener(e->{
 			view.getEnvioDialogo().getDialog().close();
 		});
-				
+		
 		view.getVoltarButton().addClickListener(new ComponentEventListener<ClickEvent<Button>>() {
 			
 			@Override
@@ -60,9 +53,9 @@ public class VisualizarQuestaoObjetivaPresenter {
 	
 	private void enviarQuestao(ClickEvent<Button> event) {
 		//pegando a questao que está na view e chamando o método de envio
-		view.getQuestaoObjetiva().enviarParaRevisao(null);
+		view.getQuestaoDiscursiva().enviarParaRevisao(null);
 		
-		questaoService.salvarEnvio(view.getQuestaoObjetiva());	
+		questaoService.salvarEnvio(view.getQuestaoDiscursiva());	
 		
 		/*Operacao bem sucedida*/
 		Notification notification = Notification
@@ -76,9 +69,8 @@ public class VisualizarQuestaoObjetivaPresenter {
 	
 	private void voltar(ClickEvent<Button> event) {
 		
-		Long idProva = view.getQuestaoObjetiva().getProva().getId();
+		Long idProva = view.getQuestaoDiscursiva().getProva().getId();
 		
 		event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, idProva));
 	}
-
 }

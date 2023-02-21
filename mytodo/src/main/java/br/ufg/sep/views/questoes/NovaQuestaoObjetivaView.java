@@ -27,6 +27,9 @@ import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
+import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
+import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
 import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
 @Route(value="cadastrar_questoes_objetiva", layout = MainLayout.class)
@@ -49,7 +52,7 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 	private List<Checkbox> checkboxList;
 
 	private Button salvarButton;
-
+	private Button descartarButton;
 	private Button enviarButton;
 
 	//layouts final
@@ -61,6 +64,8 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 	private VerticalLayout buttonsLayout;
 	
 	private MetadadosQuestaoComponent metadados;
+	private ConfirmaEnvioRevisaoDialog envioDialogo;
+	private CancelarEdicaoDialog cancelarDialogo;
 
 	private Prova prova;
 	private int quantAlternativas;
@@ -69,7 +74,10 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		
+		//criando os componentes
 		setMetadados(new MetadadosQuestaoComponent());
+		envioDialogo = new ConfirmaEnvioRevisaoDialog();
+		cancelarDialogo = new CancelarEdicaoDialog();
 
 		//criando os layouts intermediarios
 		HorizontalLayout informacaoLayout = new HorizontalLayout();
@@ -89,8 +97,8 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		enunciadoLayout.setWidth("667px");
 		alternativaLayout.setWidth("700px");
 		informacaoLayout.setWidth("700px");
-		justificativaLayout.setWidth("700px");
-		buttonsLayout.setWidth("700px");
+		justificativaLayout.setWidth("699px");
+		buttonsLayout.setWidth("699px");
 		
 		//criando os componentes de informacoes sobre a questao a ser cadastrada
 		subareaTF = new TextField("Subárea da questão");
@@ -206,16 +214,15 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		
 		HorizontalLayout h = new HorizontalLayout();
 		
-		salvarButton = new Button("Salvar");
+		this.descartarButton = new Button("Descartar edição");
+		this.salvarButton = new Button("Salvar");
+		this.enviarButton = new Button("Enviar para revisão 1");
 		
-		//este botão poderá sofrer mudanças de acordo com o status da questão
-		enviarButton = new Button("Enviar para Revisão Técnica 1");
-		
-		h.add(salvarButton, enviarButton);
-		//h.setAlignItems(Alignment.END);
+		this.salvarButton.getStyle().set("margin-left", "247px");
+		this.enviarButton.getStyle().set("margin-left", "auto");
+		h.add(descartarButton, salvarButton,enviarButton);
 		
 		buttonsLayout.add(h);
-		buttonsLayout.setAlignItems(Alignment.END);
 		
 		this.add(buttonsLayout);
 	}
@@ -269,6 +276,10 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 		return enviarButton;
 	}
 	
+	public Button getDescartarButton() {
+		return descartarButton;
+	}
+	
 	public TextField getSubareaTF() {
 		return subareaTF;
 	}
@@ -295,5 +306,13 @@ public class NovaQuestaoObjetivaView extends VerticalLayout implements HasUrlPar
 
 	public void setMetadados(MetadadosQuestaoComponent metadados) {
 		this.metadados = metadados;
+	}
+
+	public ConfirmaEnvioRevisaoDialog getEnvioDialogo() {
+		return envioDialogo;
+	}
+
+	public CancelarEdicaoDialog getCancelarDialogo() {
+		return cancelarDialogo;
 	}
 }

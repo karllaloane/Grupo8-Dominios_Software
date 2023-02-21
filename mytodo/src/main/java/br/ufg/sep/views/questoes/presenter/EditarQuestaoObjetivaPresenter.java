@@ -1,12 +1,8 @@
 package br.ufg.sep.views.questoes.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import br.ufg.sep.entity.*;
-
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -18,17 +14,18 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.views.concurso.ConcursosView;
-import br.ufg.sep.views.concurso.FormularioConcursoView;
+import br.ufg.sep.entity.NivelDificuldade;
+import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.views.questoes.EditarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
-import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
-public class NovaQuestaoObjetivaPresenter {
+public class EditarQuestaoObjetivaPresenter {
 
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private NovaQuestaoObjetivaView view;
+	private EditarQuestaoObjetivaView view;
 	private QuestaoObjetiva questao;
 	private Prova prova;
 	
@@ -42,14 +39,13 @@ public class NovaQuestaoObjetivaPresenter {
 	private List<String> alternativasList;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public NovaQuestaoObjetivaPresenter(ProvaService provaService,
-			QuestaoService questaoService, NovaQuestaoObjetivaView view) {
+	public EditarQuestaoObjetivaPresenter(ProvaService provaService, QuestaoService questaoService,
+			EditarQuestaoObjetivaView view) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		this.view = view;
-		
-		prova = view.getProva();
+		prova = view.getQuestaoObjetiva().getProva();
 		
 		correta = -1;
 		
@@ -94,7 +90,6 @@ public class NovaQuestaoObjetivaPresenter {
 			view.getCancelarDialogo().getDialog().open();
 		});
 		
-		
 		/**pegando as ações dos diálogos**/
 		
 		//se confirmar o envio, chama o método que irá salvar e enviar a questão
@@ -118,12 +113,12 @@ public class NovaQuestaoObjetivaPresenter {
 		view.getCancelarDialogo().getcancelarDialogButton().addClickListener(e->{
 			view.getCancelarDialogo().getDialog().close();
 		});
-	
+
 	}
 
 	private void enviarQuestao(ClickEvent<Button> event) {
 		Notification notification;
-		prova = view.getProva();
+		questao = new QuestaoObjetiva();
 		
 		//chama o método para verificar os dados da view
 		//se ele retornou true todos os dados foram coletados com sucesso
@@ -131,6 +126,9 @@ public class NovaQuestaoObjetivaPresenter {
 			//cria a questão com os dados coletados
 			criarQuestao();
 
+			//setando o id para update
+			questao.setId(view.getQuestaoObjetiva().getId());
+			
 			//envia para a correcao
 			questao.enviarParaRevisao(null);
 			
@@ -151,13 +149,15 @@ public class NovaQuestaoObjetivaPresenter {
 	private void salvarQuestao(ClickEvent<Button> event) {
 		
 		Notification notification;
-		prova = view.getProva();
-		
+
 		//chama o método para verificar os dados da view
 		//se ele retornou true todos os dados foram coletados com sucesso
 		if(verificaDadosPreenchidos()) {
 			//cria a questão com os dados coletados
 			criarQuestao();
+			
+			//setando o id para update
+			questao.setId(view.getQuestaoObjetiva().getId());
 			
 			prova.getQuestoes().add(questao);
 			
@@ -251,3 +251,4 @@ public class NovaQuestaoObjetivaPresenter {
 		questao.setProva(prova);
 	}
 }
+

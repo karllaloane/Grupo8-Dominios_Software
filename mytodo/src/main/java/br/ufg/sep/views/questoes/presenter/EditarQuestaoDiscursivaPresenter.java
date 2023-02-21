@@ -1,12 +1,14 @@
 package br.ufg.sep.views.questoes.presenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+
+import antlr.debug.Event;
+
 import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
@@ -15,17 +17,15 @@ import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoDiscursiva;
-import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.views.questoes.EditarQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
-import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
-import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 
-public class NovaQuestaoDiscursivaPresenter {
-	
+public class EditarQuestaoDiscursivaPresenter {
+
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private NovaQuestaoDiscursivaView view;
+	private EditarQuestaoDiscursivaView view;
 	private Questao questao;
 	private Prova prova;
 	
@@ -35,8 +35,8 @@ public class NovaQuestaoDiscursivaPresenter {
 	private String respostaEsperada;
 	private List<String> subarea;
 	
-	public NovaQuestaoDiscursivaPresenter(ProvaService provaService,
-			QuestaoService questaoService, NovaQuestaoDiscursivaView view) {
+	public EditarQuestaoDiscursivaPresenter(ProvaService provaService, QuestaoService questaoService,
+			EditarQuestaoDiscursivaView view) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -83,13 +83,17 @@ public class NovaQuestaoDiscursivaPresenter {
 	
 	private void enviarQuestao(ClickEvent<Button> event) {
 		Notification notification;
+		questao = new QuestaoDiscursiva();
 		prova = view.getProva();
 		
-		//chama o método para verificar os dados da view
+		//chama o método para coletar os dados da view
 		//verificando se ele retornou ture, ou seja
 		//todos os dados foram coletados com sucesso
 		if(verificaDadosPreenchidos()) {
 			criarQuestao();
+			//setando o id para salvar a mesma questao
+			questao.setId(view.getQuestaoDiscursiva().getId());
+			
 			//envia para a correcao
 			questao.enviarParaRevisao(null);
 			
@@ -105,19 +109,18 @@ public class NovaQuestaoDiscursivaPresenter {
 			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	private void salvarQuestao(ClickEvent<Button> event) {
-		
+	
+	public void salvarQuestao(ClickEvent<Button> event) {
 		Notification notification;
 		questao = new QuestaoDiscursiva();
 		prova = view.getProva();
 		
-		//chama o método para verificar os dados da view
+		//chama o método para coletar os dados da view
 		//verificando se ele retornou ture, ou seja
 		//todos os dados foram coletados com sucesso
 		if(verificaDadosPreenchidos()) {
 			criarQuestao();
+			questao.setId(view.getQuestaoDiscursiva().getId());
 			
 			prova.getQuestoes().add(questao);
 			
@@ -131,7 +134,6 @@ public class NovaQuestaoDiscursivaPresenter {
 			
 			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
 		}
-		
 	}
 	
 	private void criarQuestao() {
