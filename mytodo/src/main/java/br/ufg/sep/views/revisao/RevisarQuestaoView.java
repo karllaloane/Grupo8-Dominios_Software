@@ -8,10 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
-import br.ufg.sep.entity.Atendimento;
-import br.ufg.sep.entity.Questao;
-import br.ufg.sep.entity.QuestaoObjetiva;
-import br.ufg.sep.state.stateImpl.Revisao1;
+import br.ufg.sep.entity.*;
 import br.ufg.sep.state.stateImpl.Revisao2;
 import br.ufg.sep.state.stateImpl.Revisao3;
 import br.ufg.sep.views.revisao.components.DropDownQuestaoFactory;
@@ -43,7 +40,6 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 
-import br.ufg.sep.entity.Prova;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.correcao.presenter.CorrecaoObjetivaBancaPresenter;
 
@@ -107,7 +103,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
     private CorrecaoObjetivaBancaPresenter presenter;
     private VerticalLayout revisaoTecnicaLayout = new VerticalLayout();
     private TextArea orientacoesTextField = new TextArea();
-    private QuestaoObjetiva questao;
+    private QuestaoObjetiva questaoObjetiva;
 
 	private Button addButton;
 	private VerticalLayout topicosDeRevisaoLayout;
@@ -119,6 +115,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private Questao questaoSelecionada;
 
 	private RevisarQuestaoPresenter revisarQuestaoPresenter;
+	QuestaoDiscursiva questaoDiscussiva;
 
 	public RevisarQuestaoView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
@@ -141,8 +138,12 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		
 		Span orientacaoSpan = new Span("Orientações");
 		orientacoesTextField = new TextArea();
-		if(questao.getState().getRevisao()!=null)
-		orientacoesTextField.setValue(questao.getState().getRevisao().getOrientacoes());
+		if(questaoObjetiva!=null)
+		if(questaoObjetiva.getState().getRevisao()!=null)
+		orientacoesTextField.setValue(questaoObjetiva.getState().getRevisao().getOrientacoes());
+		else {
+			orientacoesTextField.setValue(questaoDiscussiva.getState().getRevisao().getOrientacoes());
+		}
 		orientacoesTextField.setWidthFull();
 		orientacoesTextField.setReadOnly(true);
 		
@@ -176,9 +177,9 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		List<Data> list = new ArrayList<>();
 		
 		grid.setItems(list);
-		
-		if(questao.getState().getRevisao()!=null)
-		for(Map.Entry<String, Atendimento> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
+		if(questaoObjetiva!=null)
+		if(questaoObjetiva.getState().getRevisao()!=null)
+		for(Map.Entry<String, Atendimento> pair : questaoObjetiva.getState().getRevisao().getItemAnalisado().entrySet()){
 			list.add(new Data(pair.getKey(), pair.getValue().toString()));
 		} 
 		
@@ -489,8 +490,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		detailsQuestaoAtual.setMinWidth("1070px");
 		detailsQuestaoAtual.setOpened(false);
 	}
-	
-	
+
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
 		/* Questão está null, tentei de vários jeitos, mas não foi não */
@@ -517,7 +517,10 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		enviarRevisao.setTooltipText(metadadoRevisao);
 		
 		Optional<Questao> optionalQuestao = questaoService.getRepository().findById(parameter);
-		questao = (QuestaoObjetiva) optionalQuestao.get();
+		if(optionalQuestao.get() instanceof  QuestaoObjetiva)
+		questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();
+		else
+		this.questaoDiscussiva = (QuestaoDiscursiva)optionalQuestao.get();
 		
 		dropMenuConcurso(); 
 		dropMenuProva(); 
@@ -539,9 +542,11 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 				verticalDetails.add(d);
 			}
 			detailsUltimaRevisao.setOpened(false);
-			if(questao.getState().getRevisao()==null){
+			if(questaoObjetiva!=null)
+			if(questaoObjetiva.getState().getRevisao()==null){
 				detailsUltimaRevisao.setVisible(false);
 			}
+
 			detailsQuestaoAtual.setOpened(true);
 			verticalDetails.add(detailsUltimaRevisao, detailsQuestaoAtual, layoutQuestao, topicosDeRevisaoLayout, orientacoesQuestao, botoesLayout);
 			

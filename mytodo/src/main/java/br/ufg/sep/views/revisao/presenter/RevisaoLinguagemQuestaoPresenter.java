@@ -3,6 +3,8 @@ package br.ufg.sep.views.revisao.presenter;
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.entity.*;
 import br.ufg.sep.views.revisao.RevisaoLinguagemQuestaoView;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 
 import java.util.List;
@@ -21,8 +23,19 @@ public class RevisaoLinguagemQuestaoPresenter {
     this.questaoRepository = questaoRepository;
     this.questao = questao;
     this.prova = questao.getProva();
+    setQuestaoInfo();
+    configBotoes();
     }
-    private void setQuestaoInfo(Integer x) throws NullPointerException{
+
+    private void configBotoes(){
+        view.getEnviarBanca().addClickListener(c->{
+        this.questao.enviarParaBanca(questao.getState().getRevisao());
+        questaoRepository.save(questao);
+        });
+    }
+
+
+    private void setQuestaoInfo() throws NullPointerException{
         String subAreas = new String("");
         for(String sub : questao.getSubAreas()){
             subAreas+=sub+"\n";
