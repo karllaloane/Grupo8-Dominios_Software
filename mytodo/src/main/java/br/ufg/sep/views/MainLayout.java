@@ -32,10 +32,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.AuthenticatedUser;
+import br.ufg.sep.state.stateImpl.RevisaoBanca;
 import br.ufg.sep.views.elaboracao.ElaboracaoView;
 import br.ufg.sep.views.gerencia.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
+import br.ufg.sep.views.revisao.RevisaoBancaView;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
 
 /**
