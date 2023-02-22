@@ -38,6 +38,7 @@ import br.ufg.sep.views.gerencia.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
 import br.ufg.sep.views.revisao.RevisaoBancaView;
+import br.ufg.sep.views.revisao.RevisaoLinguagemQuestaoView;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
 
 /**
