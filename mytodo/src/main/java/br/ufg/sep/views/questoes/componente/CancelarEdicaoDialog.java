@@ -12,7 +12,7 @@ public class CancelarEdicaoDialog {
 	public CancelarEdicaoDialog() {
 		dialog = new Dialog();
 		dialog.setHeaderTitle("Descartar edição");
-		dialog.add("Todo o trabalho será perdido. Deseja realmente descartar a questão?");
+		dialog.add("Todo o trabalho será perdido. Deseja realmente descartar a edição?");
 		
 		cancelarDialogButton = new Button("Cancelar");
 		cancelarDialogButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
