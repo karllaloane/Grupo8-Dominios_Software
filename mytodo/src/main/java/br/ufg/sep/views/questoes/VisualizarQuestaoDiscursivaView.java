@@ -6,6 +6,7 @@ import javax.annotation.security.PermitAll;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -24,6 +25,7 @@ import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoDiscursiva;
 import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.state.stateImpl.Elaboracao;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
@@ -43,6 +45,7 @@ public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements H
 	private MetadadosQuestaoComponent metadados;
 	private ConfirmaEnvioRevisaoDialog envioDialogo;
 	
+	private Span span2;
 	//layouts final
 	//todos eles são criados no construtor
 	//e adicionados posteriormente
@@ -76,7 +79,7 @@ public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements H
 		envioDialogo = new ConfirmaEnvioRevisaoDialog();
 		
 		//criando os layouts intermediarios
-		HorizontalLayout informacaoLayout = new HorizontalLayout();
+		VerticalLayout informacaoLayout = new VerticalLayout();
 		VerticalLayout enunciadoLayout = new VerticalLayout();
 		VerticalLayout respostaEsperadaLayout = new VerticalLayout();
 		
@@ -87,10 +90,28 @@ public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements H
 		//ajustando tamanho dos layouts
 		enunciadoLayout.setWidth("667px");
 		informacaoLayout.setWidth("700px");
+		informacaoLayout.setPadding(false);
+		informacaoLayout.getStyle().set("margin-bottom", "15px");
+		
 		respostaEsperadaLayout.setWidth("667px");
 		buttonsLayout.setWidth("685px");
 		
-		informacaoLayout.add(metadados);
+		HorizontalLayout statusH = new HorizontalLayout();
+		VerticalLayout statusV = new VerticalLayout();
+		
+		Span span1 = new Span("Status:");
+		span2 = new Span();
+		span1.getStyle().set("font-weight", "bold");
+		span2.getStyle().set("font-weight", "bold");
+		
+		statusH.add(span1, span2);
+		statusV.setAlignItems(Alignment.CENTER);
+		statusV.add(statusH);
+		//statusV.setPadding(false);
+		statusV.setWidth("665px");
+		statusV.getStyle().set("border", "1px solid lightsteelblue");
+		
+		informacaoLayout.add(statusV, metadados);
 		
 		/**************** Layout do enunciado ***********************/
 		
@@ -159,9 +180,16 @@ public class VisualizarQuestaoDiscursivaView extends VerticalLayout implements H
 		this.metadados.setSubAreas(questaoDiscursiva.getSubAreas());
 		this.metadados.atualizaGrid();
 		
+		span2.setText("" + questaoDiscursiva.getState().toString());
+		
 		//setando as informações das questões
 		this.enunciado.setValue(questaoDiscursiva.getEnunciado());
 		this.respostaEsperada.setValue(questaoDiscursiva.getRespostaEsperada());
+		
+		//se nao tiver em elaboração, desabilitar o botao enviar
+		if(!(questaoDiscursiva.getState() instanceof Elaboracao)) {
+			this.enviarButton.setEnabled(false);
+		}
 		
 	}
 	private void addBotoes() {

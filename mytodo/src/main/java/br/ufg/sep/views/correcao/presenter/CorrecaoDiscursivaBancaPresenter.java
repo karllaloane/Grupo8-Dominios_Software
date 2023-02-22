@@ -14,7 +14,10 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Atendimento;
+import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.QuestaoDiscursiva;
+import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.correcao.CorrecaoDiscursivaBancaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
@@ -82,7 +85,9 @@ public class CorrecaoDiscursivaBancaPresenter {
 	//aqui vai a lógica para salvar a correção e a questão, e enviar
 	private void enviarQuestao(ClickEvent<Button> event) {
 	
-	
+		QuestaoDiscursiva questao = view.getQuestao();
+		Correcao correcao = new Correcao();
+		
 		Notification notification;
 		
 		//chama o método para verificar os dados da view
@@ -93,6 +98,16 @@ public class CorrecaoDiscursivaBancaPresenter {
 			 * IMPLEMENTAR
 			 */
 			
+			questao.setEnunciado(enunciado);
+			questao.setRespostaEsperada(respostaEsperada);
+			
+			correcao.setAtendimentoSugestoes(atendimento);
+			correcao.setJustificativa(justificativaAtendimento);
+			
+			questao.enviarParaRevisao(correcao);
+				
+			//salva a questao
+			questaoService.getRepository().save(questao);;
 			
 			//Notifica ação bem sucedida
 			notification = Notification

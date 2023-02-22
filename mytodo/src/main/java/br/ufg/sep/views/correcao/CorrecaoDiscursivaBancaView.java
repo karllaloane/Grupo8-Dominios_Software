@@ -13,6 +13,8 @@ import javax.annotation.security.PermitAll;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
@@ -123,7 +125,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		
 		Span revSpan = new Span("");
 		
-		revSpan.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		revSpan.getStyle().set("font-size", "16px").set("font-weight", "bold");
 		
 		if(questao.getState() instanceof Correcao1)
 			revSpan.setText("Dados da Revisão Técnica 1");
@@ -148,12 +150,18 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 		
-		revisaoTecnicaLayout.setWidth("800px");
+		revisaoTecnicaLayout.setWidth("760px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
 		revisaoTecnicaLayout.add(revSpan, orientGrid, layoutGrid);
 		
 		
-		this.add(revisaoTecnicaLayout);
+		Details details = new Details(revSpan, revisaoTecnicaLayout);
+		details.addThemeVariants(DetailsVariant.FILLED);
+		details.setWidth("785px");
+		details.setMinWidth("700px");
+		details.setOpened(true);
+		
+		this.add(details);
 
 	}
 	
@@ -161,7 +169,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		questaoLayout = new VerticalLayout();
 		
 		Span spanQuestao = new Span("Questão Reelaborada");
-		spanQuestao.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		spanQuestao.getStyle().set("font-size", "16px").set("font-weight", "bold");
 				
 		VerticalLayout enunciadoLayout = new VerticalLayout();
 		VerticalLayout respostaLayout = new VerticalLayout();
@@ -194,7 +202,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		questaoLayout.setWidth("800px");
 		questaoLayout.setAlignItems(Alignment.CENTER);
 		
-		questaoLayout.add(enunciadoLayout, respostaLayout);
+		questaoLayout.add(spanQuestao, enunciadoLayout, respostaLayout);
 		
 		this.add(questaoLayout);
 		
@@ -237,7 +245,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		justificativaGrid.setPadding(false);
 		
 		Span revSpan = new Span("Revisão da Banca");
-		revSpan.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		revSpan.getStyle().set("font-size", "16px").set("font-weight", "bold");
 		
 		Span radioSpan = new Span("As sugestões foram:");
 		radioSpan.getStyle().set("margin-right", "5px");
@@ -262,7 +270,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	
 	private void criarGrid(){
 		gridL = new HorizontalLayout();
-		gridL.setWidth("768px");
+		gridL.setWidth("727px");
 		
 		Grid<Data> grid = new Grid();
 		
@@ -277,7 +285,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		grid.addColumn(Data::getCriterio).setHeader("Critério");
 		grid.addColumn(Data::getAtendimento).setHeader("Atendimento");
 
-		grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		grid.addThemeVariants(GridVariant.LUMO_COMPACT);
 		grid.setAllRowsVisible(true);
 		
 		gridL.setSpacing(false);
@@ -306,10 +314,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	public Prova getProva() {
 		return prova;
 	}
-	
-//	public Grid<String> getGrid() {
-//		return grid;
-//	}
 
 	public TextArea getOrientacoesTextField() {
 		return orientacoesTextField;

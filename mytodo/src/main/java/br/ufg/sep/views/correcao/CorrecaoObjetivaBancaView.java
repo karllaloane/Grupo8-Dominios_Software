@@ -10,6 +10,8 @@ import javax.annotation.security.PermitAll;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.details.Details;
+import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
@@ -127,7 +129,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		questaoLayout = new VerticalLayout();
 		
 		Span spanQuestao = new Span("Questão Reelaborada");
-		spanQuestao.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		spanQuestao.getStyle().set("font-size", "16px").set("font-weight", "bold");
 				
 		VerticalLayout enunciadoLayout = new VerticalLayout();
 		
@@ -260,6 +262,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	}
 	
 	private void criaLayoutRevisaoTecnica() {
+		
 		revisaoTecnicaLayout = new VerticalLayout();
 		
 		VerticalLayout layoutGrid = new VerticalLayout();
@@ -267,7 +270,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		
 		Span revSpan = new Span("");
 		
-		revSpan.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		revSpan.getStyle().set("font-size", "16px").set("font-weight", "bold");
 		
 		if(questao.getState() instanceof Correcao1)
 			revSpan.setText("Dados da Revisão Técnica 1");
@@ -292,12 +295,17 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 		
-		revisaoTecnicaLayout.setWidth("800px");
+		revisaoTecnicaLayout.setWidth("760px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
 		revisaoTecnicaLayout.add(revSpan, orientGrid, layoutGrid);
 		
+		Details details = new Details(revSpan, revisaoTecnicaLayout);
+		details.addThemeVariants(DetailsVariant.FILLED);
+		details.setWidth("785px");
+		details.setMinWidth("700px");
+		details.setOpened(true);
 		
-		this.add(revisaoTecnicaLayout);
+		this.add(details);
 
 	}
 	
@@ -319,7 +327,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		justificativaGrid.setPadding(false);
 		
 		Span revSpan = new Span("Revisão da Banca");
-		revSpan.getStyle().set("font-size", "18px").set("font-weight", "bold");
+		revSpan.getStyle().set("font-size", "16px").set("font-weight", "bold");
 		
 		Span radioSpan = new Span("As sugestões foram:");
 		radioSpan.getStyle().set("margin-right", "5px");
@@ -344,7 +352,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	
 	private void criarGrid(){
 		gridL = new HorizontalLayout();
-		gridL.setWidth("768px");
+		gridL.setWidth("727px");
 		
 		Grid<Data> grid = new Grid();
 		
@@ -359,7 +367,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		grid.addColumn(Data::getCriterio).setHeader("Critério");
 		grid.addColumn(Data::getAtendimento).setHeader("Atendimento");
 
-		grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		grid.addThemeVariants(GridVariant.LUMO_COMPACT);
 		grid.setAllRowsVisible(true);
 		
 		gridL.setSpacing(false);

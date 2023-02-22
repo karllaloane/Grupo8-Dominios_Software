@@ -18,6 +18,9 @@ import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.state.stateImpl.Revisao1;
+import br.ufg.sep.state.stateImpl.Revisao2;
+import br.ufg.sep.state.stateImpl.Revisao3;
 import br.ufg.sep.state.stateImpl.RevisaoBanca;
 import br.ufg.sep.state.stateImpl.RevisaoLinguagem;
 import br.ufg.sep.views.correcao.CorrecaoDiscursivaBancaView;
@@ -88,14 +91,17 @@ public class QuestoesProvaPresenter {
             			view.getEditarButton().setVisible(false);
             		}
             		
+            		view.habilitarBotoesQuestao();
+            		
             		//a ideia aqui é habilitar para os outros estados do elaborador
-            		if(questao.getState() instanceof Elaboracao 
-            				|| questao.getState() instanceof Correcao1 
+            		if(questao.getState() instanceof Elaboracao) {
+            			view.getAcessarButton().setText("Visualizar");
+            		}else if(questao.getState() instanceof Correcao1 
             				|| questao.getState() instanceof Correcao2 
             				|| questao.getState() instanceof RevisaoBanca) {
-            			view.habilitarBotoesQuestao();
+            			view.getAcessarButton().setText("Realizar correção");
             		} else {
-            			view.desabilitarBotoesQuestao();
+            			view.getAcessarButton().setText("Acessar");
             		}
             	}
             }
@@ -103,16 +109,24 @@ public class QuestoesProvaPresenter {
 		
 		/*Acessar a prova*/
 		view.getAcessarButton().addClickListener(e->{
-					
+			
+			//se a prova tiver com revisor, acessa mas não envia
 			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
-					&& questao.getState() instanceof Elaboracao) {
+					&& (questao.getState() instanceof Elaboracao || questao.getState() instanceof Revisao1
+							|| questao.getState() instanceof Revisao2
+							|| questao.getState() instanceof Revisao3
+							|| questao.getState() instanceof RevisaoLinguagem)) {
 				
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(VisualizarQuestaoObjetivaView.class, questao.getId());});
 			}
 			
+			//se a prova tiver com revisor, acessa mas não envia
 			if((prova.getTipo() == TipoProva.DISCUSSIVA)
-					&& questao.getState() instanceof Elaboracao) {
+					&& (questao.getState() instanceof Elaboracao || questao.getState() instanceof Revisao1
+					|| questao.getState() instanceof Revisao2
+					|| questao.getState() instanceof Revisao3
+					|| questao.getState() instanceof RevisaoLinguagem)) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(VisualizarQuestaoDiscursivaView.class, questao.getId());});
 			}
