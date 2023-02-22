@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.naming.directory.InvalidAttributeIdentifierException;
 
+import com.nimbusds.jose.JWEObject.State;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -17,8 +18,13 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Atendimento;
+import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.state.QuestaoState;
+import br.ufg.sep.state.stateImpl.Correcao1;
+import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
@@ -117,9 +123,11 @@ public class CorrecaoObjetivaBancaPresenter {
 	
 	//aqui vai a lógica para salvar a correção e a questão, e enviar
 	private void enviarQuestao(ClickEvent<Button> event) {
-		
+		QuestaoObjetiva questao = view.getQuestao();
 		
 		Notification notification;
+		
+		Correcao correcao = new Correcao();
 		
 		//chama o método para verificar os dados da view
 		//se ele retornou true todos os dados foram coletados com sucesso
@@ -129,6 +137,18 @@ public class CorrecaoObjetivaBancaPresenter {
 			 * IMPLEMENTAR
 			 */
 			
+			questao.setAlternativaCorreta(correta);
+			questao.setAlternativas(alternativasList);
+			questao.setEnunciado(enunciado);
+			questao.setJustificativa(justificativaCorreta);
+			
+			correcao.setAtendimentoSugestoes(atendimento);
+			correcao.setJustificativa(justificativaAtendimento);
+			
+			questao.enviarParaRevisao(correcao);
+				
+			//salva a questao
+			questaoService.getRepository().save(questao);;
 			
 			//Notifica ação bem sucedida
 			notification = Notification

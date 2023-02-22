@@ -17,6 +17,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
@@ -29,6 +30,7 @@ import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoObjetiva;
+import br.ufg.sep.state.stateImpl.Elaboracao;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 import br.ufg.sep.views.questoes.componente.MetadadosQuestaoComponent;
@@ -52,6 +54,8 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 	private TextArea enunciado;	
 	private List<TextArea> alternativasList;
 	private List<Checkbox> checkboxList;
+	
+	private Span span2;
 
 	private Button voltarButton;
 	private Button enviarButton;
@@ -77,7 +81,7 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		this.questaoService = questaoService;
 
 		//criando os layouts intermediarios
-		HorizontalLayout informacaoLayout = new HorizontalLayout();
+		VerticalLayout informacaoLayout = new VerticalLayout();
 		VerticalLayout enunciadoLayout = new VerticalLayout();
 				
 		//criando as listas que serao usadas pra guardar os componentes
@@ -94,14 +98,29 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 		enunciadoLayout.setWidth("667px");
 		alternativaLayout.setWidth("700px");
 		informacaoLayout.setWidth("700px");
+		informacaoLayout.setPadding(false);
 		justificativaLayout.setWidth("699px");
 		buttonsLayout.setWidth("700px");
 		
 		metadados = new MetadadosQuestaoComponent();
 		envioDialogo = new ConfirmaEnvioRevisaoDialog();
 		
+		HorizontalLayout statusH = new HorizontalLayout();
+		VerticalLayout statusV = new VerticalLayout();
 		
-		informacaoLayout.add(metadados); //adicionando ao layout intermediario
+		Span span1 = new Span("Status:");
+		span2 = new Span();
+		span1.getStyle().set("font-weight", "bold");
+		span2.getStyle().set("font-weight", "bold");
+		
+		statusH.add(span1, span2);
+		statusV.setAlignItems(Alignment.CENTER);
+		statusV.add(statusH);
+		//statusV.setPadding(false);
+		statusV.setWidth("665px");
+		statusV.getStyle().set("border", "1px solid lightsteelblue");
+		
+		informacaoLayout.add(statusV, metadados); //adicionando ao layout intermediario
 		
 		/**************** Layout do enunciado ***********************/
 	
@@ -249,7 +268,7 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			metadados.atualizaGrid(); //atualizando o grid apos setar a lista de subareas
 			metadados.setEdicaoFalse(); //desabilitando a edicao dos componentes
 			metadados.getNivelDificuldadeCombo().setValue(questaoObjetiva.getNivelDificuldade());
-	
+			span2.setText("" + questaoObjetiva.getState().toString());
 			
 			//chama o método que adiciona o layout de alternativas de acordo com a quantidade de questoes
 			//definidas no cadastro da prova
@@ -258,6 +277,11 @@ public class VisualizarQuestaoObjetivaView extends VerticalLayout implements Has
 			//chama o método para criar o resto do layout
 			addJustificativa();
 			addBotões();
+			
+			//se nao tiver em elaboração, desabilitar o botao enviar
+			if(!(questaoObjetiva.getState() instanceof Elaboracao)) {
+				this.enviarButton.setEnabled(false);
+			}
 
 			this.presenter = new VisualizarQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
 		}
