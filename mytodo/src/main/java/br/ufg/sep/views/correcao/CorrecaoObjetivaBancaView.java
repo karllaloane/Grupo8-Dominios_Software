@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.views.revisao.components.DropDownQuestaoFactory;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -49,7 +50,7 @@ import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 
 @Route(value="correcao_questao_objetiva", layout = MainLayout.class)
-@PageTitle("Revisao da Banca")
+@PageTitle("Correção da Banca")
 @PermitAll
 public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlParameter<Long>{
 
@@ -301,8 +302,14 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		
 		revisaoTecnicaLayout.setWidth("760px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
+		DropDownQuestaoFactory dropDownQuestaoFactory = new DropDownQuestaoFactory(this.questao);
+		dropDownQuestaoFactory.tituloSumario.setText("Questão avaliada");
+		this.add(dropDownQuestaoFactory.getComponent());
 		revisaoTecnicaLayout.add(revSpan, orientGrid, layoutGrid);
-		
+
+
+		this.add(revisaoTecnicaLayout);
+
 		Details details = new Details(revSpan, revisaoTecnicaLayout);
 		details.addThemeVariants(DetailsVariant.FILLED);
 		details.setWidth("785px");
@@ -337,7 +344,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		radioSpan.getStyle().set("margin-right", "5px");
 		radioGrid.add(radioSpan, radioGroup);
 		
-		Span justSpan = new Span("Justificativa");
+		Span justSpan = new Span("Justificativa de atendimento");
 		//justSpan.getStyle().set("font-weight", "bold");
 		
 		justificativaAtendimentoTA = new TextArea();

@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.views.revisao.components.DropDownQuestaoFactory;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.details.Details;
@@ -49,7 +50,7 @@ import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 
 @Route(value="correcao_questao_discursiva", layout = MainLayout.class)
-@PageTitle("Revisao da Banca")
+@PageTitle("Correção da Banca")
 @PermitAll
 public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUrlParameter<Long>{
 	
@@ -149,9 +150,14 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		orientGrid.getStyle().set("margin-bottom", "10px");
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
-		
-		revisaoTecnicaLayout.setWidth("760px");
+
+		revisaoTecnicaLayout.setWidth("800px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
+
+		DropDownQuestaoFactory dropDownQuestaoFactory = new DropDownQuestaoFactory(this.questao);
+		dropDownQuestaoFactory.tituloSumario.setText("Questão avaliada");
+		this.add(dropDownQuestaoFactory.getComponent());
+
 		revisaoTecnicaLayout.add(revSpan, orientGrid, layoutGrid);
 		
 		
@@ -255,7 +261,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		radioSpan.getStyle().set("margin-right", "5px");
 		radioGrid.add(radioSpan, radioGroup);
 		
-		Span justSpan = new Span("Justificativa");
+		Span justSpan = new Span("Justificativa de atendimento");
 		//justSpan.getStyle().set("font-weight", "bold");
 		
 		justificativaAtendimentoTA = new TextArea();
@@ -361,5 +367,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	
 	public TextArea getRespostaEsperadaTA() {
 		return respostaEsperadaTA;
+	}
+
+	public void setRespostaEsperadaTA(TextArea respostaEsperadaTA) {
+		this.respostaEsperadaTA = respostaEsperadaTA;
 	}
 }

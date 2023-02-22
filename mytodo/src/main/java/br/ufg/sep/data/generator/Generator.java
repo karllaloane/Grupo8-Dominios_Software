@@ -2,14 +2,11 @@ package br.ufg.sep.data.generator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.Revisao;
-import br.ufg.sep.state.stateImpl.Elaboracao;
-import br.ufg.sep.state.stateImpl.Revisao1;
 import org.springframework.context.annotation.Bean;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -47,7 +44,7 @@ if(true) return 0;
 		revisao.setItemAnalisado(hashMap);
 		//criando corr1
 		Correcao correcao = new Correcao();
-		correcao.setJustificativa("Teste");
+		correcao.setJustificativaDoAtendimento("Teste");
 		correcao.setAtendimentoSugestoes(Atendimento.PARCIAL);
 
 		q.enviarParaRevisao(null); // r1
