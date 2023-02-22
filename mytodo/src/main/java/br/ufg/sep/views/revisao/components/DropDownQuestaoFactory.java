@@ -94,7 +94,9 @@ public class DropDownQuestaoFactory {
         this.getSubAreasQuestao().setValue(subAreas);
         this.getEnunciadoQuestao().setValue(questao.getEnunciado());
         this.getNivelDificuldadeQuestaoCombo().setValue(questao.getNivelDificuldade().toString());
+        if(questao.getState()!=null)
         this.getEstadoQuestao().setValue(questao.getState().toString());
+        else this.getEstadoQuestao().setVisible(false);
         List<TextArea> alternativas = List.of(
                 this.getAlternativaAQuestao(),
                 this.getAlternativaBQuestao(),

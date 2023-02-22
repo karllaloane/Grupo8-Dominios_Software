@@ -2,9 +2,9 @@ package br.ufg.sep.views.revisao;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.views.revisao.components.ComponenteQuestao;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.charts.model.Select;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Span;
@@ -20,7 +20,6 @@ import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.MainLayout;
-import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional;
 
 @Route(value="revisao_questao_banca", layout = MainLayout.class)
 @PageTitle("Revisão da Banca")

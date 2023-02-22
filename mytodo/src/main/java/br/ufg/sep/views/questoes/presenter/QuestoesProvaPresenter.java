@@ -1,5 +1,7 @@
 package br.ufg.sep.views.questoes.presenter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -58,8 +60,15 @@ public class QuestoesProvaPresenter {
 		}
 		
 		//populando a view com as questoes daquela prova
+		List<Questao> lista = questaoService.getRepository().findByProva(prova);
+		List<Questao> listaRefinada = new ArrayList<>();
+		lista.forEach(item->{
+			if(item.getState()!=null)
+				listaRefinada.add(item);
+		});
 		view.getQuestoesGrid().setItems(
-                questaoService.getRepository().findByProva(prova));
+				listaRefinada
+                );
 		
 		//Evento do botao criar questao
 		view.getNovaQuestaoButton().addClickListener(e->{
