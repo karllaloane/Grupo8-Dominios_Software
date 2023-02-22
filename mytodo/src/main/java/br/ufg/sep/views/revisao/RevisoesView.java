@@ -31,8 +31,6 @@ import javax.annotation.security.RolesAllowed;
 public class RevisoesView extends VerticalLayout {
     private QuestaoRepository questaoRepository;
     private Grid<Questao> questoesGrid = new Grid<>(Questao.class,false);
-    private Button teste = new Button("EnviarParaBanca");
-    private Button teste2 = new Button("EnviarParaRevisao");
     private RevisaoPresenter revisaoPresenter;
 
     private Button revisarButton ;
@@ -44,15 +42,12 @@ public class RevisoesView extends VerticalLayout {
         this.questaoRepository = questaoRepository;
         iniciarGrid();
         iniciarButoes();
-        //**************TESTE
-        testesRevisoesView();
-        //**************TESTE
 
         opcoesGridLayout = new HorizontalLayout(revisarButton);
 
 
         this.revisaoPresenter = new RevisaoPresenter(this,questaoRepository,provaRepository,authenticatedUser);
-        add(opcoesGridLayout,questoesGrid,teste,teste2);
+        add(opcoesGridLayout,questoesGrid);
     }
 
     private void iniciarButoes() {
@@ -62,31 +57,7 @@ public class RevisoesView extends VerticalLayout {
         visualizarButton = new Button("Visualziar", new Icon(VaadinIcon.EYE));
     }
 
-    private void testesRevisoesView() {
-        /******TESTE******/
-        teste.addClickListener(e->{
-            questoesGrid.getSelectedItems().forEach(item->
-            {
-                item.enviarParaBanca(new Revisao());
-                questaoRepository.save(item);
-                revisaoPresenter.configGrid();
-                Notification.show("Salvo!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            });
-        });
 
-        teste2.addClickListener(e->{
-            questoesGrid.getSelectedItems().forEach(item->
-            {
-                item.enviarParaRevisao(new Correcao());
-                questaoRepository.save(item);
-                revisaoPresenter.configGrid();
-                Notification.show("Salvo!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
-            });
-        });
-
-        /******TESTE*****/
-    }
 
     private void iniciarGrid() {
         questoesGrid = new Grid<>(Questao.class,false);

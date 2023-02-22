@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.security.PermitAll;
 
-import br.ufg.sep.entity.AtendimentoSugestoes;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.state.stateImpl.Revisao2;
 import br.ufg.sep.state.stateImpl.Revisao3;
@@ -98,7 +98,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private HorizontalLayout addtopicosDeRevisaoLayout;
 	private List<String> topicosDeRevisao;
 
-	private HashMap<String,AtendimentoSugestoes> topicosAnalisadosHashMap = new HashMap<>();
+	private HashMap<String, Atendimento> topicosAnalisadosHashMap = new HashMap<>();
 
 	private Questao questaoSelecionada;
 
@@ -148,7 +148,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 
 		addtopicosDeRevisaoLayout.add(topicosDeRevisaoTF, addButton);
 		
-		topicosAnalisadosGrid.setWidth("1030px");
+		topicosAnalisadosGrid.setWidth("1200px");
 		
 		topicosDeRevisaoLayout.add(new Span("Tópicos avaliados na Revisão"), topicosAnalisadosGrid, addtopicosDeRevisaoLayout);
 		
@@ -176,22 +176,15 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
                 	checkNaoAtende.setLabel("Não Atende");
                 })).setWidth("130px").setFlexGrow(0).setKey("nao-atende");
 		*/
-		topicosAnalisadosGrid.addColumn(
-                new ComponentRenderer<>(Button::new, (button, item) -> {
-                    button.addThemeVariants(ButtonVariant.LUMO_ICON,
-                            ButtonVariant.LUMO_TERTIARY);
-                    button.setIcon(new Icon(VaadinIcon.MINUS_CIRCLE_O));
-                    button.addClickListener(e -> this.removeSubArea(item));
-                })).setWidth("130px").setFlexGrow(0).setKey("remover");
 
 		topicosAnalisadosGrid.setSelectionMode(Grid.SelectionMode.NONE);
 		topicosAnalisadosGrid.addColumn(
 				new ComponentRenderer<>( topico->{
 					RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
 					radioGroup.setItems(
-							AtendimentoSugestoes.TOTAL.toString(),
-							AtendimentoSugestoes.PARCIAL.toString(),
-							AtendimentoSugestoes.NAO_ATENDIDA.toString()
+							Atendimento.TOTAL.toString(),
+							Atendimento.PARCIAL.toString(),
+							Atendimento.NAO_ATENDIDA.toString()
 					);
 
 					this.topicosAnalisadosHashMap.forEach((topic, atend)->{
@@ -200,19 +193,19 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 					});
 
 					radioGroup.addValueChangeListener(v->{
-						if(v.getValue().equals(AtendimentoSugestoes.TOTAL.toString())) {
+						if(v.getValue().equals(Atendimento.TOTAL.toString())) {
 							this.topicosAnalisadosHashMap.remove(topico);
-							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.TOTAL);
+							this.topicosAnalisadosHashMap.put(topico, Atendimento.TOTAL);
 							//return;
 						}
-						if(v.getValue().equals(AtendimentoSugestoes.PARCIAL.toString())) {
+						if(v.getValue().equals(Atendimento.PARCIAL.toString())) {
 							this.topicosAnalisadosHashMap.remove(topico);
-							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.PARCIAL);
+							this.topicosAnalisadosHashMap.put(topico, Atendimento.PARCIAL);
 							//return;
 						}
-						if(v.getValue().equals(AtendimentoSugestoes.NAO_ATENDIDA.toString())) {
+						if(v.getValue().equals(Atendimento.NAO_ATENDIDA.toString())) {
 							this.topicosAnalisadosHashMap.remove(topico);
-							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.NAO_ATENDIDA);
+							this.topicosAnalisadosHashMap.put(topico, Atendimento.NAO_ATENDIDA);
 						}
 						/*
 						System.out.println("|*********************|");
@@ -227,6 +220,14 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 					return radioGroup;
 				}
 				)).setKey("radio-group");
+
+		topicosAnalisadosGrid.addColumn(
+				new ComponentRenderer<>(Button::new, (button, item) -> {
+					button.addThemeVariants(ButtonVariant.LUMO_ICON,
+							ButtonVariant.LUMO_TERTIARY);
+					button.setIcon(new Icon(VaadinIcon.MINUS_CIRCLE_O));
+					button.addClickListener(e -> this.removeSubArea(item));
+				})).setWidth("130px").setFlexGrow(0).setKey("remover");
 
 
 		// listener pra adicionar os topicos no grid
@@ -810,11 +811,11 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.details3 = details3;
 	}
 
-	public HashMap<String, AtendimentoSugestoes> getTopicosAnalisadosHashMap() {
+	public HashMap<String, Atendimento> getTopicosAnalisadosHashMap() {
 		return topicosAnalisadosHashMap;
 	}
 
-	public void setTopicosAnalisadosHashMap(HashMap<String, AtendimentoSugestoes> topicosAnalisadosHashMap) {
+	public void setTopicosAnalisadosHashMap(HashMap<String, Atendimento> topicosAnalisadosHashMap) {
 		this.topicosAnalisadosHashMap = topicosAnalisadosHashMap;
 	}
 }

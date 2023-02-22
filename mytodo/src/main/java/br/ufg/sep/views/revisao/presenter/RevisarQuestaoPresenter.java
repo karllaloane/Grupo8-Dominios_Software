@@ -36,7 +36,7 @@ public class RevisarQuestaoPresenter {
         view.getEnviarBanca().addClickListener(click->{
 
                 Revisao revisao = new Revisao();
-                //revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
+                revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
                 revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
                 if(questao.enviarParaBanca(revisao)){
                     Notification notification = Notification.show("Questão enviada com sucesso");
