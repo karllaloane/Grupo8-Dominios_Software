@@ -151,7 +151,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 
-		revisaoTecnicaLayout.setWidth("800px");
+		revisaoTecnicaLayout.setWidth("760px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
 
 		DropDownQuestaoFactory dropDownQuestaoFactory = new DropDownQuestaoFactory(this.questao);
