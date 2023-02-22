@@ -126,7 +126,7 @@ public class CorrecaoDiscursivaBancaPresenter {
 	
 		/* Criando e armazenando os valores do Input*/
 		enunciado = view.getEnunciado().getValue();
-		respostaEsperada = view.getJustificativaCorretaTA().getValue();
+		respostaEsperada = view.getRespostaEsperadaTA().getValue();
 		justificativaAtendimento = view.getJustificativaAtendimentoTA().getValue();
 	
 		try {

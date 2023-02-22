@@ -59,7 +59,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	private HorizontalLayout gridL;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
-	private TextArea justificativaCorretaTA;
+	//private TextArea justificativaCorretaTA;
 	private RadioButtonGroup<String> radioGroup;
 	
 	private Button salvarButton;
@@ -76,7 +76,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	//inputs da questao
 	private TextArea enunciado;	
 	private TextArea respostaEsperadaTA;
-	
+
 	private QuestaoDiscursiva questao;
 	private Prova prova;
 	public CorrecaoDiscursivaBancaView(ProvaService provaService, QuestaoService questaoService) {
@@ -219,6 +219,10 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		this.descartarButton = new Button("Descartar edição");
 		this.enviarButton = new Button("Enviar para revisão 2");
 		
+		if(questao.getState() instanceof Correcao2) {
+			this.enviarButton.setText("Enviar para revisão 3");
+		}
+		
 		this.enviarButton.getStyle().set("margin-left", "435px");
 		h.add(descartarButton,enviarButton);
 		
@@ -323,10 +327,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		return justificativaAtendimentoTA;
 	}
 
-	public TextArea getJustificativaCorretaTA() {
-		return justificativaCorretaTA;
-	}
-
 	public RadioButtonGroup<String> getRadioGroup() {
 		return radioGroup;
 	}
@@ -357,5 +357,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 
 	public QuestaoDiscursiva getQuestao() {
 		return questao;
+	}
+	
+	public TextArea getRespostaEsperadaTA() {
+		return respostaEsperadaTA;
 	}
 }

@@ -253,6 +253,10 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		this.descartarButton = new Button("Descartar edição");
 		this.enviarButton = new Button("Enviar para revisão 2");
 		
+		if(questao.getState() instanceof Correcao2) {
+			this.enviarButton.setText("Enviar para revisão 3");
+		}
+		
 		this.enviarButton.getStyle().set("margin-left", "435px");
 		h.add(descartarButton,enviarButton);
 		
