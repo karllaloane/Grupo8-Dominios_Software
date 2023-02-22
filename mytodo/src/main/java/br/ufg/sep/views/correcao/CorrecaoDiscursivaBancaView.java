@@ -223,13 +223,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.enviarButton = new Button("Enviar para revisão 2");
+		this.enviarButton = new Button("Enviar para revisão técnica");
 		
-		if(questao.getState() instanceof Correcao2) {
-			this.enviarButton.setText("Enviar para revisão 3");
-		}
-		
-		this.enviarButton.getStyle().set("margin-left", "435px");
+		this.enviarButton.getStyle().set("margin-left", "393px");
 		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
