@@ -56,6 +56,7 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	private TextArea descricaoTF;
 	private TextField numQuestoesFeitasTF;
 	private TextField numQuestoesTotalTF;
+	private TextField tipoProvaTF;
 	
 	private Button novaQuestaoButton;
 	private Button acessarButton;
@@ -131,9 +132,16 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		
 		//layouts para organizacao dos componentes
 		HorizontalLayout h = new HorizontalLayout();
+		HorizontalLayout h2 = new HorizontalLayout();
 		VerticalLayout infosForm = new VerticalLayout();
+		VerticalLayout vertical = new VerticalLayout();
 		VerticalLayout numQuestaoform = new VerticalLayout();
 		
+		vertical.setSpacing(false);
+		vertical.setPadding(false);
+		h.setPadding(false);
+		h2.setPadding(false);
+		numQuestaoform.setPadding(false);
 		
 		HorizontalLayout summary = new HorizontalLayout();
 		summary.setSpacing(false);
@@ -148,29 +156,48 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		descricaoTF = new TextArea("Descrição", "", "");
 		numQuestoesFeitasTF = new TextField("Questões Elaboradas", "", "");
 		numQuestoesTotalTF = new TextField("Questões Solicitadas", "", "");
+		tipoProvaTF = new TextField("Tipo de prova", "", "");
 		
 		//tamanho dos componentes
 		h.setWidthFull();
+		h2.setWidthFull();
 		infosForm.setWidth("1700px");
 		concursoTF.setWidthFull();
 		areaConhecimentoTF.setWidthFull();
 		descricaoTF.setWidthFull();
 		descricaoTF.setHeight("133px");
+		nivelTF.setWidthFull();
+		tipoProvaTF.setWidthFull();
+		
+		numQuestoesFeitasTF.setReadOnly(true);
+		numQuestoesTotalTF.setReadOnly(true);
+		numQuestoesFeitasTF.setWidth("150px");
+		numQuestoesTotalTF.setWidth("150px");
+		
+		numQuestoesTotalTF.getStyle().set("margin-bottom", "33px");
 		
 		//espacamento dos componentes
 		infosForm.setSpacing(false);
 		numQuestaoform.setSpacing(false);
 		
 		//adicionando componentes aos formularios
-		numQuestaoform.add(nivelTF, numQuestoesFeitasTF, numQuestoesTotalTF);
+		numQuestaoform.add(numQuestoesFeitasTF, numQuestoesTotalTF, downloadButton);
 		h.add(concursoTF, areaConhecimentoTF);
-		infosForm.add(h, descricaoTF, downloadButton);
+		h2.add(tipoProvaTF, nivelTF);
+		vertical.add(h, h2);
+		
+		infosForm.add(vertical, descricaoTF);
+		infosForm.setSpacing(false);
 		
 		/** Seta apenas leitura **/
-		numQuestaoform.getChildren().forEach(txtField->{
+//		numQuestaoform.getChildren().forEach(txtField->{
+//        	((TextField)txtField).setReadOnly(true);
+//        	((TextField)txtField).setWidth("150px");
+//        });
+		h.getChildren().forEach(txtField->{
         	((TextField)txtField).setReadOnly(true);
         });
-		h.getChildren().forEach(txtField->{
+		h2.getChildren().forEach(txtField->{
         	((TextField)txtField).setReadOnly(true);
         });
 		descricaoTF.setReadOnly(true);
@@ -218,6 +245,15 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 		this.numQuestoesTotalTF.setValue("" + prova.getNumeroQuestoes());
 		this.nivelTF.setValue("" + prova.getNivel().toString());
 		this.numQuestoesFeitasTF.setValue(String.format("%d",prova.getQuestoes().size()));
+		
+		if(prova.getTipo() == TipoProva.OBJETIVA_4){
+			tipoProvaTF.setValue(prova.getTipo().toString() + " - 4 alternativas");
+		}else if(prova.getTipo() == TipoProva.OBJETIVA_5){
+			tipoProvaTF.setValue(prova.getTipo().toString() + " - 5 alternativas");
+		} else {
+			tipoProvaTF.setValue(prova.getTipo().toString());
+		}
+		
 	}
 	// --------------- Getter e Setters
 	
