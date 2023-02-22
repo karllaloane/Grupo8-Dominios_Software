@@ -28,9 +28,10 @@ public class RevisaoBancaPresenter {
 	private Questao questao;
 	
 	public RevisaoBancaPresenter(ProvaService provaService, QuestaoService questaoService,
-			RevisaoBancaView revisaoBancaView) {
+			RevisaoBancaView view) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
+		
 		this.view = view;
 		
 		this.questao = view.getQuestao();

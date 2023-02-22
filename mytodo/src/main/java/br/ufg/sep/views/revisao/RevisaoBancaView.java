@@ -160,10 +160,9 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 		
 		this.questaoAnterior.getEnunciado().setValue(q.getEnunciado());
 		this.questaoAnterior.getRespostaEsperada().setValue(q.getRespostaEsperada());
-		
-		q = (QuestaoDiscursiva) questao;
-		this.questaoNova.getEnunciado().setValue(q.getEnunciado());
-		this.questaoNova.getRespostaEsperada().setValue(q.getRespostaEsperada());
+
+		this.questaoNova.getEnunciado().setValue(questao.getEnunciado());
+		this.questaoNova.getRespostaEsperada().setValue(((QuestaoDiscursiva) questao).getRespostaEsperada());
 		
 	}
 
