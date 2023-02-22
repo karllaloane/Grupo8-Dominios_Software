@@ -140,9 +140,9 @@ public class NovaQuestaoDiscursivaView extends VerticalLayout implements HasUrlP
 		
 		this.descartarButton = new Button("Descartar edição");
 		this.salvarButton = new Button("Salvar");
-		this.enviarButton = new Button("Enviar para revisão 1");
+		this.enviarButton = new Button("Enviar para revisão técnica");
 		
-		this.salvarButton.getStyle().set("margin-left", "247px");
+		this.salvarButton.getStyle().set("margin-left", "205px");
 		this.enviarButton.getStyle().set("margin-left", "auto");
 		h.add(descartarButton, salvarButton,enviarButton);
 		

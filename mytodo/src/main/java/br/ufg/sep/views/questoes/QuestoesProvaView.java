@@ -7,11 +7,13 @@ import javax.annotation.security.PermitAll;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Select;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -22,9 +24,9 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.NivelProva;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
@@ -68,6 +70,8 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	private Button dialogDeletaButton;
 	private Button dialogCancelaButton;
 	
+	//com.vaadin.flow.component.select.Select<String> select;
+	
 	public QuestoesProvaView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -95,14 +99,25 @@ public class QuestoesProvaView extends VerticalLayout implements HasUrlParameter
 	}
 
 	//metodo para iniciar o grid
-	private void iniciaGrid() {
+	private void iniciaGrid() {	
+		
+//		select = new com.vaadin.flow.component.select.Select<>();
+//		select.setLabel("Status");
+//		select.setItems("Em elaboração", "Em correção I", "Em correção II", 
+//				"Em correção II", "Em Revisão I", "Em Revisão II");
+		
 		questoesGrid = new Grid<>(Questao.class,false);
 		
 		questoesGrid.addColumn("enunciado").setHeader("Enunciado");
 		questoesGrid.addColumn("subAreas").setHeader("Subárea");
 		questoesGrid.addColumn("nivelDificuldade").setHeader("Nível");
-		questoesGrid.addColumn("state").setHeader("Status");
+		questoesGrid.addColumn("state").setHeader("Status").setSortable(true);
+		//Grid.Column<Questao> stateC = questoesGrid.addColumn("state");
 		questoesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		
+//		HeaderRow headerRow = questoesGrid.appendHeaderRow();
+//		
+//		headerRow.getCell(stateC).setComponent(select);
 	}
 	
 	//metodo para criacao dos botoes

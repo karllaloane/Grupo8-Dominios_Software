@@ -60,7 +60,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	private HorizontalLayout gridL;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
-	private TextArea justificativaCorretaTA;
+	//private TextArea justificativaCorretaTA;
 	private RadioButtonGroup<String> radioGroup;
 	
 	private Button salvarButton;
@@ -77,7 +77,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	//inputs da questao
 	private TextArea enunciado;	
 	private TextArea respostaEsperadaTA;
-	
+
 	private QuestaoDiscursiva questao;
 	private Prova prova;
 	public CorrecaoDiscursivaBancaView(ProvaService provaService, QuestaoService questaoService) {
@@ -151,8 +151,8 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 
-		revisaoTecnicaLayout.setWidth("800px");
 
+		revisaoTecnicaLayout.setWidth("760px");
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
 
 		DropDownQuestaoFactory dropDownQuestaoFactory = new DropDownQuestaoFactory(this.questao);
@@ -224,9 +224,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.enviarButton = new Button("Enviar para revisão 2");
+		this.enviarButton = new Button("Enviar para revisão técnica");
 		
-		this.enviarButton.getStyle().set("margin-left", "435px");
+		this.enviarButton.getStyle().set("margin-left", "393px");
 		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
@@ -330,10 +330,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		return justificativaAtendimentoTA;
 	}
 
-	public TextArea getJustificativaCorretaTA() {
-		return justificativaCorretaTA;
-	}
-
 	public RadioButtonGroup<String> getRadioGroup() {
 		return radioGroup;
 	}
@@ -365,7 +361,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	public QuestaoDiscursiva getQuestao() {
 		return questao;
 	}
-
+	
 	public TextArea getRespostaEsperadaTA() {
 		return respostaEsperadaTA;
 	}

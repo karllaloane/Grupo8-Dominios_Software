@@ -252,9 +252,9 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.enviarButton = new Button("Enviar para revisão 2");
+		this.enviarButton = new Button("Enviar para revisão técnica");
 		
-		this.enviarButton.getStyle().set("margin-left", "435px");
+		this.enviarButton.getStyle().set("margin-left", "393px");
 		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
@@ -381,11 +381,11 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		gridL.add(grid);
 	}
 	
-	class Data {
+	public class Data {
 		String criterio;
 		String atendimento;
 		
-		Data(String criterio, String string){
+		public Data(String criterio, String string){
 			this.criterio = criterio;
 			this.atendimento = string;
 		}
