@@ -2,6 +2,9 @@ package br.ufg.sep.views.revisao.presenter;
 
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.entity.*;
+import br.ufg.sep.state.stateImpl.Revisao2;
+import br.ufg.sep.state.stateImpl.Revisao3;
+import br.ufg.sep.state.stateImpl.RevisaoLinguagem;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
 import br.ufg.sep.views.revisao.RevisoesView;
 import com.vaadin.flow.component.notification.Notification;
@@ -34,29 +37,79 @@ public class RevisarQuestaoPresenter {
     }
 
     private void configBotoes() {
+        boolean entrarDesaprov = true;
+        boolean entrarAprov = true;
+        //se for revisao 2
+       if(questao.getState() instanceof  Revisao2){
+           entrarAprov = false;
+           view.getEnviarRevisao().addClickListener(e->{
+               Revisao revisao = new Revisao();
+               revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
+               revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
+               if(questao.enviarParaRevisaoLinguagem(revisao)){
+                   Notification notification = Notification.show("Questão para revisão de linguagem com sucesso");
+                   notification.setPosition(Notification.Position.TOP_CENTER);
+                   notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                   view.getQuestaoService().getRepository().save(questao);
+               }
+               view.getEnviarRevisao().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
+           });
 
+       }
+            //se for revisao 3
+        if(questao.getState() instanceof  Revisao3){
+            entrarAprov = false;
+            view.getEnviarRevisao().addClickListener(e->{
+                Revisao revisao = new Revisao();
+                revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
+                revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
+                if(questao.enviarParaRevisaoLinguagem(revisao)){
+                    Notification notification = Notification.show("Questão para revisão de linguagem com sucesso");
+                    notification.setPosition(Notification.Position.TOP_CENTER);
+                    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    view.getQuestaoService().getRepository().save(questao);
+                }
+                view.getEnviarRevisao().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
+            });
 
+            entrarDesaprov = false;
+            view.getEnviarBanca().addClickListener(click->{
+                Revisao revisao = new Revisao();
+                revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
+                revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
+               if(questao.descartar(revisao)){
+                   Notification notification = Notification.show("Questão para revisão de linguagem com sucesso");
+                   notification.setPosition(Notification.Position.TOP_CENTER);
+                   notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                   view.getQuestaoService().getRepository().save(questao);
+               }
+                view.getEnviarRevisao().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
+            });
+
+        }
 
 
         //botão Desaprovar questão
+        if(entrarDesaprov)
         view.getEnviarBanca().addClickListener(click->{
 
                 Revisao revisao = new Revisao();
                 revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
                 revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
                 if(questao.enviarParaBanca(revisao)){
-                    Notification notification = Notification.show("Questão enviada com sucesso");
+                    Notification notification = Notification.show("Questão enviada para banca com sucesso");
                     notification.setPosition(Notification.Position.TOP_CENTER);
                     notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                     view.getQuestaoService().getRepository().save(questao);
                 }
                 view.getEnviarBanca().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
         });
-        //botão Aprovar questão
-        view.getEnviarRevisao().addClickListener(e->{
 
+        //botão Aprovar questão
+        if(entrarAprov)
+        view.getEnviarRevisao().addClickListener(e->{
            if(questao.enviarParaRevisao(questao.getState().getCorrecao())){
-               Notification notification = Notification.show("Questão enviada com sucesso");
+               Notification notification = Notification.show("Questão enviada para revisão com sucesso");
                notification.setPosition(Notification.Position.TOP_CENTER);
                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                view.getQuestaoService().getRepository().save(questao);
