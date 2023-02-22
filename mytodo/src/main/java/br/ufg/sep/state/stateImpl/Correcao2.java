@@ -1,8 +1,6 @@
 package br.ufg.sep.state.stateImpl;
 
-import br.ufg.sep.entity.Correcao;
-import br.ufg.sep.entity.Questao;
-import br.ufg.sep.entity.Revisao;
+import br.ufg.sep.entity.*;
 import br.ufg.sep.state.QuestaoState;
 import br.ufg.sep.state.UtilQuestao;
 import jdk.jshell.execution.Util;
@@ -12,16 +10,21 @@ import javax.persistence.Entity;
 @Entity
 public class Correcao2 extends QuestaoState {
 
-    public Correcao2(Questao questaoAnterior){
+    public Correcao2(Questao questao){
         super();
-        UtilQuestao.copiarQuestao(questaoAnterior,this.questaoAnterior);
+        this.questaoAnterior =
+                questao.getProva().getTipo().equals(TipoProva.DISCUSSIVA) ?
+                        new QuestaoDiscursiva() : new QuestaoObjetiva();
+
+        UtilQuestao.copiarQuestao(questao,this.questaoAnterior);
+        System.out.println("QUESTAO ANTERIOR CRIADAAAAAAAAAA");
     }
 
     public Correcao2(){
 
     }
     @Override
-    public Boolean enviarParaRevisao(Questao questao, Correcao correcao) {
+    public Boolean enviarParaRevisao(Questao questao, Correcao correcao) { //enviar p R3
         Revisao3 revisao3 = new Revisao3();
         revisao3.setCorrecao(correcao);
         revisao3.setRevisao(this.revisao);

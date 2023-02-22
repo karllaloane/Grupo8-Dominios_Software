@@ -16,8 +16,7 @@ public class Revisao3 extends QuestaoState {
 
     @Override
     public Boolean enviarParaRevisaoLinguagem(Questao questao, Revisao revisao) {
-        RevisaoLinguagem revisaoLinguagem = new RevisaoLinguagem();
-        revisaoLinguagem.setQuestaoAnterior(this.questaoAnterior);// questao antes da correção
+        RevisaoLinguagem revisaoLinguagem = new RevisaoLinguagem(questao);
         revisaoLinguagem.setCorrecao(this.correcao);// correção feita
         revisaoLinguagem.setRevisao(revisao);// revisao da correção feita
         questao.setState(revisaoLinguagem);

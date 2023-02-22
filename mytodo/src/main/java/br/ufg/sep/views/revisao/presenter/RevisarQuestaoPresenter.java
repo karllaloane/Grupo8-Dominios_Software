@@ -35,6 +35,9 @@ public class RevisarQuestaoPresenter {
 
     private void configBotoes() {
 
+
+
+
         //botão Desaprovar questão
         view.getEnviarBanca().addClickListener(click->{
 
@@ -51,7 +54,8 @@ public class RevisarQuestaoPresenter {
         });
         //botão Aprovar questão
         view.getEnviarRevisao().addClickListener(e->{
-           if(questao.enviarParaRevisao(null)){
+
+           if(questao.enviarParaRevisao(questao.getState().getCorrecao())){
                Notification notification = Notification.show("Questão enviada com sucesso");
                notification.setPosition(Notification.Position.TOP_CENTER);
                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);

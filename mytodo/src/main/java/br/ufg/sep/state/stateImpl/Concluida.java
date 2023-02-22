@@ -19,6 +19,7 @@ public class Concluida extends QuestaoState {
         Guardada guardadaState = new Guardada();
         guardadaState.setCorrecao(this.correcao);
         guardadaState.setRevisao(this.revisao);
+        guardadaState.setQuestaoAnterior(this.questaoAnterior);
         questao.setState(guardadaState);
         return true;
     }

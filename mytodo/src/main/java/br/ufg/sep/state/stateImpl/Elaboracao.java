@@ -13,14 +13,13 @@ public class Elaboracao extends QuestaoState {
 
     public Elaboracao(){
         super();
-
     }
 
 
     @Override
-    public Boolean enviarParaRevisao(Questao questao, Correcao correcao/*null*/) { //enviar para REVISAO 1
+    public Boolean enviarParaRevisao(Questao questao, Correcao correcao/*null*/) {//enviar para REVISAO 1
         // como não veio de uma corrreção, não havera uso do objeto correcao.
-    Revisao1 revisao1 = new Revisao1();
+        Revisao1 revisao1 = new Revisao1();
     questao.setState(revisao1);
     return true;
     }

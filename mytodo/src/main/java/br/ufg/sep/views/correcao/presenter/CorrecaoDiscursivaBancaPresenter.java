@@ -102,7 +102,7 @@ public class CorrecaoDiscursivaBancaPresenter {
 			questao.setRespostaEsperada(respostaEsperada);
 			
 			correcao.setAtendimentoSugestoes(atendimento);
-			correcao.setJustificativa(justificativaAtendimento);
+			//correcao.setJustificativa(justificativaAtendimento);
 			
 			questao.enviarParaRevisao(correcao);
 				

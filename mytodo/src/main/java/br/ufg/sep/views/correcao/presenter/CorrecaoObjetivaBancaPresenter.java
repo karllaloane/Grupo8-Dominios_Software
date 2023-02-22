@@ -143,7 +143,7 @@ public class CorrecaoObjetivaBancaPresenter {
 			questao.setJustificativa(justificativaCorreta);
 			
 			correcao.setAtendimentoSugestoes(atendimento);
-			correcao.setJustificativa(justificativaAtendimento);
+			//correcao.setJustificativa(justificativaAtendimento);
 			
 			questao.enviarParaRevisao(correcao);
 				

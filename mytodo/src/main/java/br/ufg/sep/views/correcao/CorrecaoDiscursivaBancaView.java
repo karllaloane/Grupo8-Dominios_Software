@@ -150,13 +150,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		orientGrid.getStyle().set("margin-bottom", "10px");
 		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
-<<<<<<< HEAD
 
 		revisaoTecnicaLayout.setWidth("800px");
-=======
-		
-		revisaoTecnicaLayout.setWidth("760px");
->>>>>>> 7e7caa29918752531b021c536cffa5e6240eec5c
+
 		revisaoTecnicaLayout.setAlignItems(Alignment.CENTER);
 
 		DropDownQuestaoFactory dropDownQuestaoFactory = new DropDownQuestaoFactory(this.questao);

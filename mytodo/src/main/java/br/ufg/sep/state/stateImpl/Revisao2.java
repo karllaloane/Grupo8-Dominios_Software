@@ -18,10 +18,9 @@ public class Revisao2 extends QuestaoState {
     @Override
     public Boolean enviarParaRevisaoLinguagem(Questao questao, Revisao rev2) { // Envia para revisao Linguagem
 
-        RevisaoLinguagem revisaoLinguagem = new RevisaoLinguagem();
+        RevisaoLinguagem revisaoLinguagem = new RevisaoLinguagem(questao);
         revisaoLinguagem.setCorrecao(this.correcao); // correcao pd ser nula ou não
         revisaoLinguagem.setRevisao(rev2); // atualizo para a ultima revisao feita ( no caso a recém segunda)
-        revisaoLinguagem.setQuestaoAnterior(this.questaoAnterior);
         questao.setState(revisaoLinguagem);
         return true; // sinal que a operação foi um sucesso
     }
@@ -32,7 +31,6 @@ public class Revisao2 extends QuestaoState {
     public Boolean enviarParaBanca(Questao questao, Revisao rev2) { // enviar para Correcao II
 
         Correcao2 corr2State = new Correcao2(questao);
-        corr2State.setQuestaoAnterior(this.questaoAnterior);
         corr2State.setCorrecao(this.correcao); // mantenho a ultima correcao feita (pode ser nula ou nao)
         corr2State.setRevisao(rev2); // atualizo a revisao, mandando a ultima revisao feita, no caso a 2.
         questao.setState(corr2State);
