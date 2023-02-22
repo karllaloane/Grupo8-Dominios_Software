@@ -1,12 +1,10 @@
 package br.ufg.sep.views.questoes.presenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import br.ufg.sep.entity.*;
 
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -18,10 +16,7 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.views.concurso.ConcursosView;
-import br.ufg.sep.views.concurso.FormularioConcursoView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
-import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
 public class NovaQuestaoObjetivaPresenter {

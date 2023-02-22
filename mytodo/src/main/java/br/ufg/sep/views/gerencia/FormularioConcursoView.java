@@ -1,4 +1,4 @@
-package br.ufg.sep.views.concurso;
+package br.ufg.sep.views.gerencia;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.concurso.presenter.FormularioConcursoPresenter;
+import br.ufg.sep.views.gerencia.presenter.FormularioConcursoPresenter;
 
 @Route(value="cadastrar_concursos", layout = MainLayout.class)
 @PageTitle("Concursos")

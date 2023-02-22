@@ -1,4 +1,4 @@
-package br.ufg.sep.views.concurso;
+package br.ufg.sep.views.gerencia;
 
 import java.util.Optional;
 

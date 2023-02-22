@@ -55,7 +55,7 @@ public class RevisaoPresenter {
     private void configBotoes() {
         view.getRevisarButton().addClickListener(click->{
             view.getRevisarButton().getUI().ifPresent(ui->{
-                ui.navigate(RevisarQuestaoView.class);
+                ui.navigate(RevisarQuestaoView.class,questaoSelecionada.getId());
             });
         });
     }
@@ -63,13 +63,13 @@ public class RevisaoPresenter {
     public void configGrid() {
         view.getQuestoesGrid().setItems(this.questoesUsuario);
         view.getQuestoesGrid().setSortableColumns("state");
-
+        //selection listener
         view.getQuestoesGrid().addSelectionListener(selection->{
             if(selection.getFirstSelectedItem().isPresent()){
                 questaoSelecionada = selection.getFirstSelectedItem().get();
                 QuestaoState questaoState = questaoSelecionada.getState();
 
-                //caso a questão não seja revisavel pelos revisores
+                //se a questão for revisável , ela aparecerá para o pessoal
                 if(!((questaoState instanceof Correcao1)
                 || questaoState instanceof Correcao2
                 || questaoState instanceof RevisaoBanca

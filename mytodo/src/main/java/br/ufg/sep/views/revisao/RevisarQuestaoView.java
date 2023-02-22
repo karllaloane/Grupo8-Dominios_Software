@@ -2,10 +2,13 @@ package br.ufg.sep.views.revisao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.entity.Questao;
+import br.ufg.sep.state.stateImpl.Revisao2;
+import br.ufg.sep.state.stateImpl.Revisao3;
+import br.ufg.sep.views.revisao.presenter.RevisarQuestaoPresenter;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,6 +20,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -30,17 +35,14 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 
-import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
-import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.questoes.presenter.NovaQuestaoObjetivaPresenter;
 
 @Route(value="revisar-questao", layout = MainLayout.class)
 @PageTitle("Revisar")
 @PermitAll
 
-public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlParameter<Long> */{
+public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParameter<Long> {
 
 	/* Inputs do concurso */
 	private TextField nomeConcurso = new TextField("Nome", "", "");
@@ -69,11 +71,11 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 	private TextArea alternativaCQuestao = new TextArea("C) ", "", "");
 	private TextArea alternativaDQuestao = new TextArea("D) ", "", "");
 	private TextArea alternativaEQuestao = new TextArea("E) ", "", "");
-	private TextArea observacaouestao = new TextArea("Observação da Revisão", "", "");
+	private TextArea observacaoQuestao = new TextArea("Observação da Revisão", "", "");
 	
 	/* Imputs gerais */
-	private Button enviarBanca = new Button("Voltar para a Banca de Elaboração");
-	private Button enviarRevisao = new Button("Enviar para a próxima Etapa");
+	private Button enviarBanca = new Button("Desaprovar questão", new Icon(VaadinIcon.CLOSE_CIRCLE));
+	private Button enviarRevisao = new Button("Aprovar questão", new Icon(VaadinIcon.CHECK_CIRCLE));
 	private ProvaService provaService;
 	private Prova prova;
 	private int quantAlternativas;
@@ -93,10 +95,14 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 	private HorizontalLayout addtopicosDeRevisaoLayout;
 	private List<String> topicosDeRevisao;
 
+	private Questao questaoSelecionada;
+
+	private RevisarQuestaoPresenter revisarQuestaoPresenter;
 	public RevisarQuestaoView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
 		grid = new Grid<>();
+
 
 		dropMenuConcurso(); 
 		dropMenuProva(); 
@@ -104,14 +110,14 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 		topicosDeRevisaoComponent();
 		campoObservacao(); 
 		
-		verticalDetails.add(details1, details2, details3, layoutQuestao, topicosDeRevisaoLayout, observacaouestao, botoesLayout);
+		verticalDetails.add(details1, details2, details3, layoutQuestao, topicosDeRevisaoLayout, observacaoQuestao, botoesLayout);
 		
 		add(verticalDetails);
 	}
 	
 	
 	public void campoObservacao() {
-		observacaouestao.setWidth("1030px");
+		observacaoQuestao.setWidth("1030px");
 	}
 	
 	public void topicosDeRevisaoComponent(){
@@ -226,10 +232,10 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 		dataFimConcurso.setWidth("300px");
 		
 		/* Deixando campos não editáveis */
-		nomeConcurso.setEnabled(false);
-		cidadeConcurso.setEnabled(false);
-		dataInicioConcurso.setEnabled(false);
-		dataFimConcurso.setEnabled(false);
+		nomeConcurso.setReadOnly(true);
+		cidadeConcurso.setReadOnly(true);
+		dataInicioConcurso.setReadOnly(true);
+		dataFimConcurso.setReadOnly(true);
 		
 		/* Layout final do concurso */
 		HorizontalLayout horizontalLayout1 = new HorizontalLayout();
@@ -261,12 +267,12 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 	    descricaoDaProva.setWidth("1030px");
 	    
 	    /* Deixando campos não editáveis */
-		areaConhecimento.setEnabled(false);
-	    tipoProva.setEnabled(false);
-	    numAlternativas.setEnabled(false);
-	    nivelProva.setEnabled(false);
-	    prazo.setEnabled(false);
-	    descricaoDaProva.setEnabled(false);
+		areaConhecimento.setReadOnly(true);
+	    tipoProva.setReadOnly(true);
+	    numAlternativas.setReadOnly(true);
+	    nivelProva.setReadOnly(true);
+	    prazo.setReadOnly(true);
+	    descricaoDaProva.setReadOnly(true);
 		
 		/* Layout final de prova */
 		HorizontalLayout horizontalLayout1 = new HorizontalLayout();
@@ -305,15 +311,15 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 		subAreasQuestao.setWidth("1025px");
 		
 		/* Deixando campos não editaveis  */
-		enunciadoQuestao.setEnabled(false);
-		nivelDificuldadeQuestaoCombo.setEnabled(false);
-		justificativaQuestao.setEnabled(false);
-		alternativaAQuestao.setEnabled(false);
-		alternativaBQuestao.setEnabled(false);
-		alternativaCQuestao.setEnabled(false);
-		alternativaDQuestao.setEnabled(false);
-		alternativaEQuestao.setEnabled(false);
-		subAreasQuestao.setEnabled(false);
+		enunciadoQuestao.setReadOnly(true);
+		nivelDificuldadeQuestaoCombo.setReadOnly(true);
+		justificativaQuestao.setReadOnly(true);
+		alternativaAQuestao.setReadOnly(true);
+		alternativaBQuestao.setReadOnly(true);
+		alternativaCQuestao.setReadOnly(true);
+		alternativaDQuestao.setReadOnly(true);
+		alternativaEQuestao.setReadOnly(true);
+		subAreasQuestao.setReadOnly(true);
 		
 		/* Layout final de questão */
 		HorizontalLayout horizontalLayout1 = new HorizontalLayout(enunciadoQuestao, nivelDificuldadeQuestaoCombo);
@@ -329,30 +335,87 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 		details3.setMinWidth("1070px");
 		details3.setOpened(false);
 	}
-	
-	/*
 	@Override
 	public void setParameter(BeforeEvent event, Long parameter) {
-		// TODO Auto-generated method stub
-		
-		Optional<Prova> optionalProva = provaService.getRepository().findById(parameter);
-		if (optionalProva.isPresent()) {
-			prova = optionalProva.get();
-			//this.provaId = prova.getId();
-			
-			//tornando a quinta alternativa falta caso a prova seja objetiva com 4 alternativas
-			if(prova.getTipo() == TipoProva.OBJETIVA_4) {
-				quantAlternativas = 4;	
-				alternativaEQuestao.setVisible(false);
-			} else 
-				quantAlternativas = 5;
+		this.questaoSelecionada = questaoService.getRepository().findById(parameter).get();
+		if(questaoSelecionada==null) {
+			Notification notification = new Notification("Questão não existente");
+			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+			notification.open();
+			this.getUI().ifPresent(ui->ui.navigate(RevisoesView.class));
+		}
+		this.revisarQuestaoPresenter = new RevisarQuestaoPresenter(this, questaoService.getRepository());
 
-			  this.presenter = new NovaQuestaoObjetivaPresenter(provaService, questaoService, this); //iniciar o presenter
-		} 
-		
-	} */ 
-    
-    public TextField getNomeConcurso() {
+		//operadores ternários para costumizar os metadados
+		String metadadoBanca = questaoSelecionada.getState().getClass().equals(Revisao3.class)
+				? "Descartar questão" : "Enviar questão à banca, para correção";
+
+		enviarBanca.setTooltipText(metadadoBanca);
+
+		String metadadoRevisao =
+				questaoSelecionada.getState().getClass().equals(Revisao2.class)
+				||
+				questaoSelecionada.getState().getClass().equals(Revisao3.class)
+				? "Enviar à revisão linguística" : "Enviar ao próximo revisor";
+
+		enviarRevisao.setTooltipText(metadadoRevisao);
+
+	}
+
+
+	public TextArea getSubAreasQuestao() {
+		return subAreasQuestao;
+	}
+
+	public void setSubAreasQuestao(TextArea subAreasQuestao) {
+		this.subAreasQuestao = subAreasQuestao;
+	}
+
+	public Button getEnviarBanca() {
+		return enviarBanca;
+	}
+
+	public void setEnviarBanca(Button enviarBanca) {
+		this.enviarBanca = enviarBanca;
+	}
+
+	public Button getEnviarRevisao() {
+		return enviarRevisao;
+	}
+
+	public void setEnviarRevisao(Button enviarRevisao) {
+		this.enviarRevisao = enviarRevisao;
+	}
+
+	public HorizontalLayout getBotoesLayout() {
+		return botoesLayout;
+	}
+
+	public void setBotoesLayout(HorizontalLayout botoesLayout) {
+		this.botoesLayout = botoesLayout;
+	}
+
+	public void setGrid(Grid<String> grid) {
+		this.grid = grid;
+	}
+
+	public Questao getQuestaoSelecionada() {
+		return questaoSelecionada;
+	}
+
+	public void setQuestaoSelecionada(Questao questaoSelecionada) {
+		this.questaoSelecionada = questaoSelecionada;
+	}
+
+	public RevisarQuestaoPresenter getRevisarQuestaoPresenter() {
+		return revisarQuestaoPresenter;
+	}
+
+	public void setRevisarQuestaoPresenter(RevisarQuestaoPresenter revisarQuestaoPresenter) {
+		this.revisarQuestaoPresenter = revisarQuestaoPresenter;
+	}
+
+	public TextField getNomeConcurso() {
 		return nomeConcurso;
 	}
 
@@ -505,12 +568,12 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 		this.alternativaEQuestao = alternativaEQuestao;
 	}
 
-	public TextArea getObservacaouestao() {
-		return observacaouestao;
+	public TextArea getObservacaoQuestao() {
+		return observacaoQuestao;
 	}
 
-	public void setObservacaouestao(TextArea observacaouestao) {
-		this.observacaouestao = observacaouestao;
+	public void setObservacaoQuestao(TextArea observacaoQuestao) {
+		this.observacaoQuestao = observacaoQuestao;
 	}
 
 	public VerticalLayout getLayoutgrid() {
@@ -677,4 +740,6 @@ public class RevisarQuestaoView extends HorizontalLayout /* implements HasUrlPar
 	public void setDetails3(Details details3) {
 		this.details3 = details3;
 	}
+
+
 }

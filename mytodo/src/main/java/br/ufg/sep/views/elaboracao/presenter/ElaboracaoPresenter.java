@@ -1,23 +1,21 @@
-package br.ufg.sep.views.prova.presenter;
+package br.ufg.sep.views.elaboracao.presenter;
 
 import java.util.Optional;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.Prova;
-import br.ufg.sep.entity.Questao;
 import br.ufg.sep.security.AuthenticatedUser;
-import br.ufg.sep.state.stateImpl.Elaboracao;
-import br.ufg.sep.views.prova.ProvasView;
+import br.ufg.sep.views.elaboracao.ElaboracaoView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
-public class ProvasPresenter {
+public class ElaboracaoPresenter {
 
 	ProvaService provaService;
 	private Prova provaSelecionada;
 	Prova prova;
 	
-	public ProvasPresenter(AuthenticatedUser authenticatedUser, ProvasView view, ProvaService service) {
+	public ElaboracaoPresenter(AuthenticatedUser authenticatedUser, ElaboracaoView view, ProvaService service) {
 		this.provaService = service;
 		
 		Cadastro user;

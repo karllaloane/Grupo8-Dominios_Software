@@ -32,8 +32,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.security.AuthenticatedUser;
-import br.ufg.sep.views.prova.ProvasView;
-import br.ufg.sep.views.concurso.ConcursosView;
+import br.ufg.sep.views.elaboracao.ElaboracaoView;
+import br.ufg.sep.views.gerencia.ConcursosView;
 import br.ufg.sep.views.home.HomeView;
 import br.ufg.sep.views.permissoes.PermissoesView;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
@@ -112,11 +112,11 @@ public class MainLayout extends AppLayout {
         }
         
         if (accessChecker.hasAccess(ConcursosView.class)) {
-            nav.add(createTab(VaadinIcon.GLOBE, "Concursos", ConcursosView.class));
+            nav.add(createTab(VaadinIcon.GLOBE, "Gerência", ConcursosView.class));
         }
         
-        if (accessChecker.hasAccess(ProvasView.class)) {
-            nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Provas", ProvasView.class));
+        if (accessChecker.hasAccess(ElaboracaoView.class)) {
+            nav.add(createTab(VaadinIcon.FILE_TEXT_O, "Elaboração", ElaboracaoView.class));
         }
         
         if (accessChecker.hasAccess(RevisarQuestaoView.class)) {

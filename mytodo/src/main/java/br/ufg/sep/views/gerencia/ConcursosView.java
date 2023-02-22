@@ -1,6 +1,5 @@
-package br.ufg.sep.views.concurso;
+package br.ufg.sep.views.gerencia;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import com.vaadin.flow.component.button.Button;
@@ -19,7 +18,7 @@ import br.ufg.sep.data.services.ConcursoService;
 import br.ufg.sep.entity.Concurso;
 import br.ufg.sep.security.SecurityService;
 import br.ufg.sep.views.MainLayout;
-import br.ufg.sep.views.concurso.presenter.ConcursoPresenter;
+import br.ufg.sep.views.gerencia.presenter.ConcursoPresenter;
 
 @Route(value="concursos", layout = MainLayout.class)
 @PageTitle("Concursos")
@@ -30,6 +29,8 @@ public class ConcursosView extends VerticalLayout{
 	Button editarButton;
 	Button visualizarButton;
 	Button acessarProvasButton;
+
+	private Button deletarConcurso;
 	Grid<Concurso> concursos;
 	HorizontalLayout layout = new HorizontalLayout();
 	
@@ -48,7 +49,7 @@ public class ConcursosView extends VerticalLayout{
 		concursos.addColumn(presenter.getRenderizadorDatasConcurso()).setAutoWidth(true).setHeader("Fim do edital");
 		concursos.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         
-        layout.add(novoButton, visualizarButton, editarButton, acessarProvasButton);
+        layout.add(novoButton, visualizarButton, editarButton, acessarProvasButton,deletarConcurso);
         
         add(layout,concursos);
 	}
@@ -57,6 +58,7 @@ public class ConcursosView extends VerticalLayout{
 		editarButton.setEnabled(true);
 		visualizarButton.setEnabled(true);
 		acessarProvasButton.setEnabled(true);
+		deletarConcurso.setEnabled(true);
 	}
 
 	//******** método para inicializar os botões ********
@@ -65,7 +67,9 @@ public class ConcursosView extends VerticalLayout{
 		editarButton = new Button("Editar", new Icon(VaadinIcon.PENCIL));
 		visualizarButton = new Button("Visualizar", new Icon(VaadinIcon.EYE));
 		acessarProvasButton = new Button("Gerenciar Provas", new Icon(VaadinIcon.FILE_TEXT_O ));
-		
+		deletarConcurso = new Button("Deletar",new Icon(VaadinIcon.TRASH));
+		deletarConcurso.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		deletarConcurso.setEnabled(false);
 		editarButton.setEnabled(false);
 		editarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		visualizarButton.setEnabled(false);
@@ -105,4 +109,43 @@ public class ConcursosView extends VerticalLayout{
 		return acessarProvasButton;
 	}
 
+	public void setNovoButton(Button novoButton) {
+		this.novoButton = novoButton;
+	}
+
+	public void setEditarButton(Button editarButton) {
+		this.editarButton = editarButton;
+	}
+
+	public void setVisualizarButton(Button visualizarButton) {
+		this.visualizarButton = visualizarButton;
+	}
+
+	public void setAcessarProvasButton(Button acessarProvasButton) {
+		this.acessarProvasButton = acessarProvasButton;
+	}
+
+	public Button getDeletarConcurso() {
+		return deletarConcurso;
+	}
+
+	public void setDeletarConcurso(Button deletarConcurso) {
+		this.deletarConcurso = deletarConcurso;
+	}
+
+	public Grid<Concurso> getConcursos() {
+		return concursos;
+	}
+
+	public void setConcursos(Grid<Concurso> concursos) {
+		this.concursos = concursos;
+	}
+
+	public HorizontalLayout getLayout() {
+		return layout;
+	}
+
+	public void setLayout(HorizontalLayout layout) {
+		this.layout = layout;
+	}
 }
