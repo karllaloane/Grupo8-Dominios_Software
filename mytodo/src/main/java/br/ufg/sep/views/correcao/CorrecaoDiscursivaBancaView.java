@@ -1,8 +1,12 @@
 package br.ufg.sep.views.correcao;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
@@ -10,6 +14,7 @@ import javax.annotation.security.PermitAll;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -19,6 +24,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -27,6 +33,7 @@ import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoDiscursiva;
@@ -47,7 +54,9 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	private VerticalLayout revisaoTecnicaLayout;
 	private VerticalLayout revisaoBancaLayout;
 	private VerticalLayout questaoLayout;
-	private Grid<String> grid;
+	private Grid<String> grid1;
+	private Grid<String> grid2;
+	private HorizontalLayout gridL;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
 	private TextArea enunciadoTextField;
@@ -56,6 +65,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	private RadioButtonGroup<String> radioGroup;
 	
 	private List<String> topicosDeRevisao;
+	private List<String> topicosAtendimento;
 	
 	private Button salvarButton;
 	private Button descartarButton;
@@ -140,7 +150,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		Span itensSpan = new Span("Itens Avaliados");
 		criarGrid();
 		
-		orientGrid.add(itensSpan, grid);
+		orientGrid.add(itensSpan, gridL);
 		layoutGrid.add(orientacaoSpan, orientacoesTextField);
 		
 		orientGrid.setSpacing(false);
@@ -210,12 +220,10 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.salvarButton = new Button("Salvar");
 		this.enviarButton = new Button("Enviar para revisão 2");
 		
-		this.salvarButton.getStyle().set("margin-left", "345px");
-		this.enviarButton.getStyle().set("margin-left", "auto");
-		h.add(descartarButton, salvarButton,enviarButton);
+		this.enviarButton.getStyle().set("margin-left", "435px");
+		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
 		
@@ -264,55 +272,81 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	}
 	
 	private void criarGrid(){
+		gridL = new HorizontalLayout();
+		gridL.setWidth("768px");
+		
+		Grid<Data> grid = new Grid();
+		
+		List<Data> list = new ArrayList<>();
+		
+		grid1 = new Grid<>();
+		grid2 = new Grid<>();
 		
 		/* Arraylist de tópicos */ 
-		topicosDeRevisao = new ArrayList<>();
+		topicosDeRevisao = new ArrayList<>();	
+		topicosAtendimento = new ArrayList<>();
+		
+		grid.setItems(list);
 		
 		
-		for(Map.Entry<String, Integer> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
-			topicosDeRevisao.add(pair.getKey());
+		for(Map.Entry<String, Atendimento> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
+			list.add(new Data(pair.getKey(), pair.getValue().toString()));
 		}
 		
-		grid = new Grid<String>();
+//		grid1 = new Grid<>();
+//		
+//		grid1.setItems(topicosDeRevisao);
+//		grid1.setAllRowsVisible(true);
+//		
+//		grid2.setItems(topicosAtendimento);
+//		grid2.setAllRowsVisible(true);
+//		
+//		//adicionando a coluna
+//		//conterá o arraylist e o botão de remover
+//		grid1.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
+//		
+//		grid2.addColumn(item2 -> item2).setWidth("20px").setFlexGrow(1);
 		
-		grid.setItems(topicosDeRevisao);
-		grid.setAllRowsVisible(true);
+//		grid1.setWidth("1300px");
+//		grid1.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+//		grid2.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+//		grid1.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+//		grid2.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		
-		//adicionando a coluna
-		//conterá o arraylist e o botão de remover
-		grid.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
-		
-		/*
-		 * NAO SEI SETAR O ATENDIMENTO NO GRID
-		 */
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtende, item) -> {
-                	checkAtende.setLabel("Atende");
-                })).setWidth("100px").setFlexGrow(0).setKey("atende");
-		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtendeParcialmente, item) -> {
-                	checkAtendeParcialmente.setLabel("Atende Parcialmente");
-                	/* Ajeitar o taamanho disso aqui */
-                })).setWidth("160px").setFlexGrow(1).setKey("atende-parcialmente");
-		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkNaoAtende, item) -> {
-                	checkNaoAtende.setLabel("Não Atende");
-                })).setWidth("100px").setFlexGrow(1).setKey("nao-atende");
-		
-		
+		gridL.setSpacing(false);;
+		//gridL.add(grid1);
+		//gridL.add(grid2);
+		gridL.add(grid);
 		
 	}
 
+	class Data {
+		String criterio;
+		String atendimento;
+		
+		Data(String criterio, String string){
+			this.criterio = criterio;
+			this.atendimento = string;
+		}
+		
+		String getCriterio() {
+			return criterio;
+		}
+		
+		String getAtendimento() {
+			return atendimento;
+		}
+		
+		
+	}
 	
 	public Prova getProva() {
 		return prova;
 	}
 	
-	public Grid<String> getGrid() {
-		return grid;
-	}
+//	public Grid<String> getGrid() {
+//		return grid;
+//	}
 
 	public TextArea getOrientacoesTextField() {
 		return orientacoesTextField;

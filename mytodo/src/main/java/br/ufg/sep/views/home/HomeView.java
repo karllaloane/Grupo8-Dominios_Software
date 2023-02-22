@@ -6,7 +6,7 @@ import br.ufg.sep.data.repositories.ProvaRepository;
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.data.repositories.QuestaoStateRepository;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.AtendimentoSugestoes;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.Correcao;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.Revisao;
@@ -77,9 +77,9 @@ public class HomeView extends VerticalLayout {
 
 			Revisao rev = new Revisao();
 			rev.setOrientacoes("Revisao 20.02");
-			HashMap<String,Integer> hashMap = new HashMap<>();
-			hashMap.put("Paralelismo",0);
-			hashMap.put("Conteudo",0);
+			HashMap<String,Atendimento> hashMap = new HashMap<>();
+			hashMap.put("Paralelismo",Atendimento.PARCIAL);
+			hashMap.put("Conteudo",Atendimento.PARCIAL);
 			rev.setItemAnalisado(hashMap);
 
 //			q.enviarParaRevisao(null); // go to R1

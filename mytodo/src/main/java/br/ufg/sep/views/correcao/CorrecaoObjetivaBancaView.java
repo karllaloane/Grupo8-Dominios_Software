@@ -246,12 +246,10 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.salvarButton = new Button("Salvar");
 		this.enviarButton = new Button("Enviar para revisão 2");
 		
-		this.salvarButton.getStyle().set("margin-left", "345px");
-		this.enviarButton.getStyle().set("margin-left", "auto");
-		h.add(descartarButton, salvarButton,enviarButton);
+		this.enviarButton.getStyle().set("margin-left", "435px");
+		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
 		
@@ -344,45 +342,45 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	}
 	
 	private void criarGrid(){
-		
-		/* Arraylist de tópicos */ 
-		topicosDeRevisao = new ArrayList<>();
-		
-		
-		for(Map.Entry<String, Integer> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
-			topicosDeRevisao.add(pair.getKey());
-		}
-		
 		grid = new Grid<String>();
-		
-		grid.setItems(topicosDeRevisao);
-		grid.setAllRowsVisible(true);
-		
-		//adicionando a coluna
-		//conterá o arraylist e o botão de remover
-		grid.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
-		
-		/*
-		 * NAO SEI SETAR O ATENDIMENTO NO GRID
-		 */
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtende, item) -> {
-                	checkAtende.setLabel("Atende");
-                })).setWidth("100px").setFlexGrow(0).setKey("atende");
-		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtendeParcialmente, item) -> {
-                	checkAtendeParcialmente.setLabel("Atende Parcialmente");
-                	/* Ajeitar o taamanho disso aqui */
-                })).setWidth("160px").setFlexGrow(1).setKey("atende-parcialmente");
-		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkNaoAtende, item) -> {
-                	checkNaoAtende.setLabel("Não Atende");
-                })).setWidth("100px").setFlexGrow(1).setKey("nao-atende");
-		
-		
-		
+//		/* Arraylist de tópicos */ 
+//		topicosDeRevisao = new ArrayList<>();
+//		
+//		
+//		for(Map.Entry<String, Integer> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
+//			topicosDeRevisao.add(pair.getKey());
+//		}
+//		
+//		grid = new Grid<String>();
+//		
+//		grid.setItems(topicosDeRevisao);
+//		grid.setAllRowsVisible(true);
+//		
+//		//adicionando a coluna
+//		//conterá o arraylist e o botão de remover
+//		grid.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
+//		
+//		/*
+//		 * NAO SEI SETAR O ATENDIMENTO NO GRID
+//		 */
+//		grid.addColumn(
+//                new ComponentRenderer<>(Checkbox::new, (checkAtende, item) -> {
+//                	checkAtende.setLabel("Atende");
+//                })).setWidth("100px").setFlexGrow(0).setKey("atende");
+//		
+//		grid.addColumn(
+//                new ComponentRenderer<>(Checkbox::new, (checkAtendeParcialmente, item) -> {
+//                	checkAtendeParcialmente.setLabel("Atende Parcialmente");
+//                	/* Ajeitar o taamanho disso aqui */
+//                })).setWidth("160px").setFlexGrow(1).setKey("atende-parcialmente");
+//		
+//		grid.addColumn(
+//                new ComponentRenderer<>(Checkbox::new, (checkNaoAtende, item) -> {
+//                	checkNaoAtende.setLabel("Não Atende");
+//                })).setWidth("100px").setFlexGrow(1).setKey("nao-atende");
+//		
+//		
+//		
 	}
 
 	
