@@ -2,7 +2,6 @@ package br.ufg.sep.views.revisao;
 
 import javax.annotation.security.PermitAll;
 
-import br.ufg.sep.views.revisao.components.ComponenteQuestao;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -18,8 +17,14 @@ import com.vaadin.flow.router.Route;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.QuestaoDiscursiva;
 import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
+import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
+import br.ufg.sep.views.revisao.components.ComponenteQuestao;
+import br.ufg.sep.views.revisao.presenter.RevisaoBancaPresenter;
+import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional;
 
 @Route(value="revisao_questao_banca", layout = MainLayout.class)
 @PageTitle("Revisão da Banca")
@@ -38,6 +43,7 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 	private Button enviarButton;
 	private Checkbox checkbox;
 	
+	private RevisaoBancaPresenter presenter;	
 	
 	private Questao questao;
 	private int quantAlternativas = 4;
@@ -45,12 +51,15 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 	
 	private ComponenteQuestao questaoAnterior;
 	private ComponenteQuestao questaoNova;
-	
+
+	private CancelarEdicaoDialog cancelarDialogo;
 	
 	public RevisaoBancaView(ProvaService provaService, QuestaoService questaoService) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
+		
+		cancelarDialogo = new CancelarEdicaoDialog();
 		
 		questoesLayoutFinal = new HorizontalLayout();
 		aprovaLayout = new VerticalLayout();
@@ -60,6 +69,11 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 		criaAprovaLayout();
 		
 		this.add(questoesLayoutFinal, aprovaLayout);
+	}
+
+
+	public Questao getQuestao() {
+		return questao;
 	}
 
 
@@ -79,7 +93,7 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 		h.add(voltarButton);
 		h.add(enviarButton);
 		
-		aprovaLayout.add(checkbox, h	);
+		aprovaLayout.add(checkbox, h);
 	}
 
 
@@ -128,14 +142,54 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 					questaoAnterior.ocultarQuintaAlternativa();
 					questaoNova.ocultarQuintaAlternativa();
 				}
-				
+				setarDadosObjetiva();
 			} else {
 				questaoAnterior.ocutarAlternativas();
 				questaoNova.ocutarAlternativas();
 			}
+			setarDadosDiscursiva();
 				
 		}
 		
+		presenter = new RevisaoBancaPresenter(provaService, questaoService, this);
+		
+	}
+	
+	private void setarDadosDiscursiva() {
+		QuestaoDiscursiva q = (QuestaoDiscursiva) questao.getState().getQuestaoAnterior();
+		
+		this.questaoAnterior.getEnunciado().setValue(q.getEnunciado());
+		this.questaoAnterior.getRespostaEsperada().setValue(q.getRespostaEsperada());
+		
+		q = (QuestaoDiscursiva) questao;
+		this.questaoNova.getEnunciado().setValue(q.getEnunciado());
+		this.questaoNova.getRespostaEsperada().setValue(q.getRespostaEsperada());
+		
+	}
+
+
+	public void setarDadosObjetiva() {
+		QuestaoObjetiva q = (QuestaoObjetiva) questao.getState().getQuestaoAnterior();
+		
+		this.questaoAnterior.getEnunciado().setValue(q.getEnunciado());
+		this.questaoAnterior.getAlternativaA().setValue(q.getAlternativas().get(0));
+		this.questaoAnterior.getAlternativaB().setValue(q.getAlternativas().get(1));
+		this.questaoAnterior.getAlternativaC().setValue(q.getAlternativas().get(2));
+		this.questaoAnterior.getAlternativaD().setValue(q.getAlternativas().get(3));
+		
+		if(q.getQuantAlternativas() == 5)
+			this.questaoAnterior.getAlternativaE().setValue(q.getAlternativas().get(4));
+		
+		q = (QuestaoObjetiva) questao;
+		
+		this.questaoNova.getEnunciado().setValue(q.getEnunciado());
+		this.questaoNova.getAlternativaA().setValue(q.getAlternativas().get(0));
+		this.questaoNova.getAlternativaB().setValue(q.getAlternativas().get(1));
+		this.questaoNova.getAlternativaC().setValue(q.getAlternativas().get(2));
+		this.questaoNova.getAlternativaD().setValue(q.getAlternativas().get(3));
+		
+		if(q.getQuantAlternativas() == 5)
+			this.questaoNova.getAlternativaE().setValue(q.getAlternativas().get(4));
 	}
 	
 	public Button getVoltarButton
@@ -151,6 +205,10 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 
 	public Checkbox getCheckbox() {
 		return checkbox;
+	}
+
+	public CancelarEdicaoDialog getCancelarDialogo() {
+		return cancelarDialogo;
 	}
 	
 

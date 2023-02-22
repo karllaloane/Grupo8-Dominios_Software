@@ -32,6 +32,7 @@ import br.ufg.sep.views.questoes.EditarQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.NovaQuestaoObjetivaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoObjetivaView;
+import br.ufg.sep.views.revisao.RevisaoBancaView;
 import br.ufg.sep.views.questoes.VisualizarQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 
@@ -151,6 +152,11 @@ public class QuestoesProvaPresenter {
 					&& (questao.getState() instanceof Correcao1 || questao.getState() instanceof Correcao2)) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(CorrecaoDiscursivaBancaView.class, questao.getId());});
+			}
+			
+			if(questao.getState() instanceof RevisaoBanca) {
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					ui.navigate(RevisaoBancaView.class, questao.getId());});
 			}
 				
 		});
