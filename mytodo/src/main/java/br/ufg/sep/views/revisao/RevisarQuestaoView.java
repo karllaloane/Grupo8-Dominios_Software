@@ -74,7 +74,9 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private TextArea alternativaDQuestao = new TextArea("D) ", "", "");
 	private TextArea alternativaEQuestao = new TextArea("E) ", "", "");
 	private TextArea orientacoesQuestao = new TextArea("Orientações da Revisão", "", "");
-	
+
+	private TextField estadoQuestao = new TextField("Estado da questão");
+
 	/* Imputs gerais */
 	private Button enviarBanca = new Button("Desaprovar questão", new Icon(VaadinIcon.CLOSE_CIRCLE));
 	private Button enviarRevisao = new Button("Aprovar questão", new Icon(VaadinIcon.CHECK_CIRCLE));
@@ -103,7 +105,6 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private Questao questaoSelecionada;
 
 	private RevisarQuestaoPresenter revisarQuestaoPresenter;
-	private TextField estadoQuestao = new TextField("Estado da questão");
 
 	public RevisarQuestaoView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;

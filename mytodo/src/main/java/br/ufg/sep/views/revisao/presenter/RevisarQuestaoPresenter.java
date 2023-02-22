@@ -8,6 +8,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 
+import javax.validation.constraints.Null;
 import java.util.List;
 
 public class RevisarQuestaoPresenter {
@@ -24,10 +25,12 @@ public class RevisarQuestaoPresenter {
         questao = view.getQuestaoSelecionada();
         prova = questao.getProva();
         concurso = prova.getConcurso();
-        configBotoes();
-        setConcursoInfo();
-        setProvaInfo();
-        setQuestaoInfo();
+        Integer x = 0;
+            configBotoes();
+            setConcursoInfo();
+            setProvaInfo();
+            setQuestaoInfo(x);
+
     }
 
     private void configBotoes() {
@@ -46,7 +49,7 @@ public class RevisarQuestaoPresenter {
                 }
                 view.getEnviarBanca().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
         });
-
+        //botão Aprovar questão
         view.getEnviarRevisao().addClickListener(e->{
            if(questao.enviarParaRevisao(null)){
                Notification notification = Notification.show("Questão enviada com sucesso");
@@ -56,6 +59,7 @@ public class RevisarQuestaoPresenter {
            }
             view.getEnviarRevisao().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
         });
+
 
     }
 
@@ -77,21 +81,22 @@ public class RevisarQuestaoPresenter {
                         :
                         ""
         );
+        if(view.getNumAlternativas().getValue().equals(""))view.getNumAlternativas().setVisible(false);
         view.getNivelProva().setValue(prova.getNivel().toString());
         view.getPrazo().setValue(prova.getDataEntrega());
         view.getDescricaoDaProva().setValue(prova.getDescricao());
     }
 
 
-    private void setQuestaoInfo(){
+    private void setQuestaoInfo(Integer x) throws NullPointerException{
         String subAreas = new String("");
         for(String sub : questao.getSubAreas()){
             subAreas+=sub+"\n";
         }
+
         view.getSubAreasQuestao().setValue(subAreas);
         view.getEnunciadoQuestao().setValue(questao.getEnunciado());
         view.getNivelDificuldadeQuestaoCombo().setValue(questao.getNivelDificuldade().toString());
-        view.getJustificativaQuestao().setValue(questao.getJustificativa());
         view.getEstadoQuestao().setValue(questao.getState().toString());
         List<TextArea> alternativas = List.of(
                 view.getAlternativaAQuestao(),
@@ -101,15 +106,18 @@ public class RevisarQuestaoPresenter {
                 view.getAlternativaEQuestao()
         );
         if(prova.getTipo().equals(TipoProva.OBJETIVA_4)){
-                for(int i=0;i<4;i++)
+            view.getJustificativaQuestao().setValue(questao.getJustificativa());
+            for(int i=0;i<4;i++)
                     alternativas.get(i).setValue(((QuestaoObjetiva)questao).getAlternativas().get(i));
                 alternativas.get(4).setVisible(false);
         }
         if(prova.getTipo().equals(TipoProva.OBJETIVA_5)){
+            view.getJustificativaQuestao().setValue(questao.getJustificativa());
             for(int i=0;i<5;i++)
                 alternativas.get(i).setValue(((QuestaoObjetiva)questao).getAlternativas().get(i));
         }
         if(prova.getTipo().equals(TipoProva.DISCUSSIVA)){
+            view.getJustificativaQuestao().setVisible(false);
             alternativas.get(0).setLabel("Resposta Esperada");
             alternativas.get(0).setValue(
                     ((QuestaoDiscursiva)questao).getRespostaEsperada()

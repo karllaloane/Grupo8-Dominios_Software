@@ -1,10 +1,6 @@
 package br.ufg.sep.entity;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import java.util.Map;
 
 @Entity
 public class Correcao extends AbstractEntity{
@@ -15,7 +11,7 @@ public class Correcao extends AbstractEntity{
     //0 para nao atendimento, 1 para atendimento parcial, 2 para atendimento total
     // aceito refatorações (enum, classe, string, sla)
 
-    String justificativa;
+    String justificativaDoAtendimento;
 
 
     public Correcao(){
@@ -30,11 +26,11 @@ public class Correcao extends AbstractEntity{
         this.atendimentoSugestoes = atendimentoSugestoes;
     }
 
-    public String getJustificativa() {
-        return justificativa;
+    public String getJustificativaDoAtendimento() {
+        return justificativaDoAtendimento;
     }
 
-    public void setJustificativa(String justificativa) {
-        this.justificativa = justificativa;
+    public void setJustificativaDoAtendimento(String justificativaDoAtendimento) {
+        this.justificativaDoAtendimento = justificativaDoAtendimento;
     }
 }
