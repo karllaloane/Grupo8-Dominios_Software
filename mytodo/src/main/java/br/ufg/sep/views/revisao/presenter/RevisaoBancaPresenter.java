@@ -1,5 +1,8 @@
 package br.ufg.sep.views.revisao.presenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
@@ -10,7 +13,9 @@ import com.vaadin.flow.component.textfield.TextArea;
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Prova;
+import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.QuestaoDiscursiva;
+import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.questoes.QuestoesProvaView;
 import br.ufg.sep.views.revisao.RevisaoBancaView;
 
@@ -20,7 +25,7 @@ public class RevisaoBancaPresenter {
 	private QuestaoService questaoService;
 	private RevisaoBancaView view;
 	private Prova prova;
-	
+	private Questao questao;
 	
 	public RevisaoBancaPresenter(ProvaService provaService, QuestaoService questaoService,
 			RevisaoBancaView revisaoBancaView) {
@@ -28,11 +33,10 @@ public class RevisaoBancaPresenter {
 		this.questaoService = questaoService;
 		this.view = view;
 		
+		this.questao = view.getQuestao();
+		
 		prova = view.getQuestao().getProva();
 		
-		
-		
-		//chama o diálogo para confirmar o envio da questao
 		view.getEnviarButton().addClickListener( e->{
 			Notification notification;
 			
@@ -45,6 +49,16 @@ public class RevisaoBancaPresenter {
 				
 				return;
 			}
+			
+			if(questao instanceof QuestaoObjetiva) {
+				getDadosObjetiva();
+			} else {
+				getDadosSubjetiva();
+			}
+			
+			questao.concluir();
+			
+			questaoService.getRepository().save(questao);
 			
 			//implementar posteriormente
 			//if(verificaDadosPreenchidos()) {
@@ -70,8 +84,28 @@ public class RevisaoBancaPresenter {
 		});
 	}
 
-	private void enviarQuestao(ClickEvent<Button> e) {
-		// TODO Auto-generated method stub
+	private void getDadosSubjetiva() {
+		
+		questao.setEnunciado(view.getQuestaoNova().getEnunciado().getValue());
+		((QuestaoDiscursiva) questao).setRespostaEsperada(view.getQuestaoNova().getRespostaEsperada().getValue());
+		
+	}
+
+	private void getDadosObjetiva() {
+
+		List<String> lista = new ArrayList<>();
+		
+		lista.add(view.getQuestaoNova().getAlternativaA().getValue());
+		lista.add(view.getQuestaoNova().getAlternativaB().getValue());
+		lista.add(view.getQuestaoNova().getAlternativaC().getValue());
+		lista.add(view.getQuestaoNova().getAlternativaD().getValue());
+		
+		if(((QuestaoObjetiva) questao).getQuantAlternativas() == 5)
+			lista.add(view.getQuestaoNova().getAlternativaE().getValue());
+		
+		questao.setEnunciado(view.getQuestaoNova().getEnunciado().getValue());
+
+		((QuestaoObjetiva) questao).setAlternativas(lista);
 		
 	}
 
