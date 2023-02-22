@@ -3,6 +3,9 @@ package br.ufg.sep.views.revisao.presenter;
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.entity.*;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
+import br.ufg.sep.views.revisao.RevisoesView;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 
 import java.util.List;
@@ -21,11 +24,41 @@ public class RevisarQuestaoPresenter {
         questao = view.getQuestaoSelecionada();
         prova = questao.getProva();
         concurso = prova.getConcurso();
-
+        configBotoes();
         setConcursoInfo();
         setProvaInfo();
         setQuestaoInfo();
     }
+
+    private void configBotoes() {
+
+        //botão Desaprovar questão
+        view.getEnviarBanca().addClickListener(click->{
+
+                Revisao revisao = new Revisao();
+                //revisao.setItemAnalisado(view.getTopicosAnalisadosHashMap());
+                revisao.setOrientacoes(view.getOrientacoesQuestao().getValue());
+                if(questao.enviarParaBanca(revisao)){
+                    Notification notification = Notification.show("Questão enviada com sucesso");
+                    notification.setPosition(Notification.Position.TOP_CENTER);
+                    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    view.getQuestaoService().getRepository().save(questao);
+                }
+                view.getEnviarBanca().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
+        });
+
+        view.getEnviarRevisao().addClickListener(e->{
+           if(questao.enviarParaRevisao(null)){
+               Notification notification = Notification.show("Questão enviada com sucesso");
+               notification.setPosition(Notification.Position.TOP_CENTER);
+               notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+               view.getQuestaoService().getRepository().save(questao);
+           }
+            view.getEnviarRevisao().getUI().ifPresent(ui -> ui.navigate(RevisoesView.class));
+        });
+
+    }
+
     private void setConcursoInfo(){
         view.getNomeConcurso().setValue(concurso.getNome());
         view.getCidadeConcurso().setValue(concurso.getCidade());
@@ -59,6 +92,7 @@ public class RevisarQuestaoPresenter {
         view.getEnunciadoQuestao().setValue(questao.getEnunciado());
         view.getNivelDificuldadeQuestaoCombo().setValue(questao.getNivelDificuldade().toString());
         view.getJustificativaQuestao().setValue(questao.getJustificativa());
+        view.getEstadoQuestao().setValue(questao.getState().toString());
         List<TextArea> alternativas = List.of(
                 view.getAlternativaAQuestao(),
                 view.getAlternativaBQuestao(),

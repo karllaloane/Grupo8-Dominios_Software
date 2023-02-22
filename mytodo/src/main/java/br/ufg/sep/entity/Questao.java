@@ -2,7 +2,6 @@ package br.ufg.sep.entity;
 
 import br.ufg.sep.state.QuestaoState;
 import br.ufg.sep.state.stateImpl.Elaboracao;
-import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -54,28 +53,28 @@ public class Questao extends AbstractEntity {
 	public void setState(QuestaoState state) {
 		this.state = state;
 	}
-	public void enviarParaRevisao(Correcao correcao){
-	this.state.enviarParaRevisao(this,correcao);
+	public boolean enviarParaRevisao(Correcao correcao){
+	return this.state.enviarParaRevisao(this,correcao);
 	}
 
-	public void enviarParaBanca(Revisao revisao){
-		this.state.enviarParaBanca(this,revisao);
+	public boolean enviarParaBanca(Revisao revisao){
+		return this.state.enviarParaBanca(this,revisao);
 	}
 
-	public void enviarParaRevisaoLinguagem(Revisao revisao) {
-	this.state.enviarParaRevisaoLinguagem(this,revisao);
+	public boolean enviarParaRevisaoLinguagem(Revisao revisao) {
+	return this.state.enviarParaRevisaoLinguagem(this,revisao);
 	}
 
-	public void concluir(){
-		this.state.concluir(this);
+	public boolean concluir(){
+		return this.state.concluir(this);
 	}
 
-	public void descartar(Revisao revisao){
-		this.state.descartar(this,revisao);
+	public boolean descartar(Revisao revisao){
+		return this.state.descartar(this,revisao);
 	}
 
-	public void guardarNoBanco() {
-	this.state.guardarNoBanco(this);
+	public boolean guardarNoBanco() {
+	return this.state.guardarNoBanco(this);
 	}
 
 

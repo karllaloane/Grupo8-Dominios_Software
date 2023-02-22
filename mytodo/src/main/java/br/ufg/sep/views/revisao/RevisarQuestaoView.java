@@ -1,10 +1,12 @@
 package br.ufg.sep.views.revisao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.entity.AtendimentoSugestoes;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.state.stateImpl.Revisao2;
 import br.ufg.sep.state.stateImpl.Revisao3;
@@ -12,7 +14,6 @@ import br.ufg.sep.views.revisao.presenter.RevisarQuestaoPresenter;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.details.DetailsVariant;
@@ -24,6 +25,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -71,7 +73,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private TextArea alternativaCQuestao = new TextArea("C) ", "", "");
 	private TextArea alternativaDQuestao = new TextArea("D) ", "", "");
 	private TextArea alternativaEQuestao = new TextArea("E) ", "", "");
-	private TextArea observacaoQuestao = new TextArea("Observação da Revisão", "", "");
+	private TextArea orientacoesQuestao = new TextArea("Orientações da Revisão", "", "");
 	
 	/* Imputs gerais */
 	private Button enviarBanca = new Button("Desaprovar questão", new Icon(VaadinIcon.CLOSE_CIRCLE));
@@ -89,19 +91,24 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	private Details details3;
 	private TextField topicosDeRevisaoTF;
 	private Button adicionarButton;
-    private Grid<String> grid;
+    private Grid<String> topicosAnalisadosGrid;
+
 	private Button addButton;
 	private VerticalLayout topicosDeRevisaoLayout;
 	private HorizontalLayout addtopicosDeRevisaoLayout;
 	private List<String> topicosDeRevisao;
 
+	private HashMap<String,AtendimentoSugestoes> topicosAnalisadosHashMap = new HashMap<>();
+
 	private Questao questaoSelecionada;
 
 	private RevisarQuestaoPresenter revisarQuestaoPresenter;
+	private TextField estadoQuestao = new TextField("Estado da questão");
+
 	public RevisarQuestaoView(ProvaService provaService, QuestaoService questaoService) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
-		grid = new Grid<>();
+		topicosAnalisadosGrid = new Grid<>();
 
 
 		dropMenuConcurso(); 
@@ -110,14 +117,14 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		topicosDeRevisaoComponent();
 		campoObservacao(); 
 		
-		verticalDetails.add(details1, details2, details3, layoutQuestao, topicosDeRevisaoLayout, observacaoQuestao, botoesLayout);
+		verticalDetails.add(details1, details2, details3, layoutQuestao, topicosDeRevisaoLayout, orientacoesQuestao, botoesLayout);
 		
 		add(verticalDetails);
 	}
 	
 	
 	public void campoObservacao() {
-		observacaoQuestao.setWidth("1030px");
+		orientacoesQuestao.setWidth("1030px");
 	}
 	
 	public void topicosDeRevisaoComponent(){
@@ -141,54 +148,108 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 
 		addtopicosDeRevisaoLayout.add(topicosDeRevisaoTF, addButton);
 		
-		grid.setWidth("1030px");
+		topicosAnalisadosGrid.setWidth("1030px");
 		
-		topicosDeRevisaoLayout.add(new Span("Tópicos avaliados na Revisão"), grid, addtopicosDeRevisaoLayout);
+		topicosDeRevisaoLayout.add(new Span("Tópicos avaliados na Revisão"), topicosAnalisadosGrid, addtopicosDeRevisaoLayout);
 		
-		grid.setItems(topicosDeRevisao);
-		grid.setAllRowsVisible(true);
+		topicosAnalisadosGrid.setItems(topicosDeRevisao);
+		topicosAnalisadosGrid.setAllRowsVisible(true);
 		
 		//adicionando a coluna
 		//conterá o arraylist e o botão de remover
-		grid.addColumn(item -> item).setFlexGrow(1);
-		
-		grid.addColumn(
+		topicosAnalisadosGrid.addColumn(item -> item).setFlexGrow(1);
+		/*
+		topicosAnalisadosGrid.addColumn(
                 new ComponentRenderer<>(Checkbox::new, (checkAtende, item) -> {
                 	checkAtende.setLabel("Atende");
                 })).setWidth("130px").setFlexGrow(0).setKey("atende");
-		
-		grid.addColumn(
+
+		topicosAnalisadosGrid.addColumn(
                 new ComponentRenderer<>(Checkbox::new, (checkAtendeParcialmente, item) -> {
+					Checkbox checkbox = new Checkbox();
                 	checkAtendeParcialmente.setLabel("Atende Parcialmente");
-                	/* Ajeitar o taamanho disso aqui */
+                	// Ajeitar o taamanho disso aqui
                 })).setWidth("220px").setFlexGrow(0).setKey("atende-parcialmente");
 		
-		grid.addColumn(
+		topicosAnalisadosGrid.addColumn(
                 new ComponentRenderer<>(Checkbox::new, (checkNaoAtende, item) -> {
                 	checkNaoAtende.setLabel("Não Atende");
                 })).setWidth("130px").setFlexGrow(0).setKey("nao-atende");
-		
-		grid.addColumn(
+		*/
+		topicosAnalisadosGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, item) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
                             ButtonVariant.LUMO_TERTIARY);
                     button.setIcon(new Icon(VaadinIcon.MINUS_CIRCLE_O));
                     button.addClickListener(e -> this.removeSubArea(item));
                 })).setWidth("130px").setFlexGrow(0).setKey("remover");
-		
-		// listener pra adicionar as subareas no grid
+
+		topicosAnalisadosGrid.setSelectionMode(Grid.SelectionMode.NONE);
+		topicosAnalisadosGrid.addColumn(
+				new ComponentRenderer<>( topico->{
+					RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+					radioGroup.setItems(
+							AtendimentoSugestoes.TOTAL.toString(),
+							AtendimentoSugestoes.PARCIAL.toString(),
+							AtendimentoSugestoes.NAO_ATENDIDA.toString()
+					);
+
+					this.topicosAnalisadosHashMap.forEach((topic, atend)->{
+						if(topico.equals(topic))
+							radioGroup.setValue(atend.toString());
+					});
+
+					radioGroup.addValueChangeListener(v->{
+						if(v.getValue().equals(AtendimentoSugestoes.TOTAL.toString())) {
+							this.topicosAnalisadosHashMap.remove(topico);
+							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.TOTAL);
+							//return;
+						}
+						if(v.getValue().equals(AtendimentoSugestoes.PARCIAL.toString())) {
+							this.topicosAnalisadosHashMap.remove(topico);
+							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.PARCIAL);
+							//return;
+						}
+						if(v.getValue().equals(AtendimentoSugestoes.NAO_ATENDIDA.toString())) {
+							this.topicosAnalisadosHashMap.remove(topico);
+							this.topicosAnalisadosHashMap.put(topico, AtendimentoSugestoes.NAO_ATENDIDA);
+						}
+						/*
+						System.out.println("|*********************|");
+						this.topicosAnalisadosHashMap.forEach((key,obj)->{
+							System.out.println(key + " | "+ obj.toString());
+						});
+						System.out.println("|*********************|");
+						*/
+					});
+
+
+					return radioGroup;
+				}
+				)).setKey("radio-group");
+
+
+		// listener pra adicionar os topicos no grid
 		addButton.addClickListener(e ->{
 			if(!this.topicosDeRevisaoTF.isEmpty()) {
-				this.topicosDeRevisao.add(topicosDeRevisaoTF.getValue());
+				if(topicosDeRevisao.contains(topicosDeRevisaoTF.getValue())) {
+					Notification notification = new Notification("Tópico já adicionado");
+					notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+					notification.setPosition(Notification.Position.TOP_CENTER);
+					notification.setDuration(2);
+					notification.open();
+					return;
+				}else
+					this.topicosDeRevisao.add(topicosDeRevisaoTF.getValue());
 			}
 			topicosDeRevisaoTF.clear();
 			atualizaGrid();
 		});
 		
 		if(topicosDeRevisao.size() == 0) {
-			grid.setVisible(false);
+			topicosAnalisadosGrid.setVisible(false);
 		} else {
-			grid.setVisible(true);
+			topicosAnalisadosGrid.setVisible(true);
 		}
 		
 		this.setPadding(false);
@@ -197,17 +258,19 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 	//atualizar o grid
 	public void atualizaGrid() {
 		if(topicosDeRevisao.size() == 0) {
-			grid.setVisible(false);
+			topicosAnalisadosGrid.setVisible(false);
 		} else {
-			grid.setItems(this.topicosDeRevisao);
-			grid.getDataProvider().refreshAll();
-			grid.setVisible(true);
+
+			//topicosAnalisadosGrid.setItems(this.topicosDeRevisao);
+			topicosAnalisadosGrid.getDataProvider().refreshAll();
+			topicosAnalisadosGrid.setVisible(true);
 		}
 	}
 
 	//metodo pra remover uma subarea da lista
 	private void removeSubArea(String item) {
 		topicosDeRevisao.remove(item);
+		this.topicosAnalisadosHashMap.remove(item);
 		atualizaGrid();
 	}
 	
@@ -217,7 +280,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.addButton.setVisible(false);
 		this.topicosDeRevisaoTF.setVisible(false);
 		this.addtopicosDeRevisaoLayout.setVisible(false);
-		grid.getColumnByKey("remover").setVisible(false);;
+		topicosAnalisadosGrid.getColumnByKey("remover").setVisible(false);;
 	}
 	
 	private void dropMenuConcurso() {
@@ -293,7 +356,6 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		details2.setMinWidth("1070px");
 		details2.setOpened(false);
 	}
-
 	private void dadosQuestao() {
 		HorizontalLayout summary = new HorizontalLayout();
 		summary.setSpacing(false);
@@ -308,7 +370,7 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		alternativaCQuestao.setWidth("700px");
 		alternativaDQuestao.setWidth("700px");
 		alternativaEQuestao.setWidth("700px");
-		subAreasQuestao.setWidth("1025px");
+		subAreasQuestao.setWidth("512px");
 		
 		/* Deixando campos não editaveis  */
 		enunciadoQuestao.setReadOnly(true);
@@ -320,12 +382,13 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		alternativaDQuestao.setReadOnly(true);
 		alternativaEQuestao.setReadOnly(true);
 		subAreasQuestao.setReadOnly(true);
-		
+		estadoQuestao.setReadOnly(true);
 		/* Layout final de questão */
-		HorizontalLayout horizontalLayout1 = new HorizontalLayout(enunciadoQuestao, nivelDificuldadeQuestaoCombo);
+		HorizontalLayout horizontalLayout1 = new HorizontalLayout(enunciadoQuestao,
+				new VerticalLayout(nivelDificuldadeQuestaoCombo,subAreasQuestao,estadoQuestao));
 		HorizontalLayout horizontalLayout2 = new HorizontalLayout(justificativaQuestao); 
-		HorizontalLayout horizontalLayout3 = new HorizontalLayout(subAreasQuestao); 
-		VerticalLayout infosForm = new VerticalLayout(horizontalLayout1, horizontalLayout3, alternativaAQuestao, alternativaBQuestao, 
+		HorizontalLayout horizontalLayout3 = new HorizontalLayout();
+		VerticalLayout infosForm = new VerticalLayout(horizontalLayout1, horizontalLayout3, alternativaAQuestao, alternativaBQuestao,
 								alternativaCQuestao, alternativaDQuestao, alternativaEQuestao, horizontalLayout2);
 		
 		/* Drop menu*/ 
@@ -349,7 +412,6 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		//operadores ternários para costumizar os metadados
 		String metadadoBanca = questaoSelecionada.getState().getClass().equals(Revisao3.class)
 				? "Descartar questão" : "Enviar questão à banca, para correção";
-
 		enviarBanca.setTooltipText(metadadoBanca);
 
 		String metadadoRevisao =
@@ -357,7 +419,6 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 				||
 				questaoSelecionada.getState().getClass().equals(Revisao3.class)
 				? "Enviar à revisão linguística" : "Enviar ao próximo revisor";
-
 		enviarRevisao.setTooltipText(metadadoRevisao);
 
 	}
@@ -395,8 +456,8 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.botoesLayout = botoesLayout;
 	}
 
-	public void setGrid(Grid<String> grid) {
-		this.grid = grid;
+	public void setTopicosAnalisadosGrid(Grid<String> topicosAnalisadosGrid) {
+		this.topicosAnalisadosGrid = topicosAnalisadosGrid;
 	}
 
 	public Questao getQuestaoSelecionada() {
@@ -560,6 +621,14 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.alternativaDQuestao = alternativaDQuestao;
 	}
 
+	public TextField getEstadoQuestao() {
+		return estadoQuestao;
+	}
+
+	public void setEstadoQuestao(TextField estadoQuestao) {
+		this.estadoQuestao = estadoQuestao;
+	}
+
 	public TextArea getAlternativaEQuestao() {
 		return alternativaEQuestao;
 	}
@@ -568,12 +637,12 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.alternativaEQuestao = alternativaEQuestao;
 	}
 
-	public TextArea getObservacaoQuestao() {
-		return observacaoQuestao;
+	public TextArea getOrientacoesQuestao() {
+		return orientacoesQuestao;
 	}
 
-	public void setObservacaoQuestao(TextArea observacaoQuestao) {
-		this.observacaoQuestao = observacaoQuestao;
+	public void setOrientacoesQuestao(TextArea orientacoesQuestao) {
+		this.orientacoesQuestao = orientacoesQuestao;
 	}
 
 	public VerticalLayout getLayoutgrid() {
@@ -729,8 +798,8 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.topicosDeRevisao = subAreas;
 	}
 
-	public Grid<String> getGrid() {
-		return grid;
+	public Grid<String> getTopicosAnalisadosGrid() {
+		return topicosAnalisadosGrid;
 	}
 	
 	public Details getDetails3() {
@@ -741,5 +810,11 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		this.details3 = details3;
 	}
 
+	public HashMap<String, AtendimentoSugestoes> getTopicosAnalisadosHashMap() {
+		return topicosAnalisadosHashMap;
+	}
 
+	public void setTopicosAnalisadosHashMap(HashMap<String, AtendimentoSugestoes> topicosAnalisadosHashMap) {
+		this.topicosAnalisadosHashMap = topicosAnalisadosHashMap;
+	}
 }
