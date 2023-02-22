@@ -31,7 +31,6 @@ public class RevisaoBancaPresenter {
 			RevisaoBancaView view) {
 		this.provaService = provaService;
 		this.questaoService = questaoService;
-		
 		this.view = view;
 		
 		this.questao = view.getQuestao();
