@@ -54,18 +54,11 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	private VerticalLayout revisaoTecnicaLayout;
 	private VerticalLayout revisaoBancaLayout;
 	private VerticalLayout questaoLayout;
-	private Grid<String> grid1;
-	private Grid<String> grid2;
 	private HorizontalLayout gridL;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
-	private TextArea enunciadoTextField;
-	
 	private TextArea justificativaCorretaTA;
 	private RadioButtonGroup<String> radioGroup;
-	
-	private List<String> topicosDeRevisao;
-	private List<String> topicosAtendimento;
 	
 	private Button salvarButton;
 	private Button descartarButton;
@@ -84,8 +77,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	
 	private QuestaoDiscursiva questao;
 	private Prova prova;
-	private int quantAlternativas;
-	
 	public CorrecaoDiscursivaBancaView(ProvaService provaService, QuestaoService questaoService) {
 		
 		this.provaService = provaService;
@@ -138,8 +129,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 			revSpan.setText("Dados da Revisão Técnica 1");
 		else if(questao.getState() instanceof Correcao2) 
 			revSpan.setText("Dados da Revisão Técnica 2");
-		else
-			revSpan.setText("Dados da Revisão de Linguagem");
 		
 		Span orientacaoSpan = new Span("Orientações");
 		orientacoesTextField = new TextArea();
@@ -153,10 +142,10 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		orientGrid.add(itensSpan, gridL);
 		layoutGrid.add(orientacaoSpan, orientacoesTextField);
 		
-		orientGrid.setSpacing(false);
+		//orientGrid.setSpacing(false);
 		orientGrid.setPadding(false);
 		orientGrid.getStyle().set("margin-bottom", "10px");
-		layoutGrid.setSpacing(false);
+		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 		
 		revisaoTecnicaLayout.setWidth("800px");
@@ -279,43 +268,19 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		
 		List<Data> list = new ArrayList<>();
 		
-		grid1 = new Grid<>();
-		grid2 = new Grid<>();
-		
-		/* Arraylist de tópicos */ 
-		topicosDeRevisao = new ArrayList<>();	
-		topicosAtendimento = new ArrayList<>();
-		
 		grid.setItems(list);
-		
 		
 		for(Map.Entry<String, Atendimento> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
 			list.add(new Data(pair.getKey(), pair.getValue().toString()));
 		}
 		
-//		grid1 = new Grid<>();
-//		
-//		grid1.setItems(topicosDeRevisao);
-//		grid1.setAllRowsVisible(true);
-//		
-//		grid2.setItems(topicosAtendimento);
-//		grid2.setAllRowsVisible(true);
-//		
-//		//adicionando a coluna
-//		//conterá o arraylist e o botão de remover
-//		grid1.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
-//		
-//		grid2.addColumn(item2 -> item2).setWidth("20px").setFlexGrow(1);
+		grid.addColumn(Data::getCriterio).setHeader("Critério");
+		grid.addColumn(Data::getAtendimento).setHeader("Atendimento");
+
+		grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		grid.setAllRowsVisible(true);
 		
-//		grid1.setWidth("1300px");
-//		grid1.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-//		grid2.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-//		grid1.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-//		grid2.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-		
-		gridL.setSpacing(false);;
-		//gridL.add(grid1);
-		//gridL.add(grid2);
+		gridL.setSpacing(false);
 		gridL.add(grid);
 		
 	}
@@ -336,8 +301,6 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 		String getAtendimento() {
 			return atendimento;
 		}
-		
-		
 	}
 	
 	public Prova getProva() {

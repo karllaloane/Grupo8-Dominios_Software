@@ -16,7 +16,10 @@ import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.state.stateImpl.Correcao1;
+import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.state.stateImpl.RevisaoBanca;
+import br.ufg.sep.state.stateImpl.RevisaoLinguagem;
 import br.ufg.sep.views.correcao.CorrecaoDiscursivaBancaView;
 import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
 import br.ufg.sep.views.questoes.EditarQuestaoDiscursivaView;
@@ -86,8 +89,10 @@ public class QuestoesProvaPresenter {
             		}
             		
             		//a ideia aqui é habilitar para os outros estados do elaborador
-            		if(questao.getState() instanceof Elaboracao ||
-            				questao.getState() instanceof Correcao1 ) {
+            		if(questao.getState() instanceof Elaboracao 
+            				|| questao.getState() instanceof Correcao1 
+            				|| questao.getState() instanceof Correcao2 
+            				|| questao.getState() instanceof RevisaoBanca) {
             			view.habilitarBotoesQuestao();
             		} else {
             			view.desabilitarBotoesQuestao();
@@ -113,14 +118,14 @@ public class QuestoesProvaPresenter {
 			}
 			
 			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
-					&& questao.getState() instanceof Correcao1) {
+					&& (questao.getState() instanceof Correcao1 || questao.getState() instanceof Correcao2)) {
 				
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(CorrecaoObjetivaBancaView.class, questao.getId());});
 			}
 			
 			if((prova.getTipo() == TipoProva.DISCUSSIVA)
-					&& questao.getState() instanceof Correcao1) {
+					&& (questao.getState() instanceof Correcao1 || questao.getState() instanceof Correcao2)) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(CorrecaoDiscursivaBancaView.class, questao.getId());});
 			}

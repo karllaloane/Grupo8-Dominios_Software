@@ -101,7 +101,6 @@ public class CorrecaoDiscursivaBancaPresenter {
 			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			
 			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
-		
 		}
 	
 	}
