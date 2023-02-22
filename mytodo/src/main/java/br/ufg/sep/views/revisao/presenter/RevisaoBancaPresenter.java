@@ -61,9 +61,17 @@ public class RevisaoBancaPresenter {
 			
 			questaoService.getRepository().save(questao);
 			
+			/*Notifica ação bem sucedida*/
+			notification = Notification
+			        .show("Questão concluída com sucesso!");
+			notification.setPosition(Position.TOP_CENTER);
+			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+			
+			e.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
+			
 			//implementar posteriormente
 			//if(verificaDadosPreenchidos()) {
-				//view.getEnvioDialogo().getDialog().open();
+				
 			//}
 				
 		});	
