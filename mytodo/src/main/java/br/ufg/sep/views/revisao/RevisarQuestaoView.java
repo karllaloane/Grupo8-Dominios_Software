@@ -535,13 +535,14 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 				dropDownQuestaoFactory.tituloSumario.setText("Ultima versão da questão");
 				//adicionar ultima versão da questão
 				Details d = dropDownQuestaoFactory.getComponent();
-				d.setOpened(true);
+				d.setOpened(false);
 				verticalDetails.add(d);
 			}
 			detailsUltimaRevisao.setOpened(false);
 			if(questao.getState().getRevisao()==null){
 				detailsUltimaRevisao.setVisible(false);
 			}
+			detailsQuestaoAtual.setOpened(true);
 			verticalDetails.add(detailsUltimaRevisao, detailsQuestaoAtual, layoutQuestao, topicosDeRevisaoLayout, orientacoesQuestao, botoesLayout);
 			
 			add(verticalDetails);

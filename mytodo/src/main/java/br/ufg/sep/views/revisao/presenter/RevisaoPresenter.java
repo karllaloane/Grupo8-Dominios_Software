@@ -9,6 +9,7 @@ import br.ufg.sep.entity.Questao;
 import br.ufg.sep.security.AuthenticatedUser;
 import br.ufg.sep.state.QuestaoState;
 import br.ufg.sep.state.stateImpl.*;
+import br.ufg.sep.views.revisao.RevisaoLinguagemQuestaoView;
 import br.ufg.sep.views.revisao.RevisarQuestaoView;
 import br.ufg.sep.views.revisao.RevisoesView;
 import com.vaadin.flow.component.AbstractField;
@@ -53,11 +54,19 @@ public class RevisaoPresenter {
     }
 
     private void configBotoes() {
-        view.getRevisarButton().addClickListener(click->{
-            view.getRevisarButton().getUI().ifPresent(ui->{
-                ui.navigate(RevisarQuestaoView.class,questaoSelecionada.getId());
+
+
+
+        view.getRevisarButton().addClickListener(click -> {
+            view.getRevisarButton().getUI().ifPresent(ui -> {
+                if(questaoSelecionada.getState() instanceof  RevisaoLinguagem){
+                    ui.navigate(RevisaoLinguagemQuestaoView.class, questaoSelecionada.getId());
+
+                }else
+                ui.navigate(RevisarQuestaoView.class, questaoSelecionada.getId());
             });
         });
+
     }
 
     public void configGrid() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.security.PermitAll;
 
+import br.ufg.sep.views.revisao.presenter.RevisaoLinguagemQuestaoPresenter;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -36,7 +37,7 @@ import br.ufg.sep.views.revisao.presenter.RevisarQuestaoPresenter;
 @PageTitle("Revisar Linguagem")
 @PermitAll
 
-public class RevisaoLinguagemQuestaoView extends VerticalLayout /* implements HasUrlParameter<Long> */ {
+public class RevisaoLinguagemQuestaoView extends VerticalLayout  implements HasUrlParameter<Long>  {
 
 	/* Inputs do concurso */
 	private TextField nomeConcurso = new TextField("Nome", "", "");
@@ -227,18 +228,7 @@ public class RevisaoLinguagemQuestaoView extends VerticalLayout /* implements Ha
 		details3.setOpened(true);
 	}
 	
-	/*
-	@Override
-	public void setParameter(BeforeEvent event, Long parameter) {
-		
-		dropMenuConcurso(); 
-		dropMenuProva(); 
-		dadosQuestao();
-		campoObservacao();
-		
-		
 
-	} */ 
 
 
 	public TextArea getSubAreasQuestao() {
@@ -625,5 +615,16 @@ public class RevisaoLinguagemQuestaoView extends VerticalLayout /* implements Ha
 
 	public void setTopicosAnalisadosHashMap(HashMap<String, Atendimento> topicosAnalisadosHashMap) {
 		this.topicosAnalisadosHashMap = topicosAnalisadosHashMap;
+	}
+
+	@Override
+	public void setParameter(BeforeEvent event, Long parameter) {
+
+		RevisaoLinguagemQuestaoPresenter presenter = new RevisaoLinguagemQuestaoPresenter(
+				questaoService.getRepository().findById(parameter).get(),
+				this,
+				questaoService.getRepository()
+		);
+
 	}
 }
