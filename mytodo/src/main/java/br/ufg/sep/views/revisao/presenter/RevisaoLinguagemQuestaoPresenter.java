@@ -2,11 +2,15 @@ package br.ufg.sep.views.revisao.presenter;
 
 import br.ufg.sep.data.repositories.QuestaoRepository;
 import br.ufg.sep.entity.*;
+import br.ufg.sep.views.revisao.RevisaoBancaView;
 import br.ufg.sep.views.revisao.RevisaoLinguagemQuestaoView;
+import br.ufg.sep.views.revisao.RevisarQuestaoView;
+import br.ufg.sep.views.revisao.RevisoesView;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RevisaoLinguagemQuestaoPresenter {
@@ -29,9 +33,46 @@ public class RevisaoLinguagemQuestaoPresenter {
 
     private void configBotoes(){
         view.getEnviarBanca().addClickListener(c->{
-        this.questao.enviarParaBanca(questao.getState().getRevisao());
-        questaoRepository.save(questao);
+            consumirView(questao);
+            this.questao.enviarParaBanca(questao.getState().getRevisao());
+            Notification n = Notification.show("Enviado para Banca");
+            n.setPosition(Notification.Position.TOP_CENTER);
+            n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+            questaoRepository.save(questao);
+
+            view.getEnviarBanca().getUI().ifPresent(ui->{
+            ui.navigate(RevisoesView.class);
+            });
         });
+    }
+
+    private void consumirView(Questao questao) {
+        questao.setEnunciado(view.getEnunciadoQuestao().getValue()); // att enunciado
+        if(questao instanceof  QuestaoObjetiva){
+            //atualizar alternativas
+            if(questao.getProva().getTipo().equals(TipoProva.OBJETIVA_4))
+            ((QuestaoObjetiva) questao).setAlternativas(List.of(
+                    view.getAlternativaAQuestao().getValue(),
+                    view.getAlternativaBQuestao().getValue(),
+                    view.getAlternativaCQuestao().getValue(),
+                    view.getAlternativaDQuestao().getValue()
+            ));
+            else
+                ((QuestaoObjetiva) questao).setAlternativas(List.of(
+                        view.getAlternativaAQuestao().getValue(),
+                        view.getAlternativaBQuestao().getValue(),
+                        view.getAlternativaCQuestao().getValue(),
+                        view.getAlternativaDQuestao().getValue(),
+                        view.getAlternativaEQuestao().getValue()
+                ));
+        }
+        if(questao instanceof  QuestaoDiscursiva){
+            ((QuestaoDiscursiva) questao).setRespostaEsperada(
+                    view.getAlternativaAQuestao().getValue()
+            );
+        }
+
     }
 
 

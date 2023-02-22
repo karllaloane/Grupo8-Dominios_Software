@@ -138,10 +138,12 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		
 		Span orientacaoSpan = new Span("Orientações");
 		orientacoesTextField = new TextArea();
-		if(questaoObjetiva!=null)
-		if(questaoObjetiva.getState().getRevisao()!=null)
-		orientacoesTextField.setValue(questaoObjetiva.getState().getRevisao().getOrientacoes());
+		if(questaoObjetiva!=null) {
+			if (questaoObjetiva.getState().getRevisao() != null)
+				orientacoesTextField.setValue(questaoObjetiva.getState().getRevisao().getOrientacoes());
+		}
 		else {
+			if(questaoDiscussiva.getState().getRevisao()!=null)
 			orientacoesTextField.setValue(questaoDiscussiva.getState().getRevisao().getOrientacoes());
 		}
 		orientacoesTextField.setWidthFull();
@@ -521,8 +523,8 @@ public class RevisarQuestaoView extends HorizontalLayout  implements HasUrlParam
 		questaoObjetiva = (QuestaoObjetiva) optionalQuestao.get();
 		else
 		this.questaoDiscussiva = (QuestaoDiscursiva)optionalQuestao.get();
-		
-		dropMenuConcurso(); 
+
+		dropMenuConcurso();
 		dropMenuProva(); 
 		dadosQuestao();
 		topicosDeRevisaoComponent();

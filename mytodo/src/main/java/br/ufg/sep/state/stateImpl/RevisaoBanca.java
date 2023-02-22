@@ -30,4 +30,9 @@ public class RevisaoBanca extends QuestaoState {
         questao.setState(concluida);
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Em Revisão da Banca";
+    }
 }
