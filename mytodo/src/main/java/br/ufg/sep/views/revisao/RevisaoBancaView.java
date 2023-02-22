@@ -22,6 +22,7 @@ import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.views.MainLayout;
 import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
+import br.ufg.sep.views.revisao.components.ComponenteQuestao;
 import br.ufg.sep.views.revisao.presenter.RevisaoBancaPresenter;
 import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional;
 
