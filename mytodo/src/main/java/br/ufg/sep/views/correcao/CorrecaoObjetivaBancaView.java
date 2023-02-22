@@ -385,11 +385,11 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		gridL.add(grid);
 	}
 	
-	class Data {
+	public class Data {
 		String criterio;
 		String atendimento;
 		
-		Data(String criterio, String string){
+		public Data(String criterio, String string){
 			this.criterio = criterio;
 			this.atendimento = string;
 		}

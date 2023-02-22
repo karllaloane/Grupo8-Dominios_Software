@@ -140,7 +140,6 @@ public class Questao extends AbstractEntity {
 		this.prova = prova;
 	}
 
-
 	public int getIdQuestao() {
 		return idQuestao;
 	}
@@ -148,6 +147,7 @@ public class Questao extends AbstractEntity {
 	public void setIdQuestao(int idQuestao) {
 		this.idQuestao = idQuestao;
 	}
+
 	
 	
 
