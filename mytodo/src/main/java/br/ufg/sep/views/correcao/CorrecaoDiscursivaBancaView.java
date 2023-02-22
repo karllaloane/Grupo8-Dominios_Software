@@ -34,6 +34,7 @@ import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.correcao.presenter.CorrecaoDiscursivaBancaPresenter;
 import br.ufg.sep.views.correcao.presenter.CorrecaoObjetivaBancaPresenter;
 import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
@@ -65,7 +66,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 	
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private CorrecaoObjetivaBancaPresenter presenter;
+	private CorrecaoDiscursivaBancaPresenter presenter;
 	
 	//inputs da questao
 	private TextArea enunciado;	
@@ -102,7 +103,7 @@ public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUr
 			criaLayoutQuestao();
 			criaBotoesLayout();
 			
-			//presenter = new CorrecaoObjetivaBancaPresenter(provaService, questaoService, this);
+			presenter = new CorrecaoDiscursivaBancaPresenter(provaService, questaoService, this);
 			
 		} else {
 			Notification notification = Notification
