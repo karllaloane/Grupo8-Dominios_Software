@@ -211,5 +211,24 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 		return cancelarDialogo;
 	}
 	
+	public ComponenteQuestao getQuestaoAnterior() {
+		return questaoAnterior;
+	}
+
+
+	public void setQuestaoAnterior(ComponenteQuestao questaoAnterior) {
+		this.questaoAnterior = questaoAnterior;
+	}
+
+
+	public ComponenteQuestao getQuestaoNova() {
+		return questaoNova;
+	}
+
+
+	public void setQuestaoNova(ComponenteQuestao questaoNova) {
+		this.questaoNova = questaoNova;
+	}
+	
 
 }
