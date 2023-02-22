@@ -50,14 +50,16 @@ public class RevisaoBancaPresenter {
 				return;
 			}
 			
-//			if(questao instanceof QuestaoObjetiva) {
-//				getDadosObjetiva();
-//			} else {
-//				getDadosSubjetiva();
-//			}
-//			
-//			questao.
-//			
+			if(questao instanceof QuestaoObjetiva) {
+				getDadosObjetiva();
+			} else {
+				getDadosSubjetiva();
+			}
+			
+			questao.concluir();
+			
+			questaoService.getRepository().save(questao);
+			
 			//implementar posteriormente
 			//if(verificaDadosPreenchidos()) {
 				//view.getEnvioDialogo().getDialog().open();
