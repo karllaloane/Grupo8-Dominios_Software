@@ -17,6 +17,7 @@ import br.ufg.sep.data.services.QuestaoService;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
+import br.ufg.sep.state.stateImpl.Concluida;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.state.stateImpl.Elaboracao;
@@ -157,6 +158,18 @@ public class QuestoesProvaPresenter {
 			if(questao.getState() instanceof RevisaoBanca) {
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					ui.navigate(RevisaoBancaView.class, questao.getId());});
+			}
+			
+			if((prova.getTipo() == TipoProva.OBJETIVA_4 || prova.getTipo() == TipoProva.OBJETIVA_5)
+					&& questao.getState() instanceof Concluida ) {
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					ui.navigate(VisualizarQuestaoObjetivaView.class, questao.getId());});
+			}
+			
+			if((prova.getTipo() == TipoProva.DISCUSSIVA)
+					&& questao.getState() instanceof Concluida ) {
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(VisualizarQuestaoDiscursivaView.class, questao.getId());});
 			}
 				
 		});

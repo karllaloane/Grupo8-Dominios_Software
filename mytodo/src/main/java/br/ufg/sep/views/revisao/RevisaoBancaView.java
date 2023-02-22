@@ -146,8 +146,8 @@ public class RevisaoBancaView extends VerticalLayout implements HasUrlParameter<
 			} else {
 				questaoAnterior.ocutarAlternativas();
 				questaoNova.ocutarAlternativas();
+				setarDadosDiscursiva();
 			}
-			setarDadosDiscursiva();
 				
 		}
 		
