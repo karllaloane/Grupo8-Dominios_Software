@@ -16,7 +16,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 
 import br.ufg.sep.data.repositories.CadastroRepository;
 import br.ufg.sep.data.repositories.RoleUserRepository;
-import br.ufg.sep.entity.AtendimentoSugestoes;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.Cadastro;
 import br.ufg.sep.entity.role.Role;
 import br.ufg.sep.entity.role.RoleUser;
@@ -41,14 +41,14 @@ if(true) return 0;
 		//criando rev1
 		Revisao revisao = new Revisao();
 		revisao.setOrientacoes("TesteOrientacoes");
-		HashMap<String,Integer> hashMap = new HashMap<>();
-		hashMap.put("Paralelismo",2);
-		hashMap.put("Contextualizacao",1);
+		HashMap<String,Atendimento> hashMap = new HashMap<>();
+		hashMap.put("Paralelismo",Atendimento.NAO_ATENDIDA);
+		hashMap.put("Contextualizacao",Atendimento.NAO_ATENDIDA);
 		revisao.setItemAnalisado(hashMap);
 		//criando corr1
 		Correcao correcao = new Correcao();
 		correcao.setJustificativa("Teste");
-		correcao.setAtendimentoSugestoes(AtendimentoSugestoes.PARCIAL);
+		correcao.setAtendimentoSugestoes(Atendimento.PARCIAL);
 
 		q.enviarParaRevisao(null); // r1
 		questaoRepository.save(q);

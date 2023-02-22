@@ -18,18 +18,18 @@ public class Revisao extends AbstractEntity{
     @ElementCollection
     @JoinColumn(name="itens_analisados")
     @OnDelete(action = OnDeleteAction.CASCADE)//TESTAR
-    Map<String,Integer> itemAnalisado;
+    Map<String,Atendimento> itemAnalisado;
     //  EXEMPLO: String chave: Paralelismo ;; String valor: true ( atende parcialmente)
     // true: atende, false: nao atende, null: atende parcialmente
     // ACEITO SUGESTÕES DE REFATORAMENTO
 
     String orientacoes;
 
-    public Map<String, Integer> getItemAnalisado() {
+    public Map<String, Atendimento> getItemAnalisado() {
         return itemAnalisado;
     }
 
-    public void setItemAnalisado(Map<String, Integer> itemAnalisado) {
+    public void setItemAnalisado(Map<String, Atendimento> itemAnalisado) {
         this.itemAnalisado = itemAnalisado;
     }
 

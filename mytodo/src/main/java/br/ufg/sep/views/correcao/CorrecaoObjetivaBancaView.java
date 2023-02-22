@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -32,6 +33,7 @@ import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
@@ -39,6 +41,7 @@ import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.correcao.CorrecaoDiscursivaBancaView.Data;
 import br.ufg.sep.views.correcao.presenter.CorrecaoObjetivaBancaPresenter;
 import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
@@ -51,7 +54,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	private VerticalLayout revisaoTecnicaLayout;
 	private VerticalLayout revisaoBancaLayout;
 	private VerticalLayout questaoLayout;
-	private Grid<String> grid;
+	private HorizontalLayout gridL;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
 	private TextArea justificativaCorretaTA;
@@ -246,12 +249,10 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		HorizontalLayout h = new HorizontalLayout();
 		
 		this.descartarButton = new Button("Descartar edição");
-		this.salvarButton = new Button("Salvar");
 		this.enviarButton = new Button("Enviar para revisão 2");
 		
-		this.salvarButton.getStyle().set("margin-left", "345px");
-		this.enviarButton.getStyle().set("margin-left", "auto");
-		h.add(descartarButton, salvarButton,enviarButton);
+		this.enviarButton.getStyle().set("margin-left", "435px");
+		h.add(descartarButton,enviarButton);
 		
 		buttonsLayout.add(h);
 		
@@ -272,8 +273,6 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 			revSpan.setText("Dados da Revisão Técnica 1");
 		else if(questao.getState() instanceof Correcao2) 
 			revSpan.setText("Dados da Revisão Técnica 2");
-		else
-			revSpan.setText("Dados da Revisão de Linguagem");
 		
 		Span orientacaoSpan = new Span("Orientações");
 		orientacoesTextField = new TextArea();
@@ -284,13 +283,13 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		Span itensSpan = new Span("Itens Avaliados");
 		criarGrid();
 		
-		orientGrid.add(itensSpan, grid);
+		orientGrid.add(itensSpan, gridL);
 		layoutGrid.add(orientacaoSpan, orientacoesTextField);
 		
-		orientGrid.setSpacing(false);
+		//orientGrid.setSpacing(false);
 		orientGrid.setPadding(false);
 		orientGrid.getStyle().set("margin-bottom", "10px");
-		layoutGrid.setSpacing(false);
+		//layoutGrid.setSpacing(false);
 		layoutGrid.setPadding(false);
 		
 		revisaoTecnicaLayout.setWidth("800px");
@@ -344,54 +343,50 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	}
 	
 	private void criarGrid(){
+		gridL = new HorizontalLayout();
+		gridL.setWidth("768px");
 		
-		/* Arraylist de tópicos */ 
-		topicosDeRevisao = new ArrayList<>();
+		Grid<Data> grid = new Grid();
 		
+		List<Data> list = new ArrayList<>();
 		
-		for(Map.Entry<String, Integer> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
-			topicosDeRevisao.add(pair.getKey());
+		grid.setItems(list);
+		
+		for(Map.Entry<String, Atendimento> pair : questao.getState().getRevisao().getItemAnalisado().entrySet()){
+			list.add(new Data(pair.getKey(), pair.getValue().toString()));
 		}
 		
-		grid = new Grid<String>();
-		
-		grid.setItems(topicosDeRevisao);
+		grid.addColumn(Data::getCriterio).setHeader("Critério");
+		grid.addColumn(Data::getAtendimento).setHeader("Atendimento");
+
+		grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 		grid.setAllRowsVisible(true);
 		
-		//adicionando a coluna
-		//conterá o arraylist e o botão de remover
-		grid.addColumn(item -> item).setWidth("290px").setFlexGrow(1);
+		gridL.setSpacing(false);
+		gridL.add(grid);
+	}
+	
+	class Data {
+		String criterio;
+		String atendimento;
 		
-		/*
-		 * NAO SEI SETAR O ATENDIMENTO NO GRID
-		 */
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtende, item) -> {
-                	checkAtende.setLabel("Atende");
-                })).setWidth("100px").setFlexGrow(0).setKey("atende");
+		Data(String criterio, String string){
+			this.criterio = criterio;
+			this.atendimento = string;
+		}
 		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkAtendeParcialmente, item) -> {
-                	checkAtendeParcialmente.setLabel("Atende Parcialmente");
-                	/* Ajeitar o taamanho disso aqui */
-                })).setWidth("160px").setFlexGrow(1).setKey("atende-parcialmente");
+		String getCriterio() {
+			return criterio;
+		}
 		
-		grid.addColumn(
-                new ComponentRenderer<>(Checkbox::new, (checkNaoAtende, item) -> {
-                	checkNaoAtende.setLabel("Não Atende");
-                })).setWidth("100px").setFlexGrow(1).setKey("nao-atende");
-		
-		
-		
+		String getAtendimento() {
+			return atendimento;
+		}
 	}
 
 	
 	public Prova getProva() {
 		return prova;
-	}
-	
-	public Grid<String> getGrid() {
-		return grid;
 	}
 
 	public TextArea getOrientacoesTextField() {

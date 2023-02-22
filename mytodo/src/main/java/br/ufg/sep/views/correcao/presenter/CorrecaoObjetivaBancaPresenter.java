@@ -16,7 +16,7 @@ import com.vaadin.flow.component.notification.Notification.Position;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.AtendimentoSugestoes;
+import br.ufg.sep.entity.Atendimento;
 import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
@@ -35,7 +35,7 @@ public class CorrecaoObjetivaBancaPresenter {
 	private String justificativaCorreta;
 	private List<String> alternativasList;
 	private String justificativaAtendimento;
-	private AtendimentoSugestoes atendimento;
+	private Atendimento atendimento;
 	
 	private Prova prova; 
 	
@@ -77,10 +77,7 @@ public class CorrecaoObjetivaBancaPresenter {
 				
 			});
 		}
-		
-		//chama o metodo salvar, que salva mas nao envia a questao para relaboracao
-				view.getSalvarButton().addClickListener( e->salvarCorrecao(e));
-				
+			
 		//chama o diálogo para confirmar o envio da questao
 		view.getEnviarButton().addClickListener( e->{
 			if(verificaDadosPreenchidos())
@@ -145,30 +142,6 @@ public class CorrecaoObjetivaBancaPresenter {
 		
 	}
 
-	//aqui vai a lógica para salvar a correção e a questão, mas sem enviar
-	private void salvarCorrecao(ClickEvent<Button> event) {
-		
-		Notification notification;
-		
-		//chama o método para verificar os dados da view
-		//se ele retornou true todos os dados foram coletados com sucesso
-		if(verificaDadosPreenchidos()) {
-			
-			/*
-			 * IMPLEMENTAR
-			 */
-			
-			//Notifica ação bem sucedida
-			notification = Notification
-			        .show("Questão salva com sucesso!");
-			notification.setPosition(Position.TOP_CENTER);
-			notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			
-			event.getSource().getUI().ifPresent(ui -> ui.navigate(QuestoesProvaView.class, prova.getId()));
-			
-		}
-	}
-
 	private boolean verificaDadosPreenchidos() {
 		Notification notification;
 		
@@ -230,18 +203,18 @@ public class CorrecaoObjetivaBancaPresenter {
 		return true;
 	}
 
-	private AtendimentoSugestoes dedicirAtendimento() throws InvalidAttributeIdentifierException {
+	private Atendimento dedicirAtendimento() throws InvalidAttributeIdentifierException {
 		
 		String valor = view.getRadioGroup().getValue();
 		
 		if(valor.toLowerCase().contains("totalmente")) {
-			return AtendimentoSugestoes.TOTAL;
+			return Atendimento.TOTAL;
 		}
 		if(valor.toLowerCase().contains("parcialmente")) {
-			return AtendimentoSugestoes.PARCIAL;
+			return Atendimento.PARCIAL;
 		}
 		if(valor.toLowerCase().contains("não")) {
-			return AtendimentoSugestoes.NAO_ATENDIDA;
+			return Atendimento.NAO_ATENDIDA;
 		}
 		
 		throw new InvalidAttributeIdentifierException();
