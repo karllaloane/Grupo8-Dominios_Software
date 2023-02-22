@@ -17,6 +17,7 @@ import br.ufg.sep.entity.Questao;
 import br.ufg.sep.entity.TipoProva;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Elaboracao;
+import br.ufg.sep.views.correcao.CorrecaoDiscursivaBancaView;
 import br.ufg.sep.views.correcao.CorrecaoObjetivaBancaView;
 import br.ufg.sep.views.questoes.EditarQuestaoDiscursivaView;
 import br.ufg.sep.views.questoes.EditarQuestaoObjetivaView;
@@ -116,6 +117,12 @@ public class QuestoesProvaPresenter {
 				
 				view.getAcessarButton().getUI().ifPresent(ui->{
 					 ui.navigate(CorrecaoObjetivaBancaView.class, questao.getId());});
+			}
+			
+			if((prova.getTipo() == TipoProva.DISCUSSIVA)
+					&& questao.getState() instanceof Correcao1) {
+				view.getAcessarButton().getUI().ifPresent(ui->{
+					 ui.navigate(CorrecaoDiscursivaBancaView.class, questao.getId());});
 			}
 				
 		});

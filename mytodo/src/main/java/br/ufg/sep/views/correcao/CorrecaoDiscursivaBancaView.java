@@ -8,13 +8,9 @@ import java.util.Optional;
 import javax.annotation.security.PermitAll;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -23,7 +19,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -32,37 +27,35 @@ import com.vaadin.flow.router.Route;
 
 import br.ufg.sep.data.services.ProvaService;
 import br.ufg.sep.data.services.QuestaoService;
-import br.ufg.sep.entity.NivelDificuldade;
 import br.ufg.sep.entity.Prova;
 import br.ufg.sep.entity.Questao;
+import br.ufg.sep.entity.QuestaoDiscursiva;
 import br.ufg.sep.entity.QuestaoObjetiva;
 import br.ufg.sep.state.stateImpl.Correcao1;
 import br.ufg.sep.state.stateImpl.Correcao2;
 import br.ufg.sep.views.MainLayout;
+import br.ufg.sep.views.correcao.presenter.CorrecaoDiscursivaBancaPresenter;
 import br.ufg.sep.views.correcao.presenter.CorrecaoObjetivaBancaPresenter;
 import br.ufg.sep.views.questoes.componente.CancelarEdicaoDialog;
 import br.ufg.sep.views.questoes.componente.ConfirmaEnvioRevisaoDialog;
 
-@Route(value="correcao_questao_objetiva", layout = MainLayout.class)
+@Route(value="correcao_questao_discursiva", layout = MainLayout.class)
 @PageTitle("Revisao da Banca")
 @PermitAll
-public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlParameter<Long>{
-
+public class CorrecaoDiscursivaBancaView extends VerticalLayout implements HasUrlParameter<Long>{
+	
 	private VerticalLayout revisaoTecnicaLayout;
 	private VerticalLayout revisaoBancaLayout;
 	private VerticalLayout questaoLayout;
 	private Grid<String> grid;
 	private TextArea orientacoesTextField;
 	private TextArea justificativaAtendimentoTA;
+	private TextArea enunciadoTextField;
+	
 	private TextArea justificativaCorretaTA;
 	private RadioButtonGroup<String> radioGroup;
 	
 	private List<String> topicosDeRevisao;
-	
-	//inputs da questao
-	private TextArea enunciado;	
-	private List<TextArea> alternativasList;
-	private List<Checkbox> checkboxList;
 	
 	private Button salvarButton;
 	private Button descartarButton;
@@ -73,14 +66,17 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 	
 	private ProvaService provaService;
 	private QuestaoService questaoService;
-	private CorrecaoObjetivaBancaPresenter presenter;
+	private CorrecaoDiscursivaBancaPresenter presenter;
 	
-	private QuestaoObjetiva questao;
+	//inputs da questao
+	private TextArea enunciado;	
+	private TextArea respostaEsperadaTA;
+	
+	private QuestaoDiscursiva questao;
 	private Prova prova;
 	private int quantAlternativas;
-
 	
-	public CorrecaoObjetivaBancaView(ProvaService provaService, QuestaoService questaoService) {
+	public CorrecaoDiscursivaBancaView(ProvaService provaService, QuestaoService questaoService) {
 		
 		this.provaService = provaService;
 		this.questaoService = questaoService;
@@ -98,18 +94,16 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		
 		Optional<Questao> optionalQuestao = questaoService.getRepository().findById(parameter);
 		if (optionalQuestao.isPresent()) {
-			questao = (QuestaoObjetiva) optionalQuestao.get();
+			questao = (QuestaoDiscursiva) optionalQuestao.get();
 			
 			prova = questao.getProva();
-			
-			quantAlternativas = questao.getQuantAlternativas();
 			
 			criaLayoutRevisaoTecnica();
 			criaLayoutRevisaoBanca();
 			criaLayoutQuestao();
 			criaBotoesLayout();
 			
-			presenter = new CorrecaoObjetivaBancaPresenter(provaService, questaoService, this);
+			presenter = new CorrecaoDiscursivaBancaPresenter(provaService, questaoService, this);
 			
 		} else {
 			Notification notification = Notification
@@ -118,144 +112,6 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
 		
-	}
-	
-	private void criaLayoutQuestao() {
-		questaoLayout = new VerticalLayout();
-		
-		Span spanQuestao = new Span("Questão Reelaborada");
-		spanQuestao.getStyle().set("font-size", "18px").set("font-weight", "bold");
-				
-		VerticalLayout enunciadoLayout = new VerticalLayout();
-		
-		//criando os componentes do layout de questao
-		Span enunciadoSpan = new Span("Enunciado");
-		enunciado = new TextArea();
-		enunciado.setValue(questao.getEnunciado());
-		
-		//alterando estilos
-		enunciado.setWidthFull();
-		enunciado.setMinHeight("150px");
-
-		enunciadoLayout.setPadding(false);
-		enunciadoLayout.setSpacing(false);
-		enunciadoLayout.add(enunciadoSpan, enunciado);
-		
-		questaoLayout.setWidth("800px");
-		questaoLayout.setAlignItems(Alignment.CENTER);
-		
-		questaoLayout.add(spanQuestao, enunciadoLayout);
-		
-		this.add(questaoLayout);
-		criaAlternativasLayout();
-		criaJustificativaLayout();		
-	}
-	
-	private void criaJustificativaLayout() {
-		VerticalLayout justificativaLayout = new VerticalLayout();
-		
-		Span justificativaSpan = new Span("Justificativa da alternativa correta:");
-		
-		justificativaCorretaTA = new TextArea();
-		justificativaCorretaTA.setWidthFull();
-		justificativaCorretaTA.setValue(questao.getJustificativa());
-		
-		justificativaLayout.setWidth("800px");
-		justificativaLayout.add(justificativaSpan, justificativaCorretaTA);
-		
-		justificativaLayout.setSpacing(false);
-		
-		this.add(justificativaLayout);	
-	}
-
-	private void criaAlternativasLayout() {
-		VerticalLayout alternativaLayout = new VerticalLayout();
-		
-		//criando as listas que serao usadas pra guardar os componentes
-		alternativasList = new ArrayList<>();
-		checkboxList = new ArrayList<>();
-		
-		//Layout de Label
-		Label alternativaLabel = new Label("Alternativas");
-		Label corretaLabel = new Label("Correta");
-			
-		HorizontalLayout labelLayout = new HorizontalLayout();
-		
-		alternativaLabel.setWidth("680px");
-		labelLayout.add(alternativaLabel, corretaLabel);
-		
-		
-		//lista de span que guarda as alternativas a), b)...
-		List<Span> spanList = new ArrayList<Span>();
-		
-		
-		//layout auxiliar para centralizar os checkbox
-		List<HorizontalLayout> auxLayout = new ArrayList<HorizontalLayout>();
-				
-		//layout para guardar a letra, textArea e Checkbox (por alternativa)
-		List<HorizontalLayout> altLayout = new ArrayList<HorizontalLayout>();
-		
-		//adicionnado o layout de labels
-		alternativaLayout.add(labelLayout);
-						
-		//para popular a lista de Span com as letras das alternativas
-		char a = 'a';
-		for(int i = 0; i < quantAlternativas; i++) {
-			spanList.add(new Span(a + ")"));
-			a++;
-		}	
-		
-		//criando os layout das alternativas
-		//contem a letra "a)" o textArea e o checkbox da alternativa
-		for(int i = 0; i < quantAlternativas; i++) {
-			
-			//cria o textarea e adiciona ao list 
-			alternativasList.add(new TextArea());
-			alternativasList.get(i).setWidth("650px");
-			alternativasList.get(i).setValue(questao.getAlternativas().get(i));
-			
-			//cria o textbox e adiciona ao list
-			checkboxList.add(new Checkbox());
-			
-			if(i == questao.getAlternativaCorreta())
-				checkboxList.get(i).setValue(true);
-			
-			//layout para organizar o checkbox
-			auxLayout.add(new HorizontalLayout());
-			auxLayout.get(i).setPadding(true);
-			auxLayout.get(i).add(checkboxList.get(i));
-			
-			altLayout.add(new HorizontalLayout());
-			altLayout.get(i).setAlignItems(Alignment.CENTER);
-			altLayout.get(i).add(spanList.get(i), alternativasList.get(i), auxLayout.get(i));
-		}
-				
-		//adicionando os layouts de alternativas individuais ao layout geral
-		for(int i = 0; i <quantAlternativas; i++) {	
-			alternativaLayout.add(altLayout.get(i));
-		}
-
-		this.add(alternativaLayout);
-	}
-
-	private void criaBotoesLayout() {
-		//critando botoes
-		VerticalLayout buttonsLayout = new VerticalLayout();
-		buttonsLayout.setWidth("800px");
-		
-		HorizontalLayout h = new HorizontalLayout();
-		
-		this.descartarButton = new Button("Descartar edição");
-		this.salvarButton = new Button("Salvar");
-		this.enviarButton = new Button("Enviar para revisão 2");
-		
-		this.salvarButton.getStyle().set("margin-left", "345px");
-		this.enviarButton.getStyle().set("margin-left", "auto");
-		h.add(descartarButton, salvarButton,enviarButton);
-		
-		buttonsLayout.add(h);
-		
-		this.add(buttonsLayout);
 	}
 	
 	private void criaLayoutRevisaoTecnica() {
@@ -300,6 +156,70 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		
 		this.add(revisaoTecnicaLayout);
 
+	}
+	
+	private void criaLayoutQuestao() {
+		questaoLayout = new VerticalLayout();
+		
+		Span spanQuestao = new Span("Questão Reelaborada");
+		spanQuestao.getStyle().set("font-size", "18px").set("font-weight", "bold");
+				
+		VerticalLayout enunciadoLayout = new VerticalLayout();
+		VerticalLayout respostaLayout = new VerticalLayout();
+		
+		//criando os componentes do layout de questao
+		Span enunciadoSpan = new Span("Enunciado");
+		enunciado = new TextArea();
+		enunciado.setValue(questao.getEnunciado());
+		
+		//alterando estilos
+		enunciado.setWidthFull();
+		enunciado.setMinHeight("150px");
+
+		enunciadoLayout.setPadding(false);
+		enunciadoLayout.setSpacing(false);
+		enunciadoLayout.add(enunciadoSpan, enunciado);
+		
+		//criando os componentes do layout de questao
+		Span respSpan = new Span("Resposta Esperada");
+		
+		respostaEsperadaTA = new TextArea();
+		respostaEsperadaTA.setMinHeight("150px");
+		respostaEsperadaTA.setWidthFull();
+		respostaEsperadaTA.setValue(questao.getRespostaEsperada());
+		
+		respostaLayout.setPadding(false);
+		respostaLayout.setSpacing(false);
+		respostaLayout.add(respSpan, respostaEsperadaTA);
+		
+		questaoLayout.setWidth("800px");
+		questaoLayout.setAlignItems(Alignment.CENTER);
+		
+		questaoLayout.add(enunciadoLayout, respostaLayout);
+		
+		this.add(questaoLayout);
+		
+		
+	}
+	
+	private void criaBotoesLayout() {
+		//critando botoes
+		VerticalLayout buttonsLayout = new VerticalLayout();
+		buttonsLayout.setWidth("800px");
+		
+		HorizontalLayout h = new HorizontalLayout();
+		
+		this.descartarButton = new Button("Descartar edição");
+		this.salvarButton = new Button("Salvar");
+		this.enviarButton = new Button("Enviar para revisão 2");
+		
+		this.salvarButton.getStyle().set("margin-left", "345px");
+		this.enviarButton.getStyle().set("margin-left", "auto");
+		h.add(descartarButton, salvarButton,enviarButton);
+		
+		buttonsLayout.add(h);
+		
+		this.add(buttonsLayout);
 	}
 	
 	private void criaLayoutRevisaoBanca() {
@@ -414,14 +334,6 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		return enunciado;
 	}
 
-	public List<TextArea> getAlternativasList() {
-		return alternativasList;
-	}
-
-	public List<Checkbox> getCheckboxList() {
-		return checkboxList;
-	}
-
 	public Button getSalvarButton() {
 		return salvarButton;
 	}
@@ -442,8 +354,7 @@ public class CorrecaoObjetivaBancaView extends VerticalLayout implements HasUrlP
 		return cancelarDialogo;
 	}
 
-	public QuestaoObjetiva getQuestao() {
+	public QuestaoDiscursiva getQuestao() {
 		return questao;
 	}
-
 }
