@@ -1,0 +1,18 @@
+{
+  "productionMode": false,
+  "useDeprecatedV14Bootstrapping": false,
+  "eagerServerLoad": false,
+  "npmFolder": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo",
+  "node.version": "v18.13.0",
+  "node.download.root": "https://nodejs.org/dist/",
+  "generatedFolder": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\target\\frontend",
+  "frontendFolder": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\frontend",
+  "connect.javaSourceFolder": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\src\\main\\java",
+  "javaResourceFolder": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\src\\main\\resources",
+  "connect.applicationProperties": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\src\\main\\resources\\application.properties",
+  "connect.openApiFile": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\target\\generated-resources\\openapi.json",
+  "project.frontend.generated": "C:\\Users\\joaog\\OneDrive - Universidade Federal de Goiás\\Área de Trabalho\\UFG\\4º P - UFG\\Domínios de Software\\SEP\\Grupo8-Dominios_Software\\mytodo\\frontend\\generated",
+  "pnpm.enable": false,
+  "require.home.node": false,
+  "build.folder": "target"
+}
