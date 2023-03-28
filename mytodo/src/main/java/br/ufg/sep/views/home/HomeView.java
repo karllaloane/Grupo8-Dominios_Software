@@ -27,7 +27,7 @@ import java.util.HashMap;
 @PermitAll
 public class HomeView extends VerticalLayout {
 	
-	private Button testar = new Button();
+	/* private Button testar = new Button();
 	private TextField console = new TextField("Estado");
 
 
@@ -42,7 +42,7 @@ public class HomeView extends VerticalLayout {
 	public HomeView(QuestaoRepository questaoRepository,
 					QuestaoService questaoService,
 					QuestaoStateRepository questaoStateRepository,
-					ProvaRepository provaRepository){
+					ProvaRepository provaRepository){ */ 
 /*
 		deletarQuestoes.addClickListener(e->{
 			questaoRepository.deleteAll();
@@ -127,9 +127,9 @@ public class HomeView extends VerticalLayout {
 
 		});
 
-		*/
+		*/ /* 
 		add(new HorizontalLayout(testar,passarEstado, enterId, deletarQuestoes),idField,console);
 	}
 
-	
+	*/ 
 }

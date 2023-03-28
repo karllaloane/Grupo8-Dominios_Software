@@ -126,10 +126,10 @@ public class NovaProvaPresenter {
 		prova.setRevisor2(
 				view.getComboBoxMembroRevisorTecnico2().getValue()
 		);
-		//Revisor Técnico III *****************************TROCAR***************************************88888
+		//Revisor Técnico III 
 		prova.setRevisor3(
 				view.getComboBoxMembroRevisorTecnico2().getValue()
-				//O INPUT DO 2 TA INDO NO 3 APENAS PARA TESTEEEEEEEEEEEEEEEEEEEEEEEEE
+				
 		);
 		//Revisor Linguistico
 		prova.setRevisorLinguagem(
