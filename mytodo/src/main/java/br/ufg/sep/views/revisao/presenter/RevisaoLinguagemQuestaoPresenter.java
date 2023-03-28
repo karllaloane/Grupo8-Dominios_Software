@@ -44,6 +44,7 @@ public class RevisaoLinguagemQuestaoPresenter {
             view.getEnviarBanca().getUI().ifPresent(ui->{
             ui.navigate(RevisoesView.class);
             });
+
         });
     }
 

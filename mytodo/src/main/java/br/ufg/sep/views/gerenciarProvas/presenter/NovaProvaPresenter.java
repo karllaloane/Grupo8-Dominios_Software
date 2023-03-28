@@ -92,7 +92,8 @@ public class NovaProvaPresenter {
 		
 		//verificando campos em branco
 		if(areaconhecimento.isEmpty() || view.getPrazo().isEmpty()
-				|| descricao.isEmpty() || numQuestoes == 0) {
+				|| descricao.isEmpty() || numQuestoes == 0
+		|| tipo==null || nivel==null) {
 					
 				/* Notifica que existe campo em branco*/
 				Notification notification = Notification
@@ -101,6 +102,10 @@ public class NovaProvaPresenter {
 				notification.addThemeVariants(NotificationVariant.LUMO_CONTRAST);
 				return;
 		}
+
+
+
+
 		
 		/*Instancia uma Prova*/
 		Prova prova;
